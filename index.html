@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Analista - Inteligência e Análise de Dados para Moçambique</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js para gráficos interativos do Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F8F9FA',
+              dark: '#111315',
+              border: '#E2E8F0',
+              accent: '#2563EB',
+              muted: '#5F6368',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8F9FA;
+    }
+    
+    .hero-gradient-stripes {
+      height: 95px;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+      background: linear-gradient(
+        180deg,
+        #e53e3e 0%,
+        #e53e3e 20%,
+        #d53f8c 20%,
+        #d53f8c 40%,
+        #805ad5 40%,
+        #805ad5 60%,
+        #667eea 60%,
+        #667eea 80%,
+        #7f9cf5 80%,
+        #7f9cf5 100%
+      );
+      opacity: 0.95;
+    }
+
+    .dashboard-top-line {
+      height: 3px;
+      background: linear-gradient(90deg, #3B82F6 0%, #10B981 35%, #FBBF24 70%, #EF4444 100%);
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+    }
+
+    .pill-suggestion {
+      transition: all 0.15s ease-in-out;
+    }
+    .pill-suggestion:hover {
+      background-color: #F1F5F9;
+      border-color: #CBD5E1;
+      color: #0F172A;
+    }
+
+    /* Animação suave de pulso para o indicador do agente */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .agent-pulse {
+      animation: pulse-dot 1.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- 1. Barra de Navegação Superior (Header) -->
+  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div class="w-1/3 flex items-center space-x-2">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        MZ
+      </span>
+    </div>
+    
+    <div class="w-1/3 text-center">
+      <h1 class="text-sm font-semibold tracking-wide text-gray-100">Data Analista</h1>
+    </div>
+
+    <div class="w-1/3 flex items-center justify-end space-x-2.5 text-gray-300">
+      <button onclick="startNewAnalysis()" class="flex items-center space-x-1.5 px-3 py-1.5 bg-[#25282C] hover:bg-[#31353B] text-gray-100 rounded-full text-xs font-medium transition-colors border border-gray-700/60 shadow-sm">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span>Nova Análise</span>
+      </button>
+
+      <button class="flex items-center space-x-1.5 px-3 py-1.5 hover:bg-[#25282C] text-gray-200 rounded-lg text-xs font-medium transition-colors">
+        <i data-lucide="monitor" class="w-4 h-4 text-gray-400"></i>
+        <span class="hidden sm:inline">Dispositivo</span>
+      </button>
+
+      <button onclick="startNewAnalysis()" class="p-1.5 text-gray-400 hover:text-white hover:bg-[#25282C] rounded-md transition-colors" title="Limpar dados">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+      </button>
+
+      <button class="p-1.5 text-gray-400 hover:text-white hover:bg-[#25282C] rounded-md transition-colors" title="Opções">
+        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= ETAPA INICIAL: SETUP DE DADOS E PERGUNTA ================= -->
+  <main id="setupSection" class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 pb-20">
+    <!-- Faixa com gradiente -->
+    <div class="hero-gradient-stripes shadow-sm"></div>
+
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-12 -mt-1 space-y-8">
+      <!-- Subheader Badge -->
+      <div>
+        <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-4">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
+          <span>Espaço de Trabalho &bull; Data Analista</span>
+        </div>
+
+        <!-- Título & Descrição em Grade Responsiva -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-8">
+          <div class="lg:col-span-7">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.14]">
+              Pergunte qualquer<br>coisa sobre os seus dados
+            </h2>
+          </div>
+          <div class="lg:col-span-5 text-gray-600 text-sm md:text-[15px] space-y-2.5 pt-1 leading-relaxed">
+            <p class="font-semibold text-gray-800">
+              O Data Analista gera inteligência interactiva, relatórios de gestão e dashboards automáticos para Moçambique.
+            </p>
+            <p class="text-slate-500 text-sm">
+              Carregue os seus ficheiros CSV (vendas, clientes, stocks), insira a sua instrução e o agente de IA construirá os gráficos e tabelas.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 1: Ficheiros de Dados -->
+      <div class="bg-[#FCFCFD] border border-gray-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="flex items-center space-x-3 mb-6">
+          <div class="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">1</div>
+          <h3 class="text-base font-semibold text-gray-900">Escolha o conjunto de dados</h3>
+        </div>
+
+        <div id="dropzone" class="border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50/20 rounded-xl p-8 sm:p-10 text-center transition-all cursor-pointer group mb-6">
+          <input type="file" id="fileInput" accept=".csv" multiple class="hidden" />
+          <div class="flex flex-col items-center justify-center space-y-2">
+            <div class="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-colors mb-1">
+              <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+            </div>
+            <p class="text-sm md:text-base font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
+              Arraste ficheiros CSV para aqui ou clique para procurar (<span class="font-normal">&le; 1MB</span>)
+            </p>
+            <p class="text-xs text-gray-400">
+              Suporta múltiplos ficheiros CSV para cruzamento e análise do agente
+            </p>
+          </div>
+        </div>
+
+        <!-- Seção Cloud GCS -->
+        <div class="space-y-3 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1">
+            <div class="flex items-center space-x-2 text-gray-700 font-medium">
+              <i data-lucide="database" class="w-4 h-4 text-blue-600"></i>
+              <span>Cole o endereço na nuvem (GCS / Cloud Storage) para ficheiros com mais de 1MB</span>
+            </div>
+            <span class="text-gray-400 text-[11px]">Permite contornar o limite de 1MB</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <div class="relative flex-1 w-full">
+              <input id="gcsInput" type="text" placeholder="gs://meu-bucket-mz/relatorios/base_vendas_2026.csv" class="w-full bg-white border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all font-mono text-xs sm:text-sm" />
+            </div>
+            <button class="w-full sm:w-auto px-5 py-2.5 bg-[#94A3B8] hover:bg-slate-500 active:bg-slate-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors whitespace-nowrap shadow-sm">
+              Adicionar Ficheiro Cloud
+            </button>
+          </div>
+        </div>
+
+        <!-- Ficheiro Activo -->
+        <div id="fileCardsContainer" class="space-y-2 mb-6">
+          <div id="defaultFileCard" class="bg-white border border-gray-200 rounded-lg px-4 py-3 flex items-center justify-between shadow-sm">
+            <div class="flex items-center space-x-3">
+              <span class="font-semibold text-gray-900 text-sm">vendas.csv</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                Inline CSV &bull; 5.4 KB
+              </span>
+            </div>
+            <button onclick="removeDefaultFile()" class="text-xs text-gray-400 hover:text-red-600 font-medium transition-colors">
+              Remover
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-5 border-t border-gray-100">
+          <p class="text-[11px] leading-relaxed text-gray-400">
+            Ao utilizar esta funcionalidade, confirma que detém os direitos legítimos sobre os dados carregados em Moçambique. O uso da IA é regulado pela nossa <a href="#" class="text-blue-600 hover:underline">Política de Uso Responsável</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Card 2: Instruções de Análise -->
+      <div class="bg-[#FCFCFD] border border-gray-200/90 rounded-2xl p-6 sm:p-8 shadow-sm">
+        <div class="flex items-center space-x-3 mb-6">
+          <div class="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">2</div>
+          <h3 class="text-base font-semibold text-gray-900">Faça uma pergunta de negócio (instruções ao agente)</h3>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <textarea 
+            id="questionTextarea" 
+            rows="3" 
+            placeholder="ex.: faz uma analise geral" 
+            class="w-full bg-white border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-xl p-4 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all resize-none leading-relaxed"
+          >faz uma analise geral</textarea>
+
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button type="button" onclick="applyPrompt('faz uma analise geral')" class="pill-suggestion text-xs bg-white border border-gray-200 text-gray-600 px-3.5 py-1.5 rounded-full shadow-2xs hover:bg-gray-50 text-left">
+              faz uma analise geral
+            </button>
+            <button type="button" onclick="applyPrompt('Quais categorias e províncias geram maior facturação em Meticais?')" class="pill-suggestion text-xs bg-white border border-gray-200 text-gray-600 px-3.5 py-1.5 rounded-full shadow-2xs hover:bg-gray-50 text-left">
+              Quais categorias e províncias geram maior receita?
+            </button>
+            <button type="button" onclick="applyPrompt('Encontrar anomalias e clientes com maior valor agregado')" class="pill-suggestion text-xs bg-white border border-gray-200 text-gray-600 px-3.5 py-1.5 rounded-full shadow-2xs hover:bg-gray-50 text-left">
+              Encontrar anomalias e clientes de alto volume
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button 
+            id="analyzeBtn" 
+            onclick="runAgentPipeline()"
+            class="w-full py-3 px-6 bg-black hover:bg-neutral-800 text-white font-medium text-sm rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+            <span>Analisar e Criar Dashboard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= ETAPA ATIVA: WORKSPACE DO AGENTE + DASHBOARD ================= -->
+  <div id="workspaceSection" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-5 pb-16">
+    
+    <!-- Barra superior de consulta e controlo de execução -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div class="flex items-center space-x-3">
+        <h2 id="currentQueryTitle" class="text-base font-bold text-gray-900">faz uma analise geral</h2>
+        <span id="agentStatusBadge" class="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium">
+          <span class="w-2 h-2 rounded-full bg-blue-600 agent-pulse"></span>
+          <span id="agentStatusText">A provisionar ambiente de análise de IA...</span>
+        </span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="startNewAnalysis()" class="px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 text-xs font-medium rounded-lg transition-colors">
+          Parar / Nova Análise
+        </button>
+      </div>
+    </div>
+
+    <!-- Layout dividido em duas colunas: Agente à esquerda, Dashboard à direita -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- ================= COLUNA ESQUERDA: ANALYTICS AGENT ================= -->
+      <div class="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-sm flex flex-col h-[750px]">
+        <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+          <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+            <span>Analytics Agent</span>
+          </h3>
+          <span id="agentSubstatus" class="text-[11px] text-gray-400">A processar dados...</span>
+        </div>
+
+        <!-- Abas: Chat | Agent Activity -->
+        <div class="flex items-center space-x-2 pt-3 pb-3">
+          <button id="tabChatBtn" onclick="switchAgentTab('chat')" class="px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-800">
+            Chat <span class="text-gray-400 font-normal">1</span>
+          </button>
+          <button id="tabActivityBtn" onclick="switchAgentTab('activity')" class="px-3 py-1 text-xs font-medium rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-1.5">
+            Agent Activity <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+          </button>
+        </div>
+
+        <!-- Conteúdo do Chat / Atividade do Agente -->
+        <div id="agentBodyContainer" class="flex-1 overflow-y-auto pr-1 space-y-4 text-xs text-gray-700 leading-relaxed font-normal">
+          
+          <!-- Visão Atividade do Agente (Log de Pensamento) -->
+          <div id="agentActivityView" class="space-y-3 font-mono text-[11px] text-gray-600 bg-slate-50 p-3.5 rounded-xl border border-gray-100">
+            <div class="p-1.5 bg-white rounded border border-gray-200 text-gray-500">
+              <code>data, cliente, produto, provincia, total_vendas, quantidade...</code>
+            </div>
+            <p class="text-gray-700 font-sans text-xs">
+              <strong>Estratégia do Agente:</strong> A executar scripts Python para validar os tipos de dados, gerar tabelas de apoio, calcular agregações e compor os gráficos de gestão.
+            </p>
+            <div class="pt-2 border-t border-gray-200 text-gray-500">
+              <p class="font-semibold text-gray-700 mb-1 font-sans text-xs">Consolidação das Métricas de Moçambique:</p>
+              <p class="font-sans text-[11px]">
+                A agrupar províncias (Maputo, Matola, Beira, Nampula) e a cruzar os principais clientes institucionais e de retalho.
+              </p>
+            </div>
+          </div>
+
+          <!-- Visão Chat do Agente (Recomendações e Insights em Português) -->
+          <div id="agentChatView" class="hidden space-y-3">
+            <div class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 space-y-2 text-xs">
+              <p class="font-semibold text-blue-900">Diagnóstico Estratégico Concluído:</p>
+              <ol class="list-decimal pl-4 space-y-2 text-gray-700">
+                <li>
+                  <strong>Optimização do Ticket Médio:</strong> Oferecer descontos progressivos por volume para elevar a faturação por encomenda nas regiões de Maputo e Matola.
+                </li>
+                <li>
+                  <strong>Fidelização de Clientes Top-Tier:</strong> Criar canais de atendimento prioritário e contratos corporativos para clientes com volume superior, como <em>Ana Cossa</em> e <em>João Sitoe</em>.
+                </li>
+                <li>
+                  <strong>Gestão de Stock em Pico:</strong> Preparar stock antecipado com 4 semanas de margem para suprir o salto de compras observado no segundo semestre.
+                </li>
+              </ol>
+            </div>
+
+            <!-- Sugestões de Perguntas de Acompanhamento (Follow-up) -->
+            <div class="space-y-1.5 pt-2">
+              <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Perguntas de Acompanhamento:</p>
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+                Examinar a relação entre total de vendas e quantidade de produtos
+              </button>
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+                Encontrar anomalias ou desvios atípicos nas colunas numéricas
+              </button>
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+                Fornecer um resumo estatístico descritivo das métricas
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Input do Chat com o Agente -->
+        <div class="pt-3 border-t border-gray-100">
+          <div class="flex items-center gap-2">
+            <input 
+              id="followUpInput"
+              type="text" 
+              placeholder="Coloque uma pergunta de acompanhamento..." 
+              class="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500"
+            />
+            <button 
+              id="sendFollowUpBtn"
+              onclick="sendFollowUpFromInput()"
+              class="px-3 py-2 bg-gray-200 text-gray-600 text-xs font-medium rounded-lg hover:bg-black hover:text-white transition-colors"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= COLUNA DIREITA: DASHBOARD GERADO ================= -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Estado 1: Placeholder de Geração em Curso -->
+        <div id="dashboardPlaceholder" class="bg-white border border-gray-200 rounded-2xl p-16 text-center shadow-sm flex flex-col items-center justify-center min-h-[500px]">
+          <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+            <i data-lucide="loader-2" class="w-7 h-7 animate-spin"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-1">O relatório está a ser gerado</h3>
+          <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto leading-relaxed">
+            O agente de inteligência artificial está a explorar os dados e a criar o dashboard em segundo plano. Os gráficos e tabelas finais aparecerão aqui em breve.
+          </p>
+        </div>
+
+        <!-- Estado 2: Dashboard Completo com KPIs, Gráficos e Tabelas -->
+        <div id="dashboardContent" class="hidden bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          
+          <!-- Linha colorida do topo (Blue, Green, Yellow, Red) -->
+          <div class="dashboard-top-line"></div>
+
+          <div class="p-6 sm:p-8 space-y-6">
+            
+            <!-- Header do Dashboard -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+              <div>
+                <div class="flex items-center space-x-2 text-xs mb-1.5">
+                  <span class="px-2.5 py-0.5 rounded-full font-bold bg-blue-50 text-blue-700 text-[10px] tracking-wider uppercase">
+                    VENDAS
+                  </span>
+                  <span class="text-gray-400 font-mono">2026-10-27</span>
+                </div>
+                <h2 class="text-2xl font-extrabold text-gray-900">Análise: vendas</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Consulta: <span class="font-medium text-gray-700">faz uma analise geral</span></p>
+              </div>
+
+              <!-- Ações: Download PDF e JSON -->
+              <div class="flex items-center space-x-2">
+                <button onclick="window.print()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                  <span>Baixar PDF</span>
+                </button>
+                <button class="px-3.5 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-lg transition-colors">
+                  JSON
+                </button>
+              </div>
+            </div>
+
+            <!-- Abas do Dashboard -->
+            <div class="flex flex-wrap items-center gap-2 border-b border-gray-100 pb-4">
+              <button onclick="switchDashboardTab('overview')" id="btnTabOverview" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-black text-white shadow-xs">
+                Visão Geral
+              </button>
+              <button onclick="switchDashboardTab('charts')" id="btnTabCharts" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5">
+                Visualizações <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">3</span>
+              </button>
+              <button onclick="switchDashboardTab('tables')" id="btnTabTables" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5">
+                Tabelas de Dados <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">4</span>
+              </button>
+              <button onclick="switchDashboardTab('insights')" id="btnTabInsights" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100">
+                Recomendações & Acções
+              </button>
+            </div>
+
+            <!-- Seção 1: Cartões de Métricas (KPI Cards em Meticais MT) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <!-- KPI 1 -->
+              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
+                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">VENDAS TOTAIS</span>
+                <div class="text-2xl font-extrabold text-gray-900 mt-1">1.741.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
+                <p class="text-[11px] text-gray-500 mt-1 truncate">Maputo registou as maiores vendas por cidade...</p>
+              </div>
+
+              <!-- KPI 2 -->
+              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
+                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">QUANTIDADE TOTAL</span>
+                <div class="text-2xl font-extrabold text-gray-900 mt-1">273 <span class="text-xs font-normal text-gray-500">unid.</span></div>
+                <p class="text-[11px] text-gray-500 mt-1 truncate">Boane registou a maior quantidade vendida...</p>
+              </div>
+
+              <!-- KPI 3 -->
+              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
+                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">PRODUTO LÍDER</span>
+                <div class="text-2xl font-extrabold text-gray-900 mt-1">1.035.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
+                <p class="text-[11px] text-gray-500 mt-1 truncate">Computador Portátil teve as maiores vendas...</p>
+              </div>
+
+              <!-- KPI 4 -->
+              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
+                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">VOLUME EM ARTIGOS</span>
+                <div class="text-2xl font-extrabold text-gray-900 mt-1">275 <span class="text-xs font-normal text-gray-500">unid.</span></div>
+                <p class="text-[11px] text-gray-500 mt-1 truncate">Rato Óptico liderou o total de unidades vendidas...</p>
+              </div>
+            </div>
+
+            <!-- Síntese Executiva de IA (Executive AI Takeaway) -->
+            <div class="p-5 bg-gradient-to-r from-slate-50 to-blue-50/30 border border-slate-200 rounded-xl">
+              <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i>
+                Síntese Executiva de IA (Executive AI Takeaway)
+              </h4>
+              <p class="text-xs text-gray-600 leading-relaxed">
+                A análise aos ficheiros foi concluída com sucesso. A província e cidade de <strong>Maputo</strong> lidera o valor consolidado de vendas com <strong>1.741.000 MT</strong>. O dashboard gerou 4 tabelas analíticas detalhadas e 3 gráficos visuais interactivos para suporte à gestão.
+              </p>
+            </div>
+
+            <!-- Painel de Gráficos (Visualizações) -->
+            <div id="chartsView" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Gráfico 1: Vendas por Cidade/Província -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-2xs">
+                  <h4 class="text-xs font-bold text-gray-800 mb-4 flex items-center justify-between">
+                    <span>Facturação por Cidade (em MT)</span>
+                    <span class="text-[10px] text-gray-400 font-normal">Top Cidades</span>
+                  </h4>
+                  <div class="h-60">
+                    <canvas id="cityChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Gráfico 2: Evolução das Vendas Mensais -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-2xs">
+                  <h4 class="text-xs font-bold text-gray-800 mb-4 flex items-center justify-between">
+                    <span>Tendência Semestral de Facturação</span>
+                    <span class="text-[10px] text-gray-400 font-normal">Jul - Dez</span>
+                  </h4>
+                  <div class="h-60">
+                    <canvas id="timelineChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Painel de Tabelas de Dados -->
+            <div id="tablesView" class="hidden bg-white border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
+              <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h4 class="text-xs font-bold text-gray-800">Tabela Consolidada de Vendas por Província e Produto</h4>
+                <span class="text-[11px] text-gray-400">4 registos principais</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-gray-600">
+                  <thead class="bg-slate-50 text-[11px] font-semibold text-gray-500 uppercase border-b border-gray-100">
+                    <tr>
+                      <th class="px-5 py-3">Cidade / Região</th>
+                      <th class="px-5 py-3">Produto Principal</th>
+                      <th class="px-5 py-3">Quantidade</th>
+                      <th class="px-5 py-3 text-right">Total Vendas (MT)</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 font-mono text-[11px]">
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Maputo</td>
+                      <td class="px-5 py-3">Computador Portátil</td>
+                      <td class="px-5 py-3">120</td>
+                      <td class="px-5 py-3 text-right font-bold text-slate-800">1.035.000 MT</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Matola</td>
+                      <td class="px-5 py-3">Monitor 27" 4K</td>
+                      <td class="px-5 py-3">78</td>
+                      <td class="px-5 py-3 text-right font-bold text-slate-800">450.000 MT</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Boane</td>
+                      <td class="px-5 py-3">Rato Óptico & Teclado</td>
+                      <td class="px-5 py-3">275</td>
+                      <td class="px-5 py-3 text-right font-bold text-slate-800">256.000 MT</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Painel de Recomendações e Ações -->
+            <div id="insightsView" class="hidden space-y-4">
+              <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-3">
+                <h4 class="text-xs font-bold text-gray-900 uppercase">Acções Recomendadas para o Negócio</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-700">
+                  <div class="p-4 bg-white rounded-lg border border-gray-200">
+                    <p class="font-bold text-gray-900 mb-1">1. Reforço de Stock de Portáteis</p>
+                    <p class="text-gray-500 leading-relaxed">Sendo a categoria que gera mais de 59% da receita total, garantir abastecimento sem roturas em Maputo e Matola.</p>
+                  </div>
+                  <div class="p-4 bg-white rounded-lg border border-gray-200">
+                    <p class="font-bold text-gray-900 mb-1">2. Campanha de Margem em Acessórios</p>
+                    <p class="text-gray-500 leading-relaxed">Em Boane, o volume de unidades é alto mas o ticket médio é baixo. Criar pacotes combo com monitores e computadores.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let cityChartInstance = null;
+    let timelineChartInstance = null;
+
+    const setupSection = document.getElementById('setupSection');
+    const workspaceSection = document.getElementById('workspaceSection');
+    const questionTextarea = document.getElementById('questionTextarea');
+    const currentQueryTitle = document.getElementById('currentQueryTitle');
+    const agentStatusText = document.getElementById('agentStatusText');
+    const agentSubstatus = document.getElementById('agentSubstatus');
+    const agentStatusBadge = document.getElementById('agentStatusBadge');
+    
+    const dashboardPlaceholder = document.getElementById('dashboardPlaceholder');
+    const dashboardContent = document.getElementById('dashboardContent');
+
+    const tabChatBtn = document.getElementById('tabChatBtn');
+    const tabActivityBtn = document.getElementById('tabActivityBtn');
+    const agentChatView = document.getElementById('agentChatView');
+    const agentActivityView = document.getElementById('agentActivityView');
+
+    function applyPrompt(text) {
+      questionTextarea.value = text;
+      questionTextarea.focus();
+    }
+
+    function removeDefaultFile() {
+      const def = document.getElementById('defaultFileCard');
+      if (def) def.remove();
+    }
+
+    function startNewAnalysis() {
+      setupSection.classList.remove('hidden');
+      workspaceSection.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function runAgentPipeline() {
+      const query = questionTextarea.value.trim() || 'faz uma analise geral';
+      currentQueryTitle.innerText = query;
+
+      // Ocultar Setup e Exibir Workspace
+      setupSection.classList.add('hidden');
+      workspaceSection.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Iniciar estado de carregamento do agente
+      dashboardPlaceholder.classList.remove('hidden');
+      dashboardContent.classList.add('hidden');
+      agentStatusText.innerText = "A provisionar ambiente de análise de IA...";
+      agentSubstatus.innerText = "A explorar estrutura dos dados...";
+      switchAgentTab('activity');
+
+      // Simular progresso do modelo de IA (1.5 segundos)
+      setTimeout(() => {
+        agentStatusText.innerText = "A executar scripts de diagnóstico e criação de gráficos...";
+        agentSubstatus.innerText = "A processar métricas de vendas...";
+      }, 900);
+
+      setTimeout(() => {
+        // Conclusão: exibir Dashboard e ativar Chat com Insights
+        dashboardPlaceholder.classList.add('hidden');
+        dashboardContent.classList.remove('hidden');
+
+        agentStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-emerald-700 font-medium">Análise concluída com sucesso</span>`;
+        agentSubstatus.innerText = "Pronto para acompanhamento";
+
+        switchAgentTab('chat');
+        renderCharts();
+        lucide.createIcons();
+      }, 1800);
+    }
+
+    function switchAgentTab(tab) {
+      if (tab === 'chat') {
+        tabChatBtn.className = "px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-800 shadow-2xs";
+        tabActivityBtn.className = "px-3 py-1 text-xs font-medium rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-1.5";
+        agentChatView.classList.remove('hidden');
+        agentActivityView.classList.add('hidden');
+      } else {
+        tabActivityBtn.className = "px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-800 shadow-2xs";
+        tabChatBtn.className = "px-3 py-1 text-xs font-medium rounded-lg text-gray-500 hover:text-gray-900";
+        agentActivityView.classList.remove('hidden');
+        agentChatView.classList.add('hidden');
+      }
+    }
+
+    function switchDashboardTab(tab) {
+      const tabs = ['overview', 'charts', 'tables', 'insights'];
+      const btnMap = {
+        'overview': document.getElementById('btnTabOverview'),
+        'charts': document.getElementById('btnTabCharts'),
+        'tables': document.getElementById('btnTabTables'),
+        'insights': document.getElementById('btnTabInsights')
+      };
+
+      const chartsView = document.getElementById('chartsView');
+      const tablesView = document.getElementById('tablesView');
+      const insightsView = document.getElementById('insightsView');
+
+      tabs.forEach(t => {
+        if (t === tab) {
+          btnMap[t].className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-black text-white shadow-xs";
+        } else {
+          btnMap[t].className = "px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100";
+        }
+      });
+
+      if (tab === 'overview') {
+        chartsView.classList.remove('hidden');
+        tablesView.classList.remove('hidden');
+        insightsView.classList.add('hidden');
+      } else if (tab === 'charts') {
+        chartsView.classList.remove('hidden');
+        tablesView.classList.add('hidden');
+        insightsView.classList.add('hidden');
+      } else if (tab === 'tables') {
+        chartsView.classList.add('hidden');
+        tablesView.classList.remove('hidden');
+        insightsView.classList.add('hidden');
+      } else if (tab === 'insights') {
+        chartsView.classList.add('hidden');
+        tablesView.classList.add('hidden');
+        insightsView.classList.remove('hidden');
+      }
+    }
+
+    function sendFollowUp(text) {
+      document.getElementById('followUpInput').value = text;
+      sendFollowUpFromInput();
+    }
+
+    function sendFollowUpFromInput() {
+      const input = document.getElementById('followUpInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const userMsg = document.createElement('div');
+      userMsg.className = "p-2.5 bg-gray-100 rounded-lg text-xs text-gray-800 font-medium text-right";
+      userMsg.innerText = text;
+      agentChatView.appendChild(userMsg);
+
+      input.value = '';
+
+      setTimeout(() => {
+        const reply = document.createElement('div');
+        reply.className = "p-3 bg-blue-50/70 border border-blue-100 rounded-lg text-xs text-gray-700 leading-relaxed";
+        reply.innerHTML = `<span class="font-bold text-blue-900">Resposta da IA:</span> Análise calculada para "<em>${text}</em>": O coeficiente de correlação é de 0.84, indicando que a demanda por itens de alto valor é fortemente sustentada por clientes corporativos.`;
+        agentChatView.appendChild(reply);
+        agentChatView.scrollTop = agentChatView.scrollHeight;
+      }, 600);
+    }
+
+    function renderCharts() {
+      if (cityChartInstance) cityChartInstance.destroy();
+      if (timelineChartInstance) timelineChartInstance.destroy();
+
+      const ctxCity = document.getElementById('cityChart').getContext('2d');
+      cityChartInstance = new Chart(ctxCity, {
+        type: 'bar',
+        data: {
+          labels: ['Maputo', 'Matola', 'Beira', 'Nampula', 'Boane'],
+          datasets: [{
+            label: 'Vendas (MT)',
+            data: [1741000, 850000, 620000, 480000, 256000],
+            backgroundColor: ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              ticks: { callback: v => (v / 1000) + 'k MT' },
+              grid: { color: '#F1F5F9' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
+      timelineChartInstance = new Chart(ctxTimeline, {
+        type: 'line',
+        data: {
+          labels: ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          datasets: [{
+            label: 'Facturação Mensal (MT)',
+            data: [420000, 510000, 580000, 920000, 750000, 890000],
+            borderColor: '#2563EB',
+            backgroundColor: 'rgba(37, 99, 235, 0.08)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: '#2563EB'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              ticks: { callback: v => (v / 1000) + 'k MT' },
+              grid: { color: '#F1F5F9' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
