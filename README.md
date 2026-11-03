@@ -35,12 +35,33 @@ Plataforma moderna, minimalista e interativa de análise de dados ("AI Data Anal
 
 ---
 
+## 🗄️ Base de Dados & Autenticação (MongoDB Atlas)
+
+A aplicação está configurada com base de dados **MongoDB Atlas** (`datanalistadb`):
+- **String de Conexão:** `mongodb+srv://nielsoniel_db_user:***@cluster0.efcyoe3.mongodb.net/`
+- **Base de Dados:** `datanalistadb`
+- **Coleção de Utilizadores:** `users`
+
+### Credenciais do Utilizador Administrador (Admin)
+- **E-mail:** `admin@dataanalista.com`
+- **Palavra-passe:** `@nalista`
+- **Perfil:** `admin` (Superutilizador com encriptação bcrypt)
+
+Para recriar ou sincronizar o utilizador no banco:
+```bash
+python scripts/create_admin.py
+```
+
+---
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **HTML5 & CSS3**
 - **[Tailwind CSS](https://tailwindcss.com/)**
 - **[Lucide Icons](https://lucide.dev/)**
 - **[Chart.js](https://www.chartjs.org/)**
+- **[MongoDB Atlas](https://www.mongodb.com/)**
+- **[Python (PyMongo & Bcrypt)](https://pymongo.readthedocs.io/)**
 
 ---
 

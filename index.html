@@ -598,11 +598,13 @@
         try {
           const user = JSON.parse(stored);
           const displayName = user.name || user.email || 'Utilizador';
+          const isAdmin = user.role === 'admin' || user.isSuperuser;
           authArea.innerHTML = `
             <div class="flex items-center space-x-2">
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#1F2428] text-gray-200 border border-gray-700/70">
-                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span class="w-2 h-2 rounded-full ${isAdmin ? 'bg-amber-400' : 'bg-blue-500'}"></span>
                 <span class="truncate max-w-[120px] font-semibold">${displayName}</span>
+                ${isAdmin ? '<span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">ADMIN</span>' : ''}
               </span>
               <button onclick="logoutUser()" class="p-1 text-gray-400 hover:text-red-400 rounded transition-colors" title="Terminar Sessão">
                 <i data-lucide="log-out" class="w-3.5 h-3.5"></i>

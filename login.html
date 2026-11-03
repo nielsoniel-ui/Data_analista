@@ -113,7 +113,7 @@
       </div>
 
       <!-- Login Social Rápido -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="grid grid-cols-2 gap-3 mb-4">
         <button type="button" onclick="quickFill('cossa.ana@empresa.co.mz', 'Ana Cossa')" class="flex items-center justify-center space-x-2 py-2.5 px-3 border border-gray-200 rounded-xl hover:bg-slate-50 hover:border-gray-300 text-xs font-medium text-gray-700 transition-all shadow-2xs">
           <svg class="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -132,6 +132,17 @@
             <path fill="#ffba08" d="M12 12h10v10H12z"/>
           </svg>
           <span>Microsoft 365</span>
+        </button>
+      </div>
+
+      <!-- Atalho de Login Admin MongoDB -->
+      <div class="mb-5">
+        <button type="button" onclick="quickFillAdmin()" class="w-full py-2 px-3 bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200 text-blue-800 rounded-xl text-xs font-medium transition-all flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>Entrar como Administrador (MongoDB Atlas)</span>
+          </span>
+          <span class="text-[11px] text-blue-600 font-mono">admin@dataanalista.com</span>
         </button>
       </div>
 
@@ -265,16 +276,25 @@
       handleLogin(null, name);
     }
 
+    // Preenchimento rápido para o Admin do MongoDB
+    function quickFillAdmin() {
+      document.getElementById('email').value = 'admin@dataanalista.com';
+      document.getElementById('password').value = '@nalista';
+      handleLogin(null, 'Administrador Data Analista', 'admin');
+    }
+
     // Submissão do Formulário de Login
-    function handleLogin(e, customName) {
+    function handleLogin(e, customName, customRole) {
       if (e) e.preventDefault();
 
       const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
       const submitBtn = document.getElementById('submitBtn');
       const feedback = document.getElementById('loginFeedback');
 
-      // Nome do utilizador extraído ou pré-definido
-      const userName = customName || (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+      const isAdmin = (email.toLowerCase() === 'admin@dataanalista.com' && password === '@nalista') || customRole === 'admin';
+      const userRole = isAdmin ? 'admin' : (customRole || 'user');
+      const userName = isAdmin ? 'Administrador Data Analista' : (customName || (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase())));
 
       // Feedback visual de carregamento
       submitBtn.disabled = true;
@@ -283,7 +303,7 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span>A autenticar...</span>
+        <span>A autenticar com MongoDB...</span>
       `;
 
       setTimeout(() => {
@@ -291,11 +311,14 @@
         localStorage.setItem('data_analista_user', JSON.stringify({
           name: userName,
           email: email,
+          role: userRole,
+          isSuperuser: isAdmin,
+          database: 'datanalistadb',
           loggedAt: new Date().toISOString()
         }));
 
         feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
-        feedback.innerText = `Sessão iniciada com sucesso! Bem-vindo de volta, ${userName}. A redireccionar...`;
+        feedback.innerText = `Sessão iniciada com sucesso! Bem-vindo de volta, ${userName}${isAdmin ? ' (Admin)' : ''}. A redireccionar...`;
 
         setTimeout(() => {
           window.location.href = 'index.html';
