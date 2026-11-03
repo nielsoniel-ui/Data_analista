@@ -346,8 +346,12 @@
             feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
             feedback.innerText = `Sessão iniciada com sucesso via MongoDB! Bem-vindo, ${data.user.name}. A redireccionar...`;
 
+            const targetUrl = data.user.role === 'admin' 
+              ? 'admin.html' 
+              : (data.user.role === 'client' ? 'client.html' : 'index.html');
+
             setTimeout(() => {
-              window.location.href = 'index.html';
+              window.location.href = targetUrl;
             }, 800);
             return;
           } else if (res.status === 401 || res.status === 400) {
@@ -377,8 +381,12 @@
         feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
         feedback.innerText = `Sessão iniciada com sucesso! Bem-vindo de volta, ${userName}${isAdmin ? ' (Admin)' : ''}. A redireccionar...`;
 
+        const targetUrl = userRole === 'admin' 
+          ? 'admin.html' 
+          : (userRole === 'client' ? 'client.html' : 'index.html');
+
         setTimeout(() => {
-          window.location.href = 'index.html';
+          window.location.href = targetUrl;
         }, 800);
       }, 600);
     }

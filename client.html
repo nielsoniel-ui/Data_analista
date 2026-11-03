@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Cliente - Data Analista</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F8F9FA',
+              dark: '#111315',
+              border: '#E2E8F0',
+              accent: '#2563EB',
+              muted: '#5F6368',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8F9FA;
+    }
+    .hero-gradient-stripes {
+      height: 70px;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+      background: linear-gradient(
+        180deg,
+        #e53e3e 0%,
+        #e53e3e 20%,
+        #d53f8c 20%,
+        #d53f8c 40%,
+        #805ad5 40%,
+        #805ad5 60%,
+        #667eea 60%,
+        #667eea 80%,
+        #7f9cf5 80%,
+        #7f9cf5 100%
+      );
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- 1. Header do Cliente -->
+  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        MZ
+      </span>
+      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
+        <span>Data Analista</span>
+        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PORTAL DO CLIENTE</span>
+      </a>
+    </div>
+
+    <!-- Navegação Central -->
+    <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
+      <a href="client.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Meu Painel</a>
+      <a href="#filesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Meus Ficheiros</a>
+      <a href="#insightsSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Recomendações IA</a>
+      <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span>Nova Análise com IA</span>
+      </a>
+    </nav>
+
+    <!-- Perfil & Logout -->
+    <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="text-xs font-semibold text-gray-200">cliente@dataanalista.com</span>
+        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CLIENTE</span>
+      </div>
+      <button onclick="logoutClient()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors" title="Terminar Sessão">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 pb-20 space-y-6">
+    
+    <!-- Faixa Superior com o Gradiente Icónico -->
+    <div class="hero-gradient-stripes shadow-sm"></div>
+
+    <!-- Cabeçalho do Painel do Cliente -->
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-10 -mt-1">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-sm"></span>
+            <span>Inteligência Comercial &bull; Moçambique</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+            Painel Executivo do Cliente
+          </h2>
+          <p class="text-sm text-gray-500 mt-1 max-w-2xl">
+            Acompanhe a sua facturação, vendas por província, indicadores em Meticais (MT) e diagnósticos automáticos gerados pelo Data Analista.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <a href="index.html" class="px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span>Fazer Pergunta aos Dados</span>
+          </a>
+          <button onclick="window.print()" class="px-3.5 py-2.5 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Exportar Relatório PDF</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Cards de Métricas de Negócio do Cliente -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Métrica 1 -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Facturação Consolidada</span>
+          <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+            <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-gray-900">1.741.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
+        <div class="flex items-center text-xs text-emerald-600 mt-1 font-medium gap-1">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+          <span>+18.4% em relação ao trimestre anterior</span>
+        </div>
+      </div>
+
+      <!-- Métrica 2 -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Total de Pedidos / Vendas</span>
+          <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-gray-900">2.450 <span class="text-xs font-normal text-gray-500">pedidos</span></div>
+        <div class="flex items-center text-xs text-slate-500 mt-1 gap-1">
+          <span>Ticket médio: <strong>710 MT</strong> por transação</span>
+        </div>
+      </div>
+
+      <!-- Métrica 3 -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Filial Líder em Vendas</span>
+          <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-gray-900">Maputo Central</div>
+        <div class="flex items-center text-xs text-slate-500 mt-1 gap-1">
+          <span>Representa <strong>59.4%</strong> da faturação total</span>
+        </div>
+      </div>
+
+      <!-- Métrica 4 -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider">Retenção de Clientes</span>
+          <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
+            <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-extrabold text-gray-900">86.5%</div>
+        <div class="flex items-center text-xs text-emerald-600 mt-1 font-medium gap-1">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+          <span>Alta fidelização em clientes corporativos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos de Vendas e Desempenho Comercial -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Gráfico 1: Evolução Semestral -->
+      <div class="lg:col-span-8 bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-gray-900">Facturação Mensal Realizada vs Meta (MT)</h3>
+            <p class="text-xs text-gray-400 mt-0.5">Evolução do segundo semestre com projeção</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">Meta Superada</span>
+        </div>
+        <div class="h-64">
+          <canvas id="clientSalesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Vendas por Categoria -->
+      <div class="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-gray-900">Vendas por Categoria</h3>
+            <p class="text-xs text-gray-400 mt-0.5">Proporção da receita</p>
+          </div>
+        </div>
+        <div class="h-64 flex items-center justify-center">
+          <canvas id="clientCategoryChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Seção de Ficheiros & Datasets da Empresa -->
+    <div id="filesSection" class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
+      <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Bases de Dados & Ficheiros CSV Carregados</h3>
+          <p class="text-xs text-gray-500 mt-0.5">Documentos ativos associados à conta corporativa</p>
+        </div>
+        <a href="index.html" class="px-3.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition-colors flex items-center gap-1.5 self-start sm:self-auto">
+          <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+          <span>Carregar Novo Ficheiro</span>
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-gray-600">
+          <thead class="bg-slate-50 text-[11px] font-semibold text-gray-500 uppercase border-b border-gray-100">
+            <tr>
+              <th class="px-6 py-3.5">Ficheiro</th>
+              <th class="px-6 py-3.5">Tamanho</th>
+              <th class="px-6 py-3.5">Data de Envio</th>
+              <th class="px-6 py-3.5">Registos</th>
+              <th class="px-6 py-3.5">Status de Análise</th>
+              <th class="px-6 py-3.5 text-right">Ação</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="px-6 py-4 font-semibold text-gray-900 flex items-center gap-2">
+                <div class="p-1.5 bg-blue-50 text-blue-600 rounded">
+                  <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                </div>
+                <span>vendas_2026.csv</span>
+              </td>
+              <td class="px-6 py-4 font-mono text-[11px] text-gray-500">5.4 KB</td>
+              <td class="px-6 py-4">Hoje, 10:15</td>
+              <td class="px-6 py-4 font-mono">1.240 linhas</td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Analisado por IA
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <a href="index.html" class="px-3 py-1 bg-black hover:bg-neutral-800 text-white rounded-lg text-xs font-medium transition-colors inline-block">
+                  Consultar IA
+                </a>
+              </td>
+            </tr>
+
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="px-6 py-4 font-semibold text-gray-900 flex items-center gap-2">
+                <div class="p-1.5 bg-blue-50 text-blue-600 rounded">
+                  <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                </div>
+                <span>clientes_corporativos_mz.csv</span>
+              </td>
+              <td class="px-6 py-4 font-mono text-[11px] text-gray-500">14.2 KB</td>
+              <td class="px-6 py-4">Ontem, 16:30</td>
+              <td class="px-6 py-4 font-mono">3.890 linhas</td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Indexado
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <a href="index.html" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-medium transition-colors inline-block">
+                  Consultar IA
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recomendações Estratégicas de IA para o Cliente -->
+    <div id="insightsSection" class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs space-y-4">
+      <div class="flex items-center space-x-2 text-xs font-bold text-gray-900 uppercase tracking-wide">
+        <i data-lucide="sparkles" class="w-4 h-4 text-blue-600"></i>
+        <span>Diagnóstico Estratégico de IA (Para o seu Negócio)</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 bg-slate-50 border border-gray-100 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-900">1. Aumentar Stock de Portáteis</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Alta Prioridade</span>
+          </div>
+          <p class="text-xs text-gray-500 leading-relaxed">
+            Representam a maior fatia da receita. Preveja um reforço de encomendas para Maputo e Matola para evitar quebras em Novembro e Dezembro.
+          </p>
+        </div>
+
+        <div class="p-4 bg-slate-50 border border-gray-100 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-900">2. Estratégia de Combos em Boane</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">Ticket Médio</span>
+          </div>
+          <p class="text-xs text-gray-500 leading-relaxed">
+            O volume de unidades em Boane é elevado, mas o ticket é reduzido. Crie pacotes agregados de periféricos e suporte para elevar as margens.
+          </p>
+        </div>
+
+        <div class="p-4 bg-slate-50 border border-gray-100 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-900">3. Contratos Corporativos Anuais</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Fidelização</span>
+          </div>
+          <p class="text-xs text-gray-500 leading-relaxed">
+            Ofereça condições exclusivas a clientes de topo (como Ana Cossa e João Sitoe) garantindo previsibilidade de receita semestral.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Gráfico de Vendas Realizadas vs Metas
+    const ctxSales = document.getElementById('clientSalesChart').getContext('2d');
+    new Chart(ctxSales, {
+      type: 'bar',
+      data: {
+        labels: ['Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro (Est.)', 'Dezembro (Est.)'],
+        datasets: [
+          {
+            label: 'Vendas Realizadas (MT)',
+            data: [420000, 510000, 580000, 920000, 0, 0],
+            backgroundColor: '#2563EB',
+            borderRadius: 6
+          },
+          {
+            label: 'Meta Projetada (MT)',
+            data: [400000, 480000, 550000, 800000, 850000, 950000],
+            backgroundColor: '#E2E8F0',
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+        },
+        scales: {
+          y: {
+            ticks: { callback: v => (v / 1000) + 'k MT' },
+            grid: { color: '#F1F5F9' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // Gráfico de Vendas por Categoria
+    const ctxCat = document.getElementById('clientCategoryChart').getContext('2d');
+    new Chart(ctxCat, {
+      type: 'doughnut',
+      data: {
+        labels: ['Computadores', 'Monitores', 'Acessórios & Cabos', 'Serviços'],
+        datasets: [{
+          data: [59, 26, 11, 4],
+          backgroundColor: ['#2563EB', '#3B82F6', '#10B981', '#94A3B8'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+        }
+      }
+    });
+
+    function logoutClient() {
+      if (confirm('Deseja terminar a sessão do cliente?')) {
+        localStorage.removeItem('data_analista_user');
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>

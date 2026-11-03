@@ -42,15 +42,37 @@ A aplicação está configurada com base de dados **MongoDB Atlas** (`datanalist
 - **Base de Dados:** `datanalistadb`
 - **Coleção de Utilizadores:** `users`
 
-### Credenciais do Utilizador Administrador (Admin)
-- **E-mail:** `admin@dataanalista.com`
-- **Palavra-passe:** `@nalista`
-- **Perfil:** `admin` (Superutilizador com encriptação bcrypt)
+### Credenciais dos Utilizadores de Demonstração
+- **Administrador:**
+  - **E-mail:** `admin@dataanalista.com`
+  - **Palavra-passe:** `@nalista`
+  - **Perfil:** `admin` &bull; Redireciona para o **Painel do Administrador** (`admin.html`)
+- **Cliente:**
+  - **E-mail:** `cliente@dataanalista.com`
+  - **Palavra-passe:** `cli3nte`
+  - **Perfil:** `client` &bull; Redireciona para o **Painel Executivo do Cliente** (`client.html`)
 
-Para recriar ou sincronizar o utilizador no banco:
+Para sincronizar ou criar utilizadores no MongoDB Atlas:
 ```bash
 python scripts/create_admin.py
+python scripts/create_client.py
 ```
+
+---
+
+## 📊 Dashboards Dedicados
+
+1. **Dashboard do Administrador (`admin.html`):**
+   - Monitorização de utilizadores ativos em Moçambique e volume de dados processados.
+   - Gestão de contas da coleção `users` com pesquisa, suspensão e criação de utilizadores.
+   - Estado de saúde e latência da infraestrutura MongoDB Atlas.
+   - Gráficos de volume diário de consultas de IA e distribuição geográfica por províncias.
+
+2. **Dashboard do Cliente (`client.html`):**
+   - Indicadores de faturamento consolidado em Meticais (MT), ticket médio e encomendas.
+   - Gráficos de vendas realizadas vs meta projetada e vendas por categoria de produto.
+   - Lista de bases de dados e ficheiros CSV enviados pela empresa com atalho para consulta direta ao agente de IA.
+   - Diagnósticos e recomendações executivas para aumento de receita.
 
 ---
 
