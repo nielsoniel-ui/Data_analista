@@ -135,14 +135,22 @@
         </button>
       </div>
 
-      <!-- Atalho de Login Admin MongoDB -->
-      <div class="mb-5">
-        <button type="button" onclick="quickFillAdmin()" class="w-full py-2 px-3 bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200 text-blue-800 rounded-xl text-xs font-medium transition-all flex items-center justify-between">
-          <span class="flex items-center gap-1.5">
-            <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>Entrar como Administrador (MongoDB Atlas)</span>
+      <!-- Atalhos de Acesso Rápido MongoDB (Admin & Cliente) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-5">
+        <button type="button" onclick="quickFillAdmin()" class="py-2 px-3 bg-blue-50/70 hover:bg-blue-100/70 border border-blue-200 text-blue-800 rounded-xl text-xs font-medium transition-all flex items-center justify-between text-left">
+          <span class="flex items-center gap-1.5 truncate">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-600 shrink-0"></i>
+            <span class="truncate">Admin: admin@...</span>
           </span>
-          <span class="text-[11px] text-blue-600 font-mono">admin@dataanalista.com</span>
+          <span class="text-[10px] text-blue-600 font-mono bg-blue-100 px-1.5 py-0.5 rounded ml-1 shrink-0">@nalista</span>
+        </button>
+
+        <button type="button" onclick="quickFillClient()" class="py-2 px-3 bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-medium transition-all flex items-center justify-between text-left">
+          <span class="flex items-center gap-1.5 truncate">
+            <i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+            <span class="truncate">Cliente: cliente@...</span>
+          </span>
+          <span class="text-[10px] text-emerald-600 font-mono bg-emerald-100 px-1.5 py-0.5 rounded ml-1 shrink-0">cli3nte</span>
         </button>
       </div>
 
@@ -283,6 +291,13 @@
       handleLogin(null, 'Administrador Data Analista', 'admin');
     }
 
+    // Preenchimento rápido para o Cliente do MongoDB
+    function quickFillClient() {
+      document.getElementById('email').value = 'cliente@dataanalista.com';
+      document.getElementById('password').value = 'cli3nte';
+      handleLogin(null, 'Cliente Data Analista', 'client');
+    }
+
     // Submissão do Formulário de Login
     async function handleLogin(e, customName, customRole) {
       if (e) e.preventDefault();
@@ -293,8 +308,11 @@
       const feedback = document.getElementById('loginFeedback');
 
       const isAdmin = (email.toLowerCase() === 'admin@dataanalista.com' && password === '@nalista') || customRole === 'admin';
-      const userRole = isAdmin ? 'admin' : (customRole || 'user');
-      const userName = isAdmin ? 'Administrador Data Analista' : (customName || (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase())));
+      const isClient = (email.toLowerCase() === 'cliente@dataanalista.com' && password === 'cli3nte') || customRole === 'client';
+      const userRole = isAdmin ? 'admin' : (isClient ? 'client' : (customRole || 'user'));
+      const userName = isAdmin 
+        ? 'Administrador Data Analista' 
+        : (isClient ? 'Cliente Data Analista' : (customName || (email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()))));
 
       // Feedback visual de carregamento
       submitBtn.disabled = true;
