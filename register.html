@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registo de Conta - Data Analista Moçambique</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F8F9FA',
+              dark: '#111315',
+              border: '#E2E8F0',
+              accent: '#2563EB',
+              muted: '#5F6368',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8F9FA;
+    }
+    
+    /* Gradiente em faixas horizontais de topo */
+    .hero-gradient-stripes {
+      height: 70px;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+      background: linear-gradient(
+        180deg,
+        #e53e3e 0%,
+        #e53e3e 20%,
+        #d53f8c 20%,
+        #d53f8c 40%,
+        #805ad5 40%,
+        #805ad5 60%,
+        #667eea 60%,
+        #667eea 80%,
+        #7f9cf5 80%,
+        #7f9cf5 100%
+      );
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- 1. Barra de Navegação Superior (Header) -->
+  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div class="w-1/3 flex items-center space-x-2">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        MZ
+      </span>
+      <a href="index.html" class="text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1 hidden sm:inline-flex">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        <span>Voltar ao Workspace</span>
+      </a>
+    </div>
+    
+    <div class="w-1/3 text-center">
+      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white">Data Analista</a>
+    </div>
+
+    <div class="w-1/3 flex items-center justify-end space-x-2.5 text-gray-300">
+      <a href="login.html" class="flex items-center space-x-1.5 px-3 py-1.5 bg-[#25282C] hover:bg-[#31353B] text-gray-100 rounded-full text-xs font-medium transition-colors border border-gray-700/60 shadow-sm">
+        <i data-lucide="log-in" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span>Iniciar Sessão</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Container Principal Centralizado -->
+  <main class="flex-1 max-w-xl w-full mx-auto px-4 sm:px-6 pt-8 pb-16 flex flex-col justify-center">
+    
+    <!-- Faixa Superior com o Gradiente Icónico -->
+    <div class="hero-gradient-stripes shadow-sm"></div>
+
+    <!-- Card de Registo -->
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 sm:p-10 -mt-1">
+      
+      <!-- Subheader Badge -->
+      <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-4">
+        <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
+        <span>Novo Registo &bull; Data Analista Moçambique</span>
+      </div>
+
+      <!-- Título & Subtítulo -->
+      <div class="mb-6">
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight leading-tight">
+          Criar Conta
+        </h2>
+        <p class="text-gray-500 text-sm mt-1.5">
+          Junte-se aos profissionais e empresas que transformam dados em resultados e decisões inteligentes.
+        </p>
+      </div>
+
+      <!-- Registo Social Rápido -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <button type="button" onclick="quickRegister('Ana Cossa', 'cossa.ana@empresa.co.mz', 'Maputo')" class="flex items-center justify-center space-x-2 py-2.5 px-3 border border-gray-200 rounded-xl hover:bg-slate-50 hover:border-gray-300 text-xs font-medium text-gray-700 transition-all shadow-2xs">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Registar via Google</span>
+        </button>
+
+        <button type="button" onclick="quickRegister('João Sitoe', 'sitoe.joao@empresa.co.mz', 'Matola')" class="flex items-center justify-center space-x-2 py-2.5 px-3 border border-gray-200 rounded-xl hover:bg-slate-50 hover:border-gray-300 text-xs font-medium text-gray-700 transition-all shadow-2xs">
+          <svg class="w-4 h-4" viewBox="0 0 23 23">
+            <path fill="#f35325" d="M1 1h10v10H1z"/>
+            <path fill="#81bc06" d="M12 1h10v10H12z"/>
+            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+            <path fill="#ffba08" d="M12 12h10v10H12z"/>
+          </svg>
+          <span>Registar via Microsoft</span>
+        </button>
+      </div>
+
+      <!-- Divisor -->
+      <div class="relative flex items-center justify-center my-6">
+        <div class="border-t border-gray-200 w-full"></div>
+        <span class="bg-white px-3 text-[11px] font-medium text-gray-400 uppercase tracking-wider">ou preencha os seus dados</span>
+      </div>
+
+      <!-- Formulário de Registo -->
+      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
+        
+        <!-- Nome Completo -->
+        <div>
+          <label for="fullName" class="block text-xs font-semibold text-gray-700 mb-1.5">
+            Nome Completo
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </div>
+            <input 
+              type="text" 
+              id="fullName" 
+              required
+              placeholder="ex.: Ana Cossa ou João Sitoe" 
+              class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- E-mail -->
+        <div>
+          <label for="regEmail" class="block text-xs font-semibold text-gray-700 mb-1.5">
+            E-mail Profissional ou Pessoal
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </div>
+            <input 
+              type="email" 
+              id="regEmail" 
+              required
+              placeholder="seu.nome@empresa.co.mz" 
+              class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Empresa & Província (Grid 2 colunas) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="company" class="block text-xs font-semibold text-gray-700 mb-1.5">
+              Empresa / Organização
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <i data-lucide="building" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="text" 
+                id="company" 
+                placeholder="ex.: MUV Moçambique" 
+                class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="province" class="block text-xs font-semibold text-gray-700 mb-1.5">
+              Província / Cidade
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+              </div>
+              <select 
+                id="province" 
+                class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 outline-none transition-all appearance-none cursor-pointer"
+              >
+                <option value="Maputo Cidade">Maputo Cidade</option>
+                <option value="Maputo Província (Matola/Boane)">Maputo Província (Matola/Boane)</option>
+                <option value="Sofala (Beira)">Sofala (Beira)</option>
+                <option value="Nampula">Nampula</option>
+                <option value="Cabo Delgado (Pemba)">Cabo Delgado (Pemba)</option>
+                <option value="Tete">Tete</option>
+                <option value="Zambézia (Quelimane)">Zambézia (Quelimane)</option>
+                <option value="Gaza (Xai-Xai)">Gaza (Xai-Xai)</option>
+                <option value="Inhambane">Inhambane</option>
+                <option value="Manica (Chimoio)">Manica (Chimoio)</option>
+                <option value="Niassa (Lichinga)">Niassa (Lichinga)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Palavra-passe & Confirmação (Grid 2 colunas) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="regPassword" class="block text-xs font-semibold text-gray-700 mb-1.5">
+              Palavra-passe
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="password" 
+                id="regPassword" 
+                required
+                oninput="checkPasswordStrength(this.value)"
+                placeholder="Mínimo 6 caracteres" 
+                class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="confirmPassword" class="block text-xs font-semibold text-gray-700 mb-1.5">
+              Confirmar Palavra-passe
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+              </div>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                required
+                placeholder="Repita a palavra-passe" 
+                class="w-full bg-[#FCFCFD] border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 rounded-xl pl-10 pr-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none transition-all"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicador de força da palavra-passe -->
+        <div id="strengthContainer" class="hidden space-y-1">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-gray-500">Força da palavra-passe:</span>
+            <span id="strengthText" class="font-semibold text-gray-700">Média</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-1.5">
+            <div id="strengthBar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-300 w-1/3"></div>
+          </div>
+        </div>
+
+        <!-- Aceitação de Termos -->
+        <div class="pt-2">
+          <label class="flex items-start space-x-2.5 text-xs text-gray-600 cursor-pointer">
+            <input type="checkbox" id="termsAgree" required checked class="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4" />
+            <span class="leading-relaxed">
+              Concordo com os <a href="#" class="text-blue-600 hover:underline">Termos de Utilização</a> e autorizo o tratamento de dados analíticos conforme as boas práticas de privacidade em Moçambique.
+            </span>
+          </label>
+        </div>
+
+        <!-- Botão de Criação de Conta -->
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            id="regSubmitBtn" 
+            class="w-full py-3 px-6 bg-[#111315] hover:bg-black active:bg-neutral-900 text-white font-semibold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center space-x-2 group"
+          >
+            <span>Criar Conta e Aceder ao Workspace</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
+          </button>
+        </div>
+
+        <!-- Feedback de Notificação -->
+        <div id="registerFeedback" class="hidden p-3 rounded-xl text-xs font-medium text-center"></div>
+
+      </form>
+
+      <!-- Rodapé do Card com Link para Login -->
+      <div class="mt-8 pt-5 border-t border-gray-100 text-center">
+        <p class="text-xs text-gray-600">
+          Já possui uma conta registada? 
+          <a href="login.html" class="font-semibold text-blue-600 hover:underline">
+            Iniciar Sessão
+          </a>
+        </p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Verificação simples da força da senha
+    function checkPasswordStrength(val) {
+      const container = document.getElementById('strengthContainer');
+      const text = document.getElementById('strengthText');
+      const bar = document.getElementById('strengthBar');
+
+      if (!val) {
+        container.classList.add('hidden');
+        return;
+      }
+      container.classList.remove('hidden');
+
+      if (val.length < 6) {
+        text.innerText = "Fraca (muito curta)";
+        text.className = "font-semibold text-red-500";
+        bar.className = "bg-red-500 h-1.5 rounded-full transition-all duration-300 w-1/4";
+      } else if (val.length < 10) {
+        text.innerText = "Média";
+        text.className = "font-semibold text-yellow-600";
+        bar.className = "bg-yellow-500 h-1.5 rounded-full transition-all duration-300 w-2/3";
+      } else {
+        text.innerText = "Forte";
+        text.className = "font-semibold text-emerald-600";
+        bar.className = "bg-emerald-500 h-1.5 rounded-full transition-all duration-300 w-full";
+      }
+    }
+
+    // Registo rápido para demonstração
+    function quickRegister(name, email, city) {
+      document.getElementById('fullName').value = name;
+      document.getElementById('regEmail').value = email;
+      document.getElementById('company').value = 'MUV Moçambique';
+      document.getElementById('regPassword').value = 'Segredo123!';
+      document.getElementById('confirmPassword').value = 'Segredo123!';
+      handleRegister(null);
+    }
+
+    // Tratamento do Registo
+    function handleRegister(e) {
+      if (e) e.preventDefault();
+
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const company = document.getElementById('company').value.trim() || 'Moçambique';
+      const province = document.getElementById('province').value;
+      const pwd = document.getElementById('regPassword').value;
+      const confirmPwd = document.getElementById('confirmPassword').value;
+
+      const submitBtn = document.getElementById('regSubmitBtn');
+      const feedback = document.getElementById('registerFeedback');
+
+      if (pwd && confirmPwd && pwd !== confirmPwd) {
+        feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-red-50 text-red-700 border border-red-200 block";
+        feedback.innerText = "As palavras-passe não coincidem. Por favor confirme novamente.";
+        return;
+      }
+
+      // Feedback visual
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>A configurar conta no Data Analista...</span>
+      `;
+
+      setTimeout(() => {
+        // Armazenar sessão do novo utilizador
+        localStorage.setItem('data_analista_user', JSON.stringify({
+          name: name,
+          email: email,
+          company: company,
+          province: province,
+          registeredAt: new Date().toISOString()
+        }));
+
+        feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
+        feedback.innerText = `Conta criada com sucesso para ${name}! A iniciar o seu espaço de trabalho...`;
+
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 900);
+      }, 800);
+    }
+  </script>
+</body>
+</html>
