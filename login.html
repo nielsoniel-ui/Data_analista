@@ -284,7 +284,7 @@
     }
 
     // Submissão do Formulário de Login
-    function handleLogin(e, customName, customRole) {
+    async function handleLogin(e, customName, customRole) {
       if (e) e.preventDefault();
 
       const email = document.getElementById('email').value.trim();
@@ -306,8 +306,47 @@
         <span>A autenticar com MongoDB...</span>
       `;
 
+      // Se executado num servidor (como a Vercel), valida directamente na base de dados
+      if (window.location.protocol.startsWith('http')) {
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            localStorage.setItem('data_analista_user', JSON.stringify({
+              name: data.user.name,
+              email: data.user.email,
+              role: data.user.role,
+              isSuperuser: data.user.role === 'admin',
+              database: 'datanalistadb',
+              loggedAt: new Date().toISOString()
+            }));
+
+            feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
+            feedback.innerText = `Sessão iniciada com sucesso via MongoDB! Bem-vindo, ${data.user.name}. A redireccionar...`;
+
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 800);
+            return;
+          } else if (res.status === 401 || res.status === 400) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>Iniciar Sessão</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+            feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-red-50 text-red-700 border border-red-200 block";
+            feedback.innerText = data.error || 'Credenciais incorrectas.';
+            return;
+          }
+        } catch(err) {
+          console.warn('Endpoint /api/login inacessível, utilizando modo offline:', err);
+        }
+      }
+
+      // Fallback para execução local/offline
       setTimeout(() => {
-        // Armazenar sessão no navegador
         localStorage.setItem('data_analista_user', JSON.stringify({
           name: userName,
           email: email,
@@ -323,7 +362,7 @@
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 800);
-      }, 700);
+      }, 600);
     }
   </script>
 </body>

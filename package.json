@@ -1,0 +1,13 @@
+{
+  "name": "data-analista",
+  "version": "1.0.0",
+  "description": "Data Analista - Inteligência e Análise de Dados para Moçambique",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^6.10.0"
+  }
+}

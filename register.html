@@ -362,7 +362,7 @@
     }
 
     // Tratamento do Registo
-    function handleRegister(e) {
+    async function handleRegister(e) {
       if (e) e.preventDefault();
 
       const name = document.getElementById('fullName').value.trim();
@@ -388,11 +388,57 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
-        <span>A configurar conta no Data Analista...</span>
+        <span>A registar no MongoDB Atlas...</span>
       `;
 
+      // Chamada real à API na Vercel se executado via HTTP/HTTPS
+      if (window.location.protocol.startsWith('http')) {
+        try {
+          const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              email,
+              password: pwd,
+              organization: company,
+              province
+            })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            localStorage.setItem('data_analista_user', JSON.stringify({
+              name: data.user.name,
+              email: data.user.email,
+              company: data.user.organization,
+              province: data.user.province,
+              role: data.user.role,
+              database: 'datanalistadb',
+              registeredAt: new Date().toISOString()
+            }));
+
+            feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-emerald-50 text-emerald-700 border border-emerald-200 block";
+            feedback.innerText = `Conta registada no MongoDB com sucesso para ${data.user.name}! A iniciar espaço de trabalho...`;
+
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 800);
+            return;
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>Criar Conta e Aceder ao Workspace</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+            feedback.className = "p-3 rounded-xl text-xs font-medium text-center bg-red-50 text-red-700 border border-red-200 block";
+            feedback.innerText = data.error || 'Erro ao criar conta.';
+            return;
+          }
+        } catch(err) {
+          console.warn('Endpoint /api/register inacessível, utilizando modo offline:', err);
+        }
+      }
+
       setTimeout(() => {
-        // Armazenar sessão do novo utilizador
+        // Armazenar sessão do novo utilizador localmente
         localStorage.setItem('data_analista_user', JSON.stringify({
           name: name,
           email: email,
@@ -407,7 +453,7 @@
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 900);
-      }, 800);
+      }, 700);
     }
   </script>
 </body>
