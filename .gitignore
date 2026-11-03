@@ -3,3 +3,5 @@ Thumbs.db
 *.tmp
 .vscode/
 .idea/
+node_modules/
+

@@ -1,13 +1,11 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
-const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
-const dbName = process.env.MONGO_DB_NAME || process.env.MONGODB_DB || 'datanalistadb';
-
 let cachedClient = null;
 
 async function getClient() {
   if (cachedClient) return cachedClient;
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
   if (!uri) throw new Error('A variável de ambiente MONGO_URI não está definida na Vercel.');
   
   const client = new MongoClient(uri);
@@ -39,6 +37,7 @@ module.exports = async function handler(req, res) {
     }
 
     const client = await getClient();
+    const dbName = process.env.MONGO_DB_NAME || process.env.MONGODB_DB || 'datanalistadb';
     const db = client.db(dbName);
     const users = db.collection('users');
 
