@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planos e Preços - Data Analista Moçambique</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              bg: '#F8F9FA',
+              dark: '#111315',
+              border: '#E2E8F0',
+              accent: '#2563EB',
+              muted: '#5F6368',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8F9FA;
+    }
+    .hero-gradient-stripes {
+      height: 80px;
+      border-top-left-radius: 1.5rem;
+      border-top-right-radius: 1.5rem;
+      background: linear-gradient(
+        180deg,
+        #e53e3e 0%,
+        #e53e3e 20%,
+        #d53f8c 20%,
+        #d53f8c 40%,
+        #805ad5 40%,
+        #805ad5 60%,
+        #667eea 60%,
+        #667eea 80%,
+        #7f9cf5 80%,
+        #7f9cf5 100%
+      );
+      opacity: 0.95;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- Header -->
+  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        MZ
+      </span>
+      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
+        <span>Data Analista</span>
+      </a>
+    </div>
+
+    <!-- Navegação -->
+    <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
+      <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Workspace</a>
+      <a href="pricing.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Planos & Preços</a>
+      <a href="client.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Portal Cliente</a>
+    </nav>
+
+    <!-- Perfil / Login -->
+    <div id="authHeaderArea" class="flex items-center space-x-2 text-xs">
+      <a href="login.html" class="px-3 py-1.5 text-gray-300 hover:text-white">Entrar</a>
+      <a href="register.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-sm transition-colors">Criar Conta</a>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 pb-20 space-y-8">
+    
+    <!-- Faixa Superior com o Gradiente Icónico -->
+    <div class="hero-gradient-stripes shadow-sm"></div>
+
+    <!-- Hero de Planos -->
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-12 -mt-1 text-center space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <i data-lucide="gift" class="w-3.5 h-3.5"></i>
+        <span>1ª ANÁLISE 100% GRATUITA &bull; SEM CARTÃO DE CRÉDITO OBRIGATÓRIO</span>
+      </div>
+
+      <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+        Planos Recorrentes para o Seu Negócio
+      </h1>
+      
+      <p class="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
+        Experimente o poder da inteligência artificial aplicada aos seus ficheiros CSV. Faça a sua primeira análise grátis e escolha o plano de subscrição mensal ideal para a sua equipa em Moçambique.
+      </p>
+
+      <!-- Toggle Faturamento Mensal / Anual -->
+      <div class="pt-4 flex items-center justify-center gap-3 text-xs font-semibold text-gray-600">
+        <span id="labelMonthly" class="text-gray-900 font-bold">Mensal</span>
+        <button id="billingToggle" onclick="toggleBilling()" type="button" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-neutral-800 transition-colors duration-200 ease-in-out focus:outline-none">
+          <span id="billingToggleDot" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+        </button>
+        <span id="labelAnnual" class="text-gray-500 flex items-center gap-1">
+          <span>Anual</span>
+          <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-700">2 Meses Grátis</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Cartões de Preços (3 Níveis) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      
+      <!-- Plano 1: Grátis / Degustação -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-7 shadow-xs flex flex-col justify-between relative">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Degustação</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-600">GRÁTIS</span>
+          </div>
+
+          <div>
+            <div class="text-3xl font-extrabold text-gray-900">0 MT</div>
+            <p class="text-xs text-gray-400 mt-0.5">Sem compromisso &bull; Válido para sempre</p>
+          </div>
+
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Perfeito para testar o sistema com os seus dados reais antes de subscrever.
+          </p>
+
+          <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span><strong>1ª Análise Completa Grátis</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Upload de CSV até 1MB</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Dashboard com Gráficos e Tabelas</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Recomendações e Síntese de IA</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-400">
+              <i data-lucide="x" class="w-4 h-4 shrink-0"></i>
+              <span>Exportação em PDF e JSON</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <a href="index.html" class="block w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-center text-xs font-semibold rounded-xl transition-colors">
+            Fazer 1ª Análise Gratuita
+          </a>
+        </div>
+      </div>
+
+      <!-- Plano 2: Profissional (Destaque) -->
+      <div class="bg-white border-2 border-blue-600 rounded-2xl p-7 shadow-md flex flex-col justify-between relative transform md:-translate-y-2">
+        <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2">
+          <span class="px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[11px] font-bold rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3 h-3"></i> Mais Popular
+          </span>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Profissional</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">RECORRENTE</span>
+          </div>
+
+          <div>
+            <div class="flex items-baseline gap-1">
+              <span id="pricePro" class="text-4xl font-extrabold text-gray-900">1.490 MT</span>
+              <span class="text-xs font-medium text-gray-500">/ mês</span>
+            </div>
+            <p class="text-xs text-emerald-600 font-medium mt-0.5">Inclui 1ª análise grátis no primeiro mês</p>
+          </div>
+
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Ideal para analistas, gestores e médias empresas com análises frequentes.
+          </p>
+
+          <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span><strong>Análises Ilimitadas por mês</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Ficheiros até <strong>10MB</strong> (+ suporte GCS)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Exportação em <strong>PDF Executivo</strong> e JSON</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Chat de Acompanhamento Avançado</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Pagamento via <strong>M-Pesa, E-Mola</strong> ou Cartão</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <button onclick="openCheckoutModal('Profissional', '1.490 MT')" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-center text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5">
+            <span>Subscrever Profissional</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Plano 3: Corporativo / Enterprise -->
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-7 shadow-xs flex flex-col justify-between relative">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Corporativo</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-neutral-900 text-white">EMPRESAS</span>
+          </div>
+
+          <div>
+            <div class="flex items-baseline gap-1">
+              <span id="priceCorp" class="text-4xl font-extrabold text-gray-900">4.900 MT</span>
+              <span class="text-xs font-medium text-gray-500">/ mês</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-0.5">Equipas &bull; Suporte dedicado MZ</p>
+          </div>
+
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Para grandes empresas que necessitam de múltiplos utilizadores e ligação com ERPs.
+          </p>
+
+          <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span><strong>Tudo do Plano Profissional</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Até <strong>10 Utilizadores</strong> da equipa</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Conexão direta a Bancos de Dados & APIs</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Ficheiros sem limite de tamanho (Cloud GCS)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+              <span>Factura com NUIT e pagamento por transferência bancária</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <button onclick="openCheckoutModal('Corporativo', '4.900 MT')" class="w-full py-2.5 px-4 bg-neutral-900 hover:bg-black text-white text-center text-xs font-semibold rounded-xl transition-colors">
+            Contactar Equipa Corporativa
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Métodos de Pagamento em Moçambique -->
+    <div class="bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-sm font-bold text-gray-900">Métodos de Pagamento Recorrente Nacionais</h3>
+          <p class="text-xs text-gray-500 mt-0.5">Subscreva com total facilidade através de canais móveis e bancários locais.</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded-lg text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-red-600"></span> M-Pesa (Vodacom)
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-yellow-600"></span> E-Mola (Movitel)
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span> Cartão Visa / Mastercard
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold">
+            <span>Bancos MZ (Ponto 24 / IZI)</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perguntas Frequentes (FAQ) -->
+    <div class="bg-white border border-gray-200/90 rounded-2xl p-8 shadow-xs space-y-6">
+      <h3 class="text-lg font-bold text-gray-900">Perguntas Frequentes sobre a Subscrição</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-gray-600 leading-relaxed">
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm mb-1">Como funciona a primeira análise gratuita?</h4>
+          <p>Ao criar uma conta ou aceder ao Workspace, pode carregar o seu primeiro conjunto de dados (CSV) e fazer qualquer pergunta de negócio. O diagnóstico completo, gráficos e tabelas são gerados sem qualquer cobrança.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm mb-1">Posso cancelar o plano a qualquer momento?</h4>
+          <p>Sim. As subscrições recorrentes não possuem período de fidelização obrigatório. Pode pausar ou cancelar o plano no painel de controlo sem custos de penalização.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm mb-1">Como é feito o débito via M-Pesa ou E-Mola?</h4>
+          <p>Receberá mensalmente uma notificação interativa com a fatura e o prompt no telemóvel para autorização segura com o seu PIN.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-gray-900 text-sm mb-1">Os meus dados estão seguros?</h4>
+          <p>Totalmente. Utilizamos encriptação de ponta a ponta e infraestrutura dedicada MongoDB Atlas em conformidade com as diretrizes de privacidade e sigilo comercial.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal de Checkout / Pagamento -->
+  <div id="checkoutModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-xl animate-fade-in">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div>
+          <h3 class="text-sm font-bold text-gray-900">Subscrição do Plano <span id="modalPlanName" class="text-blue-600">Profissional</span></h3>
+          <p class="text-[11px] text-gray-500">1ª Análise Gratuita &bull; Faturação recorrente</p>
+        </div>
+        <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between text-xs">
+        <span class="text-blue-900 font-medium">Valor da Subscrição:</span>
+        <span id="modalPlanPrice" class="font-extrabold text-blue-700 text-sm">1.490 MT / mês</span>
+      </div>
+
+      <form id="checkoutForm" onsubmit="handleCheckout(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Nome Completo / Empresa</label>
+          <input type="text" id="chkName" required placeholder="ex.: Empresa Lda" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">E-mail de Notificação</label>
+          <input type="email" id="chkEmail" required placeholder="contacto@empresa.co.mz" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Forma de Pagamento Recorrente</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer hover:bg-slate-50">
+              <input type="radio" name="payMethod" value="mpesa" checked class="text-blue-600">
+              <span class="font-bold text-red-600">M-Pesa</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer hover:bg-slate-50">
+              <input type="radio" name="payMethod" value="emola" class="text-blue-600">
+              <span class="font-bold text-yellow-600">E-Mola</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="phoneField">
+          <label class="block font-semibold text-gray-700 mb-1">Número de Telefone (+258)</label>
+          <input type="tel" id="chkPhone" required placeholder="84 123 4567 ou 86 123 4567" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 font-mono">
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" id="chkSubmitBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">
+            <span>Confirmar Subscrição</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let isAnnual = false;
+
+    function toggleBilling() {
+      isAnnual = !isAnnual;
+      const dot = document.getElementById('billingToggleDot');
+      const labelMonthly = document.getElementById('labelMonthly');
+      const labelAnnual = document.getElementById('labelAnnual');
+      const pricePro = document.getElementById('pricePro');
+      const priceCorp = document.getElementById('priceCorp');
+
+      if (isAnnual) {
+        dot.classList.remove('translate-x-0');
+        dot.classList.add('translate-x-5');
+        labelMonthly.classList.remove('text-gray-900', 'font-bold');
+        labelMonthly.classList.add('text-gray-500');
+        labelAnnual.classList.remove('text-gray-500');
+        labelAnnual.classList.add('text-gray-900', 'font-bold');
+
+        pricePro.innerText = '14.900 MT';
+        priceCorp.innerText = '49.000 MT';
+      } else {
+        dot.classList.remove('translate-x-5');
+        dot.classList.add('translate-x-0');
+        labelAnnual.classList.remove('text-gray-900', 'font-bold');
+        labelAnnual.classList.add('text-gray-500');
+        labelMonthly.classList.remove('text-gray-500');
+        labelMonthly.classList.add('text-gray-900', 'font-bold');
+
+        pricePro.innerText = '1.490 MT';
+        priceCorp.innerText = '4.900 MT';
+      }
+    }
+
+    function openCheckoutModal(name, price) {
+      document.getElementById('modalPlanName').innerText = name;
+      document.getElementById('modalPlanPrice').innerText = price + (isAnnual ? ' / ano' : ' / mês');
+      
+      const stored = localStorage.getItem('data_analista_user');
+      if (stored) {
+        try {
+          const u = JSON.parse(stored);
+          if (u.name) document.getElementById('chkName').value = u.name;
+          if (u.email) document.getElementById('chkEmail').value = u.email;
+        } catch(e) {}
+      }
+
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function handleCheckout(e) {
+      e.preventDefault();
+      const plan = document.getElementById('modalPlanName').innerText;
+      const btn = document.getElementById('chkSubmitBtn');
+      btn.disabled = true;
+      btn.innerText = 'A processar subscrição...';
+
+      setTimeout(() => {
+        // Atualizar perfil com o plano
+        const stored = localStorage.getItem('data_analista_user');
+        let userData = stored ? JSON.parse(stored) : {};
+        userData.plan = plan;
+        userData.planStatus = 'active';
+        userData.analysesUsed = 0;
+        userData.freeTrialUsed = false;
+        localStorage.setItem('data_analista_user', JSON.stringify(userData));
+
+        alert(`Subscrição do Plano ${plan} confirmada com sucesso! Receberá a confirmação por SMS/Email.`);
+        window.location.href = 'index.html';
+      }, 900);
+    }
+
+    // Identificar utilizador logado
+    const stored = localStorage.getItem('data_analista_user');
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        const authArea = document.getElementById('authHeaderArea');
+        authArea.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#1F2428] text-gray-200 border border-gray-700/70">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span>${u.name || u.email}</span>
+            </span>
+            <a href="index.html" class="text-gray-400 hover:text-white text-xs">Workspace</a>
+          </div>
+        `;
+      } catch(e) {}
+    }
+  </script>
+</body>
+</html>

@@ -142,11 +142,19 @@
     <div class="hero-gradient-stripes shadow-sm"></div>
 
     <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-12 -mt-1 space-y-8">
-      <!-- Subheader Badge -->
+      <!-- Subheader Badge com Informação de Gratuidade -->
       <div>
-        <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-4">
-          <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
-          <span>Espaço de Trabalho &bull; Data Analista</span>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
+            <span>Espaço de Trabalho &bull; Data Analista</span>
+          </div>
+          <!-- Badge Dinâmico de Plano e 1ª Análise Grátis -->
+          <div id="trialBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>1ª Análise 100% Gratuita Disponível</span>
+            <a href="pricing.html" class="underline hover:text-emerald-900 ml-1">Ver Planos</a>
+          </div>
         </div>
 
         <!-- Título & Descrição em Grade Responsiva -->
@@ -602,6 +610,7 @@
           const isClient = user.role === 'client';
           authArea.innerHTML = `
             <div class="flex items-center space-x-2">
+              <a href="pricing.html" class="px-2 py-0.5 text-[11px] font-semibold rounded bg-[#25282C] text-gray-300 hover:text-white transition-colors">Planos</a>
               ${isAdmin ? '<a href="admin.html" class="px-2 py-0.5 text-[11px] font-bold rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 transition-colors">Painel Admin</a>' : ''}
               ${isClient ? '<a href="client.html" class="px-2 py-0.5 text-[11px] font-bold rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30 transition-colors">Painel Cliente</a>' : ''}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#1F2428] text-gray-200 border border-gray-700/70">
@@ -628,6 +637,7 @@
     }
 
     checkAuthStatus();
+    updateTrialStatus();
 
     let cityChartInstance = null;
     let timelineChartInstance = null;
@@ -664,9 +674,49 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function updateTrialStatus() {
+      const trialBadge = document.getElementById('trialBadge');
+      if (!trialBadge) return;
+      const stored = localStorage.getItem('data_analista_user');
+      if (stored) {
+        try {
+          const user = JSON.parse(stored);
+          if (user.plan && user.plan !== 'Degustação') {
+            trialBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200";
+            trialBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-600"></span><span>Plano ${user.plan} Ativo</span>`;
+          } else if (user.freeTrialUsed) {
+            trialBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200";
+            trialBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500"></span><span>1ª Análise Grátis Utilizada</span><a href="pricing.html" class="underline hover:text-amber-900 ml-1 font-bold">Subscrever Plano</a>`;
+          }
+        } catch(e) {}
+      }
+    }
+
     function runAgentPipeline() {
       const query = questionTextarea.value.trim() || 'faz uma analise geral';
       currentQueryTitle.innerText = query;
+
+      // Verificar se a primeira análise grátis já foi usada e se não tem plano
+      const stored = localStorage.getItem('data_analista_user');
+      let user = stored ? JSON.parse(stored) : {};
+      
+      const hasPlan = user.plan && user.plan !== 'Degustação';
+      const isTrialExhausted = user.freeTrialUsed && !hasPlan && user.role !== 'admin';
+
+      if (isTrialExhausted) {
+        if (confirm('A sua 1ª análise gratuita já foi realizada!\n\nPara continuar a processar análises ilimitadas e obter relatórios recorrentes, subscreva o plano Profissional ou Corporativo.\n\nDeseja ver os planos agora?')) {
+          window.location.href = 'pricing.html';
+        }
+        return;
+      }
+
+      // Se for a primeira análise gratuita, regista o uso
+      if (!hasPlan && user.role !== 'admin') {
+        user.freeTrialUsed = true;
+        user.analysesUsed = (user.analysesUsed || 0) + 1;
+        localStorage.setItem('data_analista_user', JSON.stringify(user));
+        updateTrialStatus();
+      }
 
       // Ocultar Setup e Exibir Workspace
       setupSection.classList.add('hidden');

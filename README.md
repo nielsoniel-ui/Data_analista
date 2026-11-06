@@ -60,6 +60,15 @@ python scripts/create_client.py
 
 ---
 
+## 💳 Planos Recorrentes e 1ª Análise Gratuita (`pricing.html`)
+
+A plataforma oferece um modelo freemium sustentável adaptado ao mercado moçambicano:
+- **Degustação (0 MT):** **1ª Análise 100% Gratuita** com geração completa de diagnósticos, tabelas e gráficos em CSV até 1MB, sem cartão de crédito.
+- **Profissional (1.490 MT/mês):** Análises ilimitadas, ficheiros até 10MB, exportação em PDF Executivo, suporte a GCS e pagamentos recorrentes via **M-Pesa** e **E-Mola**.
+- **Corporativo (4.900 MT/mês):** Até 10 utilizadores, integração com bases de dados empresariais e faturação com NUIT.
+
+---
+
 ## 📊 Dashboards Dedicados
 
 1. **Dashboard do Administrador (`admin.html`):**

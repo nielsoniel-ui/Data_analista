@@ -78,6 +78,10 @@
     <!-- Navegação Central -->
     <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
       <a href="client.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Meu Painel</a>
+      <a href="pricing.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        <i data-lucide="credit-card" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span>Plano & Faturação</span>
+      </a>
       <a href="#filesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Meus Ficheiros</a>
       <a href="#insightsSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Recomendações IA</a>
       <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
@@ -122,6 +126,12 @@
         </div>
 
         <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- Badge do Plano -->
+          <div class="p-2.5 px-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            <span class="text-blue-900 font-semibold">Plano Profissional Ativo</span>
+            <a href="pricing.html" class="text-blue-600 font-bold underline hover:text-blue-800 ml-1">Gerir</a>
+          </div>
           <a href="index.html" class="px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
             <span>Fazer Pergunta aos Dados</span>
