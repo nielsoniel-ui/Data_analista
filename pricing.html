@@ -123,7 +123,7 @@
     </div>
 
     <!-- Cartões de Preços (3 Níveis) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+    <div id="pricingCardsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
       
       <!-- Plano 1: Grátis / Degustação -->
       <div class="bg-white border border-gray-200/90 rounded-2xl p-7 shadow-xs flex flex-col justify-between relative">
@@ -399,13 +399,266 @@
 
     let isAnnual = false;
 
+    // Configuração padrão dos planos (caso não tenham sido personalizados pelo Admin)
+    const DEFAULT_PLANS = {
+      gratis: {
+        id: 'gratis',
+        name: 'Degustação',
+        priceMonthly: 0,
+        priceAnnual: 0,
+        desc: 'Perfeito para testar o sistema com os seus dados reais antes de subscrever.',
+        features: [
+          '1ª Análise Completa Grátis',
+          'Upload de CSV até 1MB',
+          'Dashboard com Gráficos e Tabelas',
+          'Recomendações e Síntese de IA'
+        ],
+        disabledFeatures: [
+          'Exportação em PDF e JSON'
+        ],
+        active: true,
+        badge: 'GRÁTIS',
+        ctaText: 'Fazer 1ª Análise Gratuita'
+      },
+      pro: {
+        id: 'pro',
+        name: 'Profissional',
+        priceMonthly: 1490,
+        priceAnnual: 14900,
+        desc: 'Ideal para analistas, gestores e médias empresas com análises frequentes.',
+        features: [
+          'Análises Ilimitadas por mês',
+          'Ficheiros até 10MB (+ suporte GCS)',
+          'Exportação em PDF Executivo e JSON',
+          'Chat de Acompanhamento Avançado',
+          'Pagamento via M-Pesa, E-Mola ou Cartão'
+        ],
+        disabledFeatures: [],
+        active: true,
+        badge: 'Mais Popular',
+        ctaText: 'Subscrever Profissional'
+      },
+      corp: {
+        id: 'corp',
+        name: 'Corporativo',
+        priceMonthly: 4900,
+        priceAnnual: 49000,
+        desc: 'Para grandes empresas que necessitam de múltiplos utilizadores e ligação com ERPs.',
+        features: [
+          'Tudo do Plano Profissional',
+          'Até 10 Utilizadores da equipa',
+          'Conexão direta a Bancos de Dados & APIs',
+          'Ficheiros sem limite de tamanho (Cloud GCS)',
+          'Factura com NUIT e pagamento por transferência bancária'
+        ],
+        disabledFeatures: [],
+        active: true,
+        badge: 'EMPRESAS',
+        ctaText: 'Contactar Equipa Corporativa'
+      }
+    };
+
+    function getStoredPlans() {
+      const stored = localStorage.getItem('data_analista_plans');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error('Erro ao ler planos:', e);
+        }
+      }
+      return DEFAULT_PLANS;
+    }
+
+    function formatPrice(val) {
+      if (val === 0 || val === '0') return '0 MT';
+      const num = Number(val);
+      if (isNaN(num)) return val + ' MT';
+      return num.toLocaleString('de-DE') + ' MT';
+    }
+
+    function renderPricingCards() {
+      const plans = getStoredPlans();
+      const container = document.getElementById('pricingCardsContainer');
+      if (!container) return;
+
+      const activeKeys = ['gratis', 'pro', 'corp'].filter(k => plans[k] && plans[k].active !== false);
+      const colsClass = activeKeys.length === 1 ? 'md:grid-cols-1 max-w-md mx-auto' :
+                        activeKeys.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' :
+                        'md:grid-cols-3';
+      container.className = `grid grid-cols-1 ${colsClass} gap-6 items-stretch`;
+
+      let html = '';
+
+      // Plano 1: Grátis / Degustação
+      if (plans.gratis && plans.gratis.active !== false) {
+        const g = plans.gratis;
+        const priceNum = isAnnual ? g.priceAnnual : g.priceMonthly;
+        const priceFormatted = formatPrice(priceNum);
+        const period = isAnnual ? '/ ano' : '/ mês';
+        const priceDisplay = priceNum === 0 
+          ? `<span class="text-3xl font-extrabold text-gray-900">0 MT</span>` 
+          : `<div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-gray-900">${priceFormatted}</span><span class="text-xs font-medium text-gray-500">${period}</span></div>`;
+        const periodNote = priceNum === 0 ? 'Sem compromisso &bull; Válido para sempre' : 'Subscrição económica';
+
+        const featuresHtml = (g.features || []).map(f => `
+          <div class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+            <span>${f}</span>
+          </div>
+        `).join('');
+
+        const disabledHtml = (g.disabledFeatures || []).map(f => `
+          <div class="flex items-center gap-2 text-gray-400">
+            <i data-lucide="x" class="w-4 h-4 shrink-0"></i>
+            <span>${f}</span>
+          </div>
+        `).join('');
+
+        html += `
+        <div class="bg-white border border-gray-200/90 rounded-2xl p-7 shadow-xs flex flex-col justify-between relative">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-gray-500">${g.name}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-600">${g.badge || 'GRÁTIS'}</span>
+            </div>
+
+            <div>
+              ${priceDisplay}
+              <p class="text-xs text-gray-400 mt-0.5">${periodNote}</p>
+            </div>
+
+            <p class="text-xs text-gray-600 leading-relaxed">
+              ${g.desc}
+            </p>
+
+            <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+              ${featuresHtml}
+              ${disabledHtml}
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <a href="index.html" class="block w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-center text-xs font-semibold rounded-xl transition-colors">
+              ${g.ctaText || 'Fazer 1ª Análise Gratuita'}
+            </a>
+          </div>
+        </div>
+        `;
+      }
+
+      // Plano 2: Profissional (Destaque)
+      if (plans.pro && plans.pro.active !== false) {
+        const p = plans.pro;
+        const priceNum = isAnnual ? p.priceAnnual : p.priceMonthly;
+        const priceFormatted = formatPrice(priceNum);
+        const period = isAnnual ? '/ ano' : '/ mês';
+
+        const featuresHtml = (p.features || []).map(f => `
+          <div class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+            <span>${f}</span>
+          </div>
+        `).join('');
+
+        html += `
+        <div class="bg-white border-2 border-blue-600 rounded-2xl p-7 shadow-md flex flex-col justify-between relative transform md:-translate-y-2">
+          <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2">
+            <span class="px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[11px] font-bold rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1 whitespace-nowrap">
+              <i data-lucide="sparkles" class="w-3 h-3"></i> ${p.badge || 'Mais Popular'}
+            </span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-blue-700">${p.name}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">RECORRENTE</span>
+            </div>
+
+            <div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-4xl font-extrabold text-gray-900">${priceFormatted}</span>
+                <span class="text-xs font-medium text-gray-500">${period}</span>
+              </div>
+              <p class="text-xs text-emerald-600 font-medium mt-0.5">Inclui 1ª análise grátis no primeiro mês</p>
+            </div>
+
+            <p class="text-xs text-gray-600 leading-relaxed">
+              ${p.desc}
+            </p>
+
+            <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+              ${featuresHtml}
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button onclick="openCheckoutModal('${p.name.replace(/'/g, "\\'")}', '${priceFormatted}')" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-center text-xs font-semibold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+              <span>${p.ctaText || ('Subscrever ' + p.name)}</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+        `;
+      }
+
+      // Plano 3: Corporativo / Enterprise
+      if (plans.corp && plans.corp.active !== false) {
+        const c = plans.corp;
+        const priceNum = isAnnual ? c.priceAnnual : c.priceMonthly;
+        const priceFormatted = formatPrice(priceNum);
+        const period = isAnnual ? '/ ano' : '/ mês';
+
+        const featuresHtml = (c.features || []).map(f => `
+          <div class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+            <span>${f}</span>
+          </div>
+        `).join('');
+
+        html += `
+        <div class="bg-white border border-gray-200/90 rounded-2xl p-7 shadow-xs flex flex-col justify-between relative">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-gray-500">${c.name}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-neutral-900 text-white">${c.badge || 'EMPRESAS'}</span>
+            </div>
+
+            <div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-4xl font-extrabold text-gray-900">${priceFormatted}</span>
+                <span class="text-xs font-medium text-gray-500">${period}</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5">Equipas &bull; Suporte dedicado MZ</p>
+            </div>
+
+            <p class="text-xs text-gray-600 leading-relaxed">
+              ${c.desc}
+            </p>
+
+            <div class="border-t border-gray-100 pt-4 space-y-2.5 text-xs text-gray-600">
+              ${featuresHtml}
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <button onclick="openCheckoutModal('${c.name.replace(/'/g, "\\'")}', '${priceFormatted}')" class="w-full py-2.5 px-4 bg-neutral-900 hover:bg-black text-white text-center text-xs font-semibold rounded-xl transition-colors cursor-pointer">
+              ${c.ctaText || 'Contactar Equipa Corporativa'}
+            </button>
+          </div>
+        </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      lucide.createIcons();
+    }
+
     function toggleBilling() {
       isAnnual = !isAnnual;
       const dot = document.getElementById('billingToggleDot');
       const labelMonthly = document.getElementById('labelMonthly');
       const labelAnnual = document.getElementById('labelAnnual');
-      const pricePro = document.getElementById('pricePro');
-      const priceCorp = document.getElementById('priceCorp');
 
       if (isAnnual) {
         dot.classList.remove('translate-x-0');
@@ -414,9 +667,6 @@
         labelMonthly.classList.add('text-gray-500');
         labelAnnual.classList.remove('text-gray-500');
         labelAnnual.classList.add('text-gray-900', 'font-bold');
-
-        pricePro.innerText = '14.900 MT';
-        priceCorp.innerText = '49.000 MT';
       } else {
         dot.classList.remove('translate-x-5');
         dot.classList.add('translate-x-0');
@@ -424,11 +674,13 @@
         labelAnnual.classList.add('text-gray-500');
         labelMonthly.classList.remove('text-gray-500');
         labelMonthly.classList.add('text-gray-900', 'font-bold');
-
-        pricePro.innerText = '1.490 MT';
-        priceCorp.innerText = '4.900 MT';
       }
+
+      renderPricingCards();
     }
+
+    // Renderizar cartões dinamicamente no carregamento
+    renderPricingCards();
 
     function openCheckoutModal(name, price) {
       document.getElementById('modalPlanName').innerText = name;
