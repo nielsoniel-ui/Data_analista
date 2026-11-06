@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Notificações Nativas -->
+  <script src="notifications.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -465,8 +467,11 @@
         userData.freeTrialUsed = false;
         localStorage.setItem('data_analista_user', JSON.stringify(userData));
 
-        alert(`Subscrição do Plano ${plan} confirmada com sucesso! Receberá a confirmação por SMS/Email.`);
-        window.location.href = 'index.html';
+        closeCheckoutModal();
+        showNotification(`Subscrição do Plano ${plan} confirmada com sucesso! Receberá o comprovativo por SMS/Email.`, 'success', 'Subscrição Ativa');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1200);
       }, 900);
     }
 

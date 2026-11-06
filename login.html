@@ -188,7 +188,7 @@
             <label for="password" class="block text-xs font-semibold text-gray-700">
               Palavra-passe
             </label>
-            <a href="#" onclick="alert('Instruções de recuperação foram enviadas para o endereço solicitado.')" class="text-[11px] font-medium text-blue-600 hover:underline">
+            <a href="#" onclick="event.preventDefault(); showNotification('Instruções de recuperação de conta foram enviadas para o seu endereço de e-mail.', 'info', 'Recuperação de Conta')" class="text-[11px] font-medium text-blue-600 hover:underline">
               Esqueceu a palavra-passe?
             </a>
           </div>
@@ -260,6 +260,7 @@
 
   </main>
 
+  <script src="notifications.js"></script>
   <script>
     lucide.createIcons();
 

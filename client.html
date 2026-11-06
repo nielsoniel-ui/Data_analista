@@ -14,6 +14,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Notificações Nativas -->
+  <script src="notifications.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -414,10 +416,17 @@
       }
     });
 
-    function logoutClient() {
-      if (confirm('Deseja terminar a sessão do cliente?')) {
+    async function logoutClient() {
+      const confirmed = await showConfirmDialog('Deseja terminar a sua sessão no Portal do Cliente?', {
+        title: 'Terminar Sessão',
+        confirmText: 'Sair da Conta',
+        cancelText: 'Permanecer',
+        destructive: true
+      });
+      if (confirmed) {
         localStorage.removeItem('data_analista_user');
-        window.location.href = 'login.html';
+        showNotification('Sessão terminada com sucesso.', 'info', 'Logout Realizado');
+        setTimeout(() => window.location.href = 'login.html', 500);
       }
     }
   </script>

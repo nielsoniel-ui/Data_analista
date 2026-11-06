@@ -14,6 +14,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Notificações Nativas -->
+  <script src="notifications.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -344,7 +346,7 @@
                 </span>
               </td>
               <td class="px-6 py-4 text-right space-x-2">
-                <button onclick="alert('Editar detalhes do utilizador')" class="text-xs text-slate-500 hover:text-slate-800 font-medium">Editar</button>
+                <button onclick="showNotification('A carregar detalhes do perfil de Ana Cossa...', 'info', 'Edição de Dados')" class="text-xs text-slate-500 hover:text-slate-800 font-medium">Editar</button>
                 <button onclick="toggleUserStatus(this)" class="text-xs text-red-500 hover:text-red-700 font-medium">Suspender</button>
               </td>
             </tr>
@@ -441,10 +443,17 @@
       }
     });
 
-    function logoutAdmin() {
-      if (confirm('Deseja terminar a sessão administrativa?')) {
+    async function logoutAdmin() {
+      const confirmed = await showConfirmDialog('Deseja terminar a sessão administrativa?', {
+        title: 'Terminar Sessão Admin',
+        confirmText: 'Sair do Portal',
+        cancelText: 'Cancelar',
+        destructive: true
+      });
+      if (confirmed) {
         localStorage.removeItem('data_analista_user');
-        window.location.href = 'login.html';
+        showNotification('Sessão administrativa encerrada.', 'info', 'Logout Realizado');
+        setTimeout(() => window.location.href = 'login.html', 500);
       }
     }
 
@@ -452,9 +461,11 @@
       if (btn.innerText === 'Suspender') {
         btn.innerText = 'Reativar';
         btn.className = 'text-xs text-emerald-600 hover:text-emerald-800 font-medium';
+        showNotification('Conta de utilizador suspensa temporariamente.', 'warning', 'Status Atualizado');
       } else {
         btn.innerText = 'Suspender';
         btn.className = 'text-xs text-red-500 hover:text-red-700 font-medium';
+        showNotification('Conta de utilizador reativada com sucesso.', 'success', 'Status Atualizado');
       }
     }
 
@@ -468,13 +479,13 @@
     }
 
     function refreshData() {
-      alert('Dados do painel administrativo atualizados com o MongoDB Atlas!');
+      showNotification('Métricas e dados do painel sincronizados com o MongoDB Atlas.', 'success', 'Base Atualizada');
     }
 
     function addUserModal() {
       const email = prompt('Digite o e-mail do novo utilizador:');
       if (email) {
-        alert(`Convite gerado para ${email}. O utilizador poderá registar-se ou utilizar a senha temporária enviada.`);
+        showNotification(`Convite gerado para ${email}. Instruções enviadas ao utilizador.`, 'success', 'Utilizador Convidado');
       }
     }
   </script>

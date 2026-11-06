@@ -14,6 +14,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Chart.js para gráficos interativos do Dashboard -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Notificações Nativas -->
+  <script src="notifications.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -629,10 +631,17 @@
       }
     }
 
-    function logoutUser() {
-      if (confirm('Deseja terminar a sessão no Data Analista?')) {
+    async function logoutUser() {
+      const confirmed = await showConfirmDialog('Deseja terminar a sua sessão activa no Data Analista?', {
+        title: 'Terminar Sessão',
+        confirmText: 'Sair da Conta',
+        cancelText: 'Continuar no Workspace',
+        destructive: true
+      });
+      if (confirmed) {
         localStorage.removeItem('data_analista_user');
-        window.location.reload();
+        showNotification('Sessão terminada com sucesso.', 'info', 'Até breve');
+        setTimeout(() => window.location.reload(), 600);
       }
     }
 
@@ -692,7 +701,7 @@
       }
     }
 
-    function runAgentPipeline() {
+    async function runAgentPipeline() {
       const query = questionTextarea.value.trim() || 'faz uma analise geral';
       currentQueryTitle.innerText = query;
 
@@ -704,18 +713,27 @@
       const isTrialExhausted = user.freeTrialUsed && !hasPlan && user.role !== 'admin';
 
       if (isTrialExhausted) {
-        if (confirm('A sua 1ª análise gratuita já foi realizada!\n\nPara continuar a processar análises ilimitadas e obter relatórios recorrentes, subscreva o plano Profissional ou Corporativo.\n\nDeseja ver os planos agora?')) {
+        const wantsPlan = await showConfirmDialog(
+          'A sua 1ª análise gratuita já foi realizada com sucesso!\n\nPara continuar a processar análises ilimitadas, relatórios em PDF e diagnósticos recorrentes, subscreva o plano Profissional ou Corporativo.',
+          {
+            title: '1ª Análise Gratuita Concluída',
+            confirmText: 'Ver Planos Recorrentes',
+            cancelText: 'Mais tarde'
+          }
+        );
+        if (wantsPlan) {
           window.location.href = 'pricing.html';
         }
         return;
       }
 
-      // Se for a primeira análise gratuita, regista o uso
+      // Se for a primeira análise gratuita, regista o uso e notifica
       if (!hasPlan && user.role !== 'admin') {
         user.freeTrialUsed = true;
         user.analysesUsed = (user.analysesUsed || 0) + 1;
         localStorage.setItem('data_analista_user', JSON.stringify(user));
         updateTrialStatus();
+        showNotification('A sua 1ª análise gratuita foi iniciada com sucesso!', 'success', 'Degustação Grátis Ativa');
       }
 
       // Ocultar Setup e Exibir Workspace
@@ -747,6 +765,9 @@
         switchAgentTab('chat');
         renderCharts();
         lucide.createIcons();
+
+        // Notificação nativa de conclusão
+        showNotification('O seu dashboard e relatório de IA foram gerados com sucesso!', 'success', 'Análise Pronta');
       }, 1800);
     }
 
