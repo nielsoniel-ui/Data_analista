@@ -64,48 +64,83 @@
 </head>
 <body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
 
-  <!-- 1. Header do Administrador -->
-  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
-    <div class="flex items-center space-x-3">
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        MZ
-      </span>
-      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
-        <span>Data Analista</span>
-        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">ADMIN PORTAL</span>
-      </a>
+  <!-- 1. Header do Administrador Responsivo -->
+  <header class="w-full bg-[#111315] text-white px-4 sm:px-6 py-3 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <!-- Logo & Badge -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          MZ
+        </span>
+        <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
+          <span>Data Analista</span>
+          <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">ADMIN</span>
+        </a>
+      </div>
+
+      <!-- Navegação Central Desktop (visível apenas em telas grandes) -->
+      <nav class="hidden xl:flex items-center space-x-1 text-xs text-gray-300">
+        <a href="admin.html" class="px-2.5 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Visão Geral</a>
+        <a href="#usersSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Utilizadores</a>
+        <a href="#databaseSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">MongoDB Atlas</a>
+        <a href="#planosSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Gerir Planos</span>
+        </a>
+        <a href="client.html" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="layout" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Dashboard Cliente</span>
+        </a>
+        <a href="index.html" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Workspace IA</span>
+        </a>
+      </nav>
+
+      <!-- Perfil, Logout & Hambúrguer Mobile -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span class="text-xs font-semibold text-gray-200 hidden md:inline">admin@dataanalista.com</span>
+          <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">SUPERUSER</span>
+        </div>
+        <button onclick="logoutAdmin()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Terminar Sessão">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+        <!-- Botão Menu Mobile (aparece em telas < xl) -->
+        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="xl:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Alternar Menu">
+          <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Navegação Central -->
-    <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
-      <a href="admin.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Visão Geral</a>
-      <a href="#usersSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Utilizadores</a>
-      <a href="#databaseSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">MongoDB Atlas</a>
-      <a href="#planosSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-400"></i>
-        <span>Gerir Planos</span>
+    <!-- Dropdown Mobile Navigation -->
+    <div id="mobileNavMenu" class="hidden xl:hidden border-t border-gray-800/80 pt-3 pb-2 mt-3 space-y-1">
+      <a href="admin.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium">
+        <i data-lucide="gauge" class="w-4 h-4 text-blue-400"></i>
+        <span>Visão Geral</span>
       </a>
-      <a href="client.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="layout" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <a href="#usersSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
+        <span>Gestão de Utilizadores</span>
+      </a>
+      <a href="#databaseSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
+        <span>Infraestrutura MongoDB Atlas</span>
+      </a>
+      <a href="#planosSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+        <span>Gerir Planos de Subscrição</span>
+      </a>
+      <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="layout" class="w-4 h-4 text-emerald-400"></i>
         <span>Ver Dashboard Cliente</span>
       </a>
-      <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+      <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
         <span>Workspace IA</span>
       </a>
-    </nav>
-
-    <!-- Perfil & Logout -->
-    <div class="flex items-center space-x-2">
-      <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
-        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-        <span class="text-xs font-semibold text-gray-200">admin@dataanalista.com</span>
-        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">SUPERUSER</span>
-      </div>
-      <button onclick="logoutAdmin()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors" title="Terminar Sessão">
-        <i data-lucide="log-out" class="w-4 h-4"></i>
-      </button>
     </div>
   </header>
 
@@ -399,165 +434,201 @@
     <div id="planosSection" class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
 
       <!-- Cabeçalho da Secção -->
-      <div class="flex items-center justify-between p-6 border-b border-gray-100">
-        <div class="flex items-center space-x-2.5">
-          <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-6 border-b border-gray-100">
+        <div class="flex items-start sm:items-center space-x-3">
+          <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl shrink-0">
             <i data-lucide="tag" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-sm font-bold text-gray-900">Gestão de Planos de Subscrição</h3>
-            <p class="text-xs text-gray-400 mt-0.5">Edite preços, nomes e funcionalidades de cada plano. As alterações refletem-se imediatamente na página pública.</p>
+            <h3 class="text-sm sm:text-base font-bold text-gray-900">Gestão de Planos de Subscrição</h3>
+            <p class="text-xs text-gray-500 mt-0.5 max-w-2xl">Edite preços, nomes e funcionalidades de cada plano. As alterações refletem-se automaticamente na página pública de preços.</p>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="resetPlanosDefault()" type="button" class="flex items-center gap-1 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors">
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+          <button onclick="resetPlanosDefault()" type="button" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
             <span>Padrões</span>
           </button>
-          <button onclick="savePlanos()" type="button" class="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors shadow-sm">
+          <button onclick="savePlanos()" type="button" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl transition-colors shadow-sm cursor-pointer">
             <i data-lucide="save" class="w-3.5 h-3.5"></i>
             <span>Guardar Alterações</span>
           </button>
         </div>
       </div>
 
-      <!-- Grelha de Planos Editáveis -->
-      <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-5" id="planosGrid">
+      <!-- Grelha de Planos Editáveis Responsiva -->
+      <div class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start" id="planosGrid">
 
         <!-- PLANO 1: DEGUSTAÇÃO -->
-        <div class="border border-gray-200 rounded-xl p-5 bg-slate-50 flex flex-col gap-3" data-plan="gratis">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Plano Gratuito</span>
-            <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+        <div class="border border-gray-200 rounded-2xl p-5 sm:p-6 bg-slate-50/80 flex flex-col gap-4 shadow-2xs hover:border-gray-300 transition-all" data-plan="gratis">
+          <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-gray-600">Plano Gratuito</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-200 text-gray-700">GRÁTIS</span>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Nome do Plano</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Nome do Plano</label>
             <input id="plan_gratis_name" type="text" value="Degustação"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-gray-900">
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Mensal (MT)</label>
-            <input id="plan_gratis_price_monthly" type="number" value="0" min="0"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+          <!-- Preços Mensal e Anual em grelha responsiva -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Mensal (MT)</label>
+              <input id="plan_gratis_price_monthly" type="number" value="0" min="0"
+                class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Anual (MT)</label>
+              <input id="plan_gratis_price_annual" type="number" value="0" min="0"
+                class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold">
+            </div>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Anual (MT)</label>
-            <input id="plan_gratis_price_annual" type="number" value="0" min="0"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Descrição</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Descrição</label>
             <textarea id="plan_gratis_desc" rows="2"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">Perfeito para testar o sistema com os seus dados reais antes de subscrever.</textarea>
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y leading-relaxed text-gray-700">Perfeito para testar o sistema com os seus dados reais antes de subscrever.</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Funcionalidades (uma por linha)</label>
-            <textarea id="plan_gratis_features" rows="4"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono">1ª Análise Completa Grátis
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Funcionalidades (uma por linha)</label>
+            <textarea id="plan_gratis_features" rows="5"
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y font-mono text-gray-700 leading-relaxed min-h-[96px]">1ª Análise Completa Grátis
 Upload de CSV até 1MB
 Dashboard com Gráficos e Tabelas
 Recomendações e Síntese de IA</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Funcionalidades Desativadas (uma por linha)</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Funcionalidades Desativadas (uma por linha)</label>
             <textarea id="plan_gratis_disabled" rows="2"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono">Exportação em PDF e JSON</textarea>
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y font-mono text-gray-700 leading-relaxed">Exportação em PDF e JSON</textarea>
           </div>
-          <div class="flex items-center gap-2 pt-1">
-            <input id="plan_gratis_active" type="checkbox" checked class="accent-blue-600 w-4 h-4">
-            <label for="plan_gratis_active" class="text-xs text-gray-600 font-medium">Plano visível na página pública</label>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-200/60">
+            <input id="plan_gratis_active" type="checkbox" checked class="accent-blue-600 w-4 h-4 cursor-pointer">
+            <label for="plan_gratis_active" class="text-xs text-gray-700 font-medium cursor-pointer">Plano visível na página pública</label>
           </div>
         </div>
 
         <!-- PLANO 2: PROFISSIONAL -->
-        <div class="border-2 border-blue-500 rounded-xl p-5 bg-blue-50/40 flex flex-col gap-3" data-plan="pro">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Plano Destaque</span>
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+        <div class="border-2 border-blue-500 rounded-2xl p-5 sm:p-6 bg-blue-50/40 flex flex-col gap-4 shadow-sm relative hover:border-blue-600 transition-all" data-plan="pro">
+          <div class="flex items-center justify-between pb-2 border-b border-blue-200/60">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Plano Destaque</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">POPULAR</span>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Nome do Plano</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Nome do Plano</label>
             <input id="plan_pro_name" type="text" value="Profissional"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-gray-900">
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Mensal (MT)</label>
-            <input id="plan_pro_price_monthly" type="number" value="1490" min="0"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+          <!-- Preços Mensal e Anual em grelha responsiva -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Mensal (MT)</label>
+              <input id="plan_pro_price_monthly" type="number" value="1490" min="0"
+                class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold text-blue-900">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Anual (MT)</label>
+              <input id="plan_pro_price_annual" type="number" value="14900" min="0"
+                class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold text-blue-900">
+            </div>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Anual (MT)</label>
-            <input id="plan_pro_price_annual" type="number" value="14900" min="0"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Descrição</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Descrição</label>
             <textarea id="plan_pro_desc" rows="2"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">Ideal para analistas, gestores e médias empresas com análises frequentes.</textarea>
+              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y leading-relaxed text-gray-700">Ideal para analistas, gestores e médias empresas com análises frequentes.</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Funcionalidades (uma por linha)</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Funcionalidades (uma por linha)</label>
             <textarea id="plan_pro_features" rows="5"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono">Análises Ilimitadas por mês
+              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y font-mono text-gray-700 leading-relaxed min-h-[96px]">Análises Ilimitadas por mês
 Ficheiros até 10MB (+ suporte GCS)
 Exportação em PDF Executivo e JSON
 Chat de Acompanhamento Avançado
 Pagamento via M-Pesa, E-Mola ou Cartão</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Badge de destaque</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Badge de destaque</label>
             <input id="plan_pro_badge" type="text" value="Mais Popular"
-              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-3 py-2 text-xs border border-blue-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
           </div>
-          <div class="flex items-center gap-2 pt-1">
-            <input id="plan_pro_active" type="checkbox" checked class="accent-blue-600 w-4 h-4">
-            <label for="plan_pro_active" class="text-xs text-gray-600 font-medium">Plano visível na página pública</label>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-blue-200/60">
+            <input id="plan_pro_active" type="checkbox" checked class="accent-blue-600 w-4 h-4 cursor-pointer">
+            <label for="plan_pro_active" class="text-xs text-gray-700 font-medium cursor-pointer">Plano visível na página pública</label>
           </div>
         </div>
 
         <!-- PLANO 3: CORPORATIVO -->
-        <div class="border border-gray-200 rounded-xl p-5 bg-slate-50 flex flex-col gap-3" data-plan="corp">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Plano Empresarial</span>
-            <span class="w-2.5 h-2.5 rounded-full bg-neutral-800"></span>
+        <div class="border border-gray-200 rounded-2xl p-5 sm:p-6 bg-slate-50/80 flex flex-col gap-4 shadow-2xs hover:border-gray-300 transition-all" data-plan="corp">
+          <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-neutral-800"></span>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-gray-700">Plano Empresarial</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-neutral-900 text-white">EMPRESAS</span>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Nome do Plano</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Nome do Plano</label>
             <input id="plan_corp_name" type="text" value="Corporativo"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-gray-900">
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Mensal (MT)</label>
-            <input id="plan_corp_price_monthly" type="number" value="4900" min="0"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+          <!-- Preços Mensal e Anual em grelha responsiva -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Mensal (MT)</label>
+              <input id="plan_corp_price_monthly" type="number" value="4900" min="0"
+                class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-gray-700">Preço Anual (MT)</label>
+              <input id="plan_corp_price_annual" type="number" value="49000" min="0"
+                class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-semibold">
+            </div>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Preço Anual (MT)</label>
-            <input id="plan_corp_price_annual" type="number" value="49000" min="0"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Descrição</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Descrição</label>
             <textarea id="plan_corp_desc" rows="2"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">Para grandes empresas que necessitam de múltiplos utilizadores e ligação com ERPs.</textarea>
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y leading-relaxed text-gray-700">Para grandes empresas que necessitam de múltiplos utilizadores e ligação com ERPs.</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Funcionalidades (uma por linha)</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Funcionalidades (uma por linha)</label>
             <textarea id="plan_corp_features" rows="5"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono">Tudo do Plano Profissional
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y font-mono text-gray-700 leading-relaxed min-h-[96px]">Tudo do Plano Profissional
 Até 10 Utilizadores da equipa
 Conexão direta a Bancos de Dados & APIs
 Ficheiros sem limite de tamanho (Cloud GCS)
 Factura com NUIT e pagamento por transferência bancária</textarea>
           </div>
-          <div class="space-y-2">
-            <label class="block text-xs font-semibold text-gray-600">Texto do botão CTA</label>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-700">Texto do botão CTA</label>
             <input id="plan_corp_cta" type="text" value="Contactar Equipa Corporativa"
-              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-3 py-2 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
           </div>
-          <div class="flex items-center gap-2 pt-1">
-            <input id="plan_corp_active" type="checkbox" checked class="accent-blue-600 w-4 h-4">
-            <label for="plan_corp_active" class="text-xs text-gray-600 font-medium">Plano visível na página pública</label>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-200/60">
+            <input id="plan_corp_active" type="checkbox" checked class="accent-blue-600 w-4 h-4 cursor-pointer">
+            <label for="plan_corp_active" class="text-xs text-gray-700 font-medium cursor-pointer">Plano visível na página pública</label>
           </div>
         </div>
 
@@ -839,6 +910,22 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         populatePlansForm(DEFAULT_PLANS);
         showNotification('Planos restaurados para as definições originais.', 'info', 'Planos Restaurados');
       }
+    }
+
+    // Toggle Menu Mobile
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobileNavMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
     }
 
     // Inicializar valores ao carregar o painel
