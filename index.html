@@ -90,51 +90,94 @@
 </head>
 <body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
 
-  <!-- 1. Barra de Navegação Superior (Header) -->
-  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
-    <div class="w-1/3 flex items-center space-x-2">
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        MZ
-      </span>
-    </div>
-    
-    <div class="w-1/3 text-center">
-      <h1 class="text-sm font-semibold tracking-wide text-gray-100">Data Analista</h1>
-    </div>
-
-    <div class="w-1/3 flex items-center justify-end space-x-2 text-gray-300">
-      <!-- Área Dinâmica de Autenticação (Login / Registo / Utilizador) -->
-      <div id="authHeaderArea" class="flex items-center space-x-2">
-        <a href="login.html" class="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1 text-xs font-medium text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors">
-          <i data-lucide="log-in" class="w-3.5 h-3.5 text-gray-400"></i>
-          <span>Entrar</span>
-        </a>
-        <a href="register.html" class="flex items-center space-x-1 px-2.5 py-1 bg-[#25282C] hover:bg-[#31353B] text-gray-100 rounded-full text-xs font-medium transition-colors border border-gray-700/60 shadow-sm">
-          <i data-lucide="user-plus" class="w-3.5 h-3.5 text-blue-400"></i>
-          <span>Registar</span>
+  <!-- 1. Barra de Navegação Superior (Header) Responsiva e Organizada -->
+  <header class="w-full bg-[#111315] text-white px-4 sm:px-6 py-3 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Logo & Distintivo Moçambique -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          MZ
+        </span>
+        <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
+          <span>Data Analista</span>
+          <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">WORKSPACE</span>
         </a>
       </div>
 
-      <div class="h-4 w-px bg-gray-700/80 mx-1 hidden sm:block"></div>
+      <!-- Menu Principal Central (Desktop) -->
+      <nav class="hidden lg:flex items-center space-x-1 text-xs text-gray-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Workspace IA</span>
+        </a>
+        <a href="pricing.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1.5">
+          <i data-lucide="tag" class="w-3.5 h-3.5 text-gray-400"></i>
+          <span>Planos & Preços</span>
+        </a>
+        <a href="client.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1.5">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Portal Cliente</span>
+        </a>
+        <a href="admin.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1.5">
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Painel Admin</span>
+        </a>
+      </nav>
 
-      <button onclick="startNewAnalysis()" class="flex items-center space-x-1.5 px-3 py-1.5 bg-[#25282C] hover:bg-[#31353B] text-gray-100 rounded-full text-xs font-medium transition-colors border border-gray-700/60 shadow-sm">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
-        <span>Nova Análise</span>
-      </button>
+      <!-- Ações Rápidas, Autenticação e Menu Mobile -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <!-- Alternador Rápido de Visão (Nova Análise / Ver Dashboard) -->
+        <button onclick="toggleMainView()" id="btnNavToggleView" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#25282C] hover:bg-[#31353B] text-gray-200 rounded-full text-xs font-medium transition-colors border border-gray-700/60 shadow-sm cursor-pointer">
+          <i data-lucide="layout-dashboard" id="navToggleIcon" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span id="navToggleText">Ver Dashboard</span>
+        </button>
 
-      <button class="flex items-center space-x-1.5 px-3 py-1.5 hover:bg-[#25282C] text-gray-200 rounded-lg text-xs font-medium transition-colors">
-        <i data-lucide="monitor" class="w-4 h-4 text-gray-400"></i>
-        <span class="hidden sm:inline">Dispositivo</span>
-      </button>
+        <div class="h-4 w-px bg-gray-800 mx-1 hidden sm:block"></div>
 
-      <button onclick="startNewAnalysis()" class="p-1.5 text-gray-400 hover:text-white hover:bg-[#25282C] rounded-md transition-colors" title="Limpar dados">
-        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-      </button>
+        <!-- Área Dinâmica de Autenticação -->
+        <div id="authHeaderArea" class="flex items-center space-x-2 text-xs">
+          <a href="login.html" class="px-2.5 py-1 text-xs font-medium text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors">
+            Entrar
+          </a>
+          <a href="register.html" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-medium transition-colors shadow-sm">
+            Registar
+          </a>
+        </div>
 
-      <button class="p-1.5 text-gray-400 hover:text-white hover:bg-[#25282C] rounded-md transition-colors" title="Opções">
-        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
-      </button>
+        <!-- Botão Hambúrguer Mobile -->
+        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="lg:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Alternar Menu">
+          <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Dropdown Mobile Navigation -->
+    <div id="mobileNavMenu" class="hidden lg:hidden border-t border-gray-800/80 pt-3 pb-2 mt-3 space-y-1">
+      <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium">
+        <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+        <span>Workspace IA</span>
+      </a>
+      <a href="pricing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+        <span>Planos & Preços (M-Pesa / E-Mola)</span>
+      </a>
+      <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-400"></i>
+        <span>Portal do Cliente</span>
+      </a>
+      <a href="admin.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
+        <span>Painel do Administrador</span>
+      </a>
+      <div class="pt-2 border-t border-gray-800 flex items-center justify-between px-2">
+        <button onclick="toggleMainView(); toggleMobileNav()" class="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium cursor-pointer">
+          <i data-lucide="layout" class="w-3.5 h-3.5"></i>
+          <span>Alternar para o Dashboard</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -143,21 +186,28 @@
     <!-- Faixa com gradiente -->
     <div class="hero-gradient-stripes shadow-sm"></div>
 
-    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-12 -mt-1 space-y-8">
-      <!-- Subheader Badge com Informação de Gratuidade -->
-      <div>
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block shadow-sm"></span>
-            <span>Espaço de Trabalho &bull; Data Analista</span>
-          </div>
-          <!-- Badge Dinâmico de Plano e 1ª Análise Grátis -->
-          <div id="trialBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>1ª Análise 100% Gratuita Disponível</span>
-            <a href="pricing.html" class="underline hover:text-emerald-900 ml-1">Ver Planos</a>
-          </div>
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-6 sm:p-10 -mt-1 space-y-6">
+      
+      <!-- Subheader com Controle do Menu do Dashboard e Badge de Trial -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-slate-50 border border-gray-200/90 rounded-2xl">
+        <div class="flex items-center gap-1.5 p-1 bg-white border border-gray-200 rounded-xl">
+          <button onclick="showSetupView()" id="btnViewSetup" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white shadow-2xs flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span>Nova Consulta IA</span>
+          </button>
+          <button onclick="showDashboardView()" id="btnViewDashboard" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center gap-1.5 transition-colors cursor-pointer">
+            <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Ver Dashboard Executivo</span>
+          </button>
         </div>
+
+        <!-- Badge Dinâmico de Plano e 1ª Análise Grátis -->
+        <div id="trialBadge" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>1ª Análise 100% Gratuita Disponível</span>
+          <a href="pricing.html" class="underline hover:text-emerald-900 ml-1 font-bold">Ver Planos</a>
+        </div>
+      </div>
 
         <!-- Título & Descrição em Grade Responsiva -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-8">
@@ -286,18 +336,42 @@
   <!-- ================= ETAPA ATIVA: WORKSPACE DO AGENTE + DASHBOARD ================= -->
   <div id="workspaceSection" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-5 pb-16">
     
-    <!-- Barra superior de consulta e controlo de execução -->
-    <div class="bg-white border border-gray-200 rounded-2xl p-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+    <!-- Barra superior de navegação do dashboard, filtros e controlo -->
+    <div class="bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 mb-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
-        <h2 id="currentQueryTitle" class="text-base font-bold text-gray-900">faz uma analise geral</h2>
-        <span id="agentStatusBadge" class="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium">
-          <span class="w-2 h-2 rounded-full bg-blue-600 agent-pulse"></span>
-          <span id="agentStatusText">A provisionar ambiente de análise de IA...</span>
-        </span>
+        <button onclick="showSetupView()" class="p-2 hover:bg-slate-100 rounded-xl text-gray-500 hover:text-gray-900 transition-colors cursor-pointer" title="Voltar à configuração">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="currentQueryTitle" class="text-base font-bold text-gray-900">Análise: vendas.csv</h2>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">vendas.csv</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Inline CSV &bull; 5.4 KB</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+            <span id="agentStatusBadge" class="inline-flex items-center gap-1.5 font-medium text-emerald-600">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span id="agentStatusText">Agente IA Conectado &bull; Base MongoDB Atlas</span>
+            </span>
+          </div>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <button onclick="startNewAnalysis()" class="px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 text-xs font-medium rounded-lg transition-colors">
-          Parar / Nova Análise
+
+      <!-- Filtros rápidos por Província / Região de Moçambique -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="text-xs text-gray-400 font-semibold mr-1 hidden lg:inline">Região:</span>
+        <button onclick="filterProvince('Todas', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-900 text-white shadow-2xs cursor-pointer">Todas</button>
+        <button onclick="filterProvince('Maputo', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">Maputo</button>
+        <button onclick="filterProvince('Matola', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">Matola</button>
+        <button onclick="filterProvince('Beira', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">Beira</button>
+        <button onclick="filterProvince('Nampula', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">Nampula</button>
+        <button onclick="filterProvince('Boane', this)" class="prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">Boane</button>
+      </div>
+
+      <div class="flex items-center space-x-2 shrink-0">
+        <button onclick="showSetupView()" class="px-3.5 py-2 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span>Nova Consulta</span>
         </button>
       </div>
     </div>
@@ -309,18 +383,19 @@
       <div class="lg:col-span-4 bg-white border border-gray-200/90 rounded-2xl p-5 shadow-sm flex flex-col h-[750px]">
         <div class="flex items-center justify-between pb-3 border-b border-gray-100">
           <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
             <span>Analytics Agent</span>
           </h3>
-          <span id="agentSubstatus" class="text-[11px] text-gray-400">A processar dados...</span>
+          <span id="agentSubstatus" class="text-[11px] text-emerald-600 font-medium">Diagnóstico concluído</span>
         </div>
 
         <!-- Abas: Chat | Agent Activity -->
         <div class="flex items-center space-x-2 pt-3 pb-3">
-          <button id="tabChatBtn" onclick="switchAgentTab('chat')" class="px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-800">
-            Chat <span class="text-gray-400 font-normal">1</span>
+          <button id="tabChatBtn" onclick="switchAgentTab('chat')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-800 shadow-2xs cursor-pointer">
+            Chat Estratégico <span class="text-blue-600 font-bold ml-0.5">&bull;</span>
           </button>
-          <button id="tabActivityBtn" onclick="switchAgentTab('activity')" class="px-3 py-1 text-xs font-medium rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-1.5">
-            Agent Activity <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+          <button id="tabActivityBtn" onclick="switchAgentTab('activity')" class="px-3 py-1.5 text-xs font-medium rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-1.5 cursor-pointer">
+            Atividade do Agente <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
           </button>
         </div>
 
@@ -345,8 +420,11 @@
 
           <!-- Visão Chat do Agente (Recomendações e Insights em Português) -->
           <div id="agentChatView" class="hidden space-y-3">
-            <div class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 space-y-2 text-xs">
-              <p class="font-semibold text-blue-900">Diagnóstico Estratégico Concluído:</p>
+            <div class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-100 space-y-2.5 text-xs">
+              <div class="flex items-center gap-1.5 text-blue-900 font-bold">
+                <i data-lucide="sparkles" class="w-4 h-4 text-blue-600"></i>
+                <span>Diagnóstico Estratégico do Negócio:</span>
+              </div>
               <ol class="list-decimal pl-4 space-y-2 text-gray-700">
                 <li>
                   <strong>Optimização do Ticket Médio:</strong> Oferecer descontos progressivos por volume para elevar a faturação por encomenda nas regiões de Maputo e Matola.
@@ -363,13 +441,13 @@
             <!-- Sugestões de Perguntas de Acompanhamento (Follow-up) -->
             <div class="space-y-1.5 pt-2">
               <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Perguntas de Acompanhamento:</p>
-              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors cursor-pointer">
                 Examinar a relação entre total de vendas e quantidade de produtos
               </button>
-              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors cursor-pointer">
                 Encontrar anomalias ou desvios atípicos nas colunas numéricas
               </button>
-              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors">
+              <button onclick="sendFollowUp(this.innerText)" class="w-full text-left p-2 rounded-lg border border-gray-200 hover:bg-slate-50 text-[11px] text-gray-600 transition-colors cursor-pointer">
                 Fornecer um resumo estatístico descritivo das métricas
               </button>
             </div>
@@ -379,7 +457,7 @@
 
         <!-- Input do Chat com o Agente -->
         <div class="pt-3 border-t border-gray-100">
-          <div class="flex items-center gap-2">
+          <form onsubmit="event.preventDefault(); sendFollowUpFromInput()" class="flex items-center gap-2">
             <input 
               id="followUpInput"
               type="text" 
@@ -388,12 +466,12 @@
             />
             <button 
               id="sendFollowUpBtn"
-              onclick="sendFollowUpFromInput()"
-              class="px-3 py-2 bg-gray-200 text-gray-600 text-xs font-medium rounded-lg hover:bg-black hover:text-white transition-colors"
+              type="submit"
+              class="px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
             >
               Enviar
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
@@ -420,25 +498,25 @@
           <div class="p-6 sm:p-8 space-y-6">
             
             <!-- Header do Dashboard -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
               <div>
                 <div class="flex items-center space-x-2 text-xs mb-1.5">
-                  <span class="px-2.5 py-0.5 rounded-full font-bold bg-blue-50 text-blue-700 text-[10px] tracking-wider uppercase">
-                    VENDAS
+                  <span class="px-2.5 py-0.5 rounded-full font-bold bg-blue-50 text-blue-700 text-[10px] tracking-wider uppercase border border-blue-200">
+                    RELATÓRIO CONSOLIDADO
                   </span>
-                  <span class="text-gray-400 font-mono">2026-10-27</span>
+                  <span class="text-gray-400 font-mono text-xs">Ano Fiscal 2026</span>
                 </div>
-                <h2 class="text-2xl font-extrabold text-gray-900">Análise: vendas</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Consulta: <span class="font-medium text-gray-700">faz uma analise geral</span></p>
+                <h2 class="text-2xl font-extrabold text-gray-900">Dashboard de Gestão de Vendas</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Base de dados: <span class="font-medium text-gray-800">vendas.csv</span> &bull; Cobertura nacional em Moçambique</p>
               </div>
 
               <!-- Ações: Download PDF e JSON -->
               <div class="flex items-center space-x-2">
-                <button onclick="window.print()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+                <button onclick="window.print()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer">
                   <i data-lucide="download" class="w-3.5 h-3.5"></i>
                   <span>Baixar PDF</span>
                 </button>
-                <button class="px-3.5 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-lg transition-colors">
+                <button onclick="showNotification('Exportação JSON gerada com sucesso.', 'info', 'Ficheiro Pronto')" class="px-3.5 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-medium rounded-xl transition-colors cursor-pointer">
                   JSON
                 </button>
               </div>
@@ -446,59 +524,74 @@
 
             <!-- Abas do Dashboard -->
             <div class="flex flex-wrap items-center gap-2 border-b border-gray-100 pb-4">
-              <button onclick="switchDashboardTab('overview')" id="btnTabOverview" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-black text-white shadow-xs">
+              <button onclick="switchDashboardTab('overview')" id="btnTabOverview" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-black text-white shadow-xs cursor-pointer">
                 Visão Geral
               </button>
-              <button onclick="switchDashboardTab('charts')" id="btnTabCharts" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5">
-                Visualizações <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">3</span>
+              <button onclick="switchDashboardTab('charts')" id="btnTabCharts" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5 cursor-pointer">
+                Visualizações <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">2 Gráficos</span>
               </button>
-              <button onclick="switchDashboardTab('tables')" id="btnTabTables" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5">
-                Tabelas de Dados <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">4</span>
+              <button onclick="switchDashboardTab('tables')" id="btnTabTables" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 flex items-center gap-1.5 cursor-pointer">
+                Tabelas de Dados <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-700">Consolidado</span>
               </button>
-              <button onclick="switchDashboardTab('insights')" id="btnTabInsights" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100">
-                Recomendações & Acções
+              <button onclick="switchDashboardTab('insights')" id="btnTabInsights" class="px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 hover:bg-gray-100 cursor-pointer">
+                Recomendações & Ações
               </button>
             </div>
 
             <!-- Seção 1: Cartões de Métricas (KPI Cards em Meticais MT) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4" id="kpiContainer">
               <!-- KPI 1 -->
-              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
-                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">VENDAS TOTAIS</span>
+              <div class="bg-gradient-to-br from-blue-50/50 to-white border border-blue-100 rounded-2xl p-4 shadow-2xs">
+                <div class="flex items-center justify-between text-gray-400 mb-1">
+                  <span class="text-[10px] font-bold tracking-wider text-blue-700 uppercase">VENDAS TOTAIS</span>
+                  <i data-lucide="badge-dollar-sign" class="w-4 h-4 text-blue-600"></i>
+                </div>
                 <div class="text-2xl font-extrabold text-gray-900 mt-1">1.741.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
-                <p class="text-[11px] text-gray-500 mt-1 truncate">Maputo registou as maiores vendas por cidade...</p>
+                <div class="flex items-center gap-1 text-[11px] text-emerald-600 font-semibold mt-1">
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                  <span>+18.4% vs meta</span>
+                </div>
               </div>
 
               <!-- KPI 2 -->
-              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
-                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">QUANTIDADE TOTAL</span>
+              <div class="bg-gradient-to-br from-emerald-50/50 to-white border border-emerald-100 rounded-2xl p-4 shadow-2xs">
+                <div class="flex items-center justify-between text-gray-400 mb-1">
+                  <span class="text-[10px] font-bold tracking-wider text-emerald-700 uppercase">QUANTIDADE TOTAL</span>
+                  <i data-lucide="shopping-cart" class="w-4 h-4 text-emerald-600"></i>
+                </div>
                 <div class="text-2xl font-extrabold text-gray-900 mt-1">273 <span class="text-xs font-normal text-gray-500">unid.</span></div>
-                <p class="text-[11px] text-gray-500 mt-1 truncate">Boane registou a maior quantidade vendida...</p>
+                <div class="text-[11px] text-gray-500 mt-1">Boane lidera volume</div>
               </div>
 
               <!-- KPI 3 -->
-              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
-                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">PRODUTO LÍDER</span>
+              <div class="bg-gradient-to-br from-purple-50/50 to-white border border-purple-100 rounded-2xl p-4 shadow-2xs">
+                <div class="flex items-center justify-between text-gray-400 mb-1">
+                  <span class="text-[10px] font-bold tracking-wider text-purple-700 uppercase">PRODUTO LÍDER</span>
+                  <i data-lucide="laptop" class="w-4 h-4 text-purple-600"></i>
+                </div>
                 <div class="text-2xl font-extrabold text-gray-900 mt-1">1.035.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
-                <p class="text-[11px] text-gray-500 mt-1 truncate">Computador Portátil teve as maiores vendas...</p>
+                <div class="text-[11px] text-gray-500 mt-1">Computador Portátil (59%)</div>
               </div>
 
               <!-- KPI 4 -->
-              <div class="bg-[#F8F9FA] border border-gray-200/80 rounded-xl p-4">
-                <span class="text-[10px] font-bold tracking-wider text-gray-400 uppercase">VOLUME EM ARTIGOS</span>
-                <div class="text-2xl font-extrabold text-gray-900 mt-1">275 <span class="text-xs font-normal text-gray-500">unid.</span></div>
-                <p class="text-[11px] text-gray-500 mt-1 truncate">Rato Óptico liderou o total de unidades vendidas...</p>
+              <div class="bg-gradient-to-br from-amber-50/50 to-white border border-amber-100 rounded-2xl p-4 shadow-2xs">
+                <div class="flex items-center justify-between text-gray-400 mb-1">
+                  <span class="text-[10px] font-bold tracking-wider text-amber-700 uppercase">TICKET MÉDIO</span>
+                  <i data-lucide="receipt" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <div class="text-2xl font-extrabold text-gray-900 mt-1">6.377 <span class="text-xs font-normal text-gray-500">MT</span></div>
+                <div class="text-[11px] text-amber-700 font-medium mt-1">M-Pesa e E-Mola</div>
               </div>
             </div>
 
             <!-- Síntese Executiva de IA (Executive AI Takeaway) -->
-            <div class="p-5 bg-gradient-to-r from-slate-50 to-blue-50/30 border border-slate-200 rounded-xl">
+            <div class="p-5 bg-gradient-to-r from-slate-50 via-blue-50/30 to-indigo-50/30 border border-slate-200 rounded-2xl">
               <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i>
-                Síntese Executiva de IA (Executive AI Takeaway)
+                <i data-lucide="sparkles" class="w-4 h-4 text-blue-600"></i>
+                <span>Síntese Executiva de IA (Executive AI Takeaway)</span>
               </h4>
               <p class="text-xs text-gray-600 leading-relaxed">
-                A análise aos ficheiros foi concluída com sucesso. A província e cidade de <strong>Maputo</strong> lidera o valor consolidado de vendas com <strong>1.741.000 MT</strong>. O dashboard gerou 4 tabelas analíticas detalhadas e 3 gráficos visuais interactivos para suporte à gestão.
+                A análise aos dados foi consolidada com êxito. A região de <strong>Maputo</strong> lidera com <strong>1.741.000 MT</strong> em vendas, suportada primordialmente pelo segmento corporativo de computadores portáteis. Recomenda-se reforçar canais móveis (M-Pesa e E-Mola) para elevar o ticket médio de retalho na Matola e Boane.
               </p>
             </div>
 
@@ -506,22 +599,28 @@
             <div id="chartsView" class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Gráfico 1: Vendas por Cidade/Província -->
-                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-2xs">
-                  <h4 class="text-xs font-bold text-gray-800 mb-4 flex items-center justify-between">
-                    <span>Facturação por Cidade (em MT)</span>
-                    <span class="text-[10px] text-gray-400 font-normal">Top Cidades</span>
-                  </h4>
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-2xs">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 class="text-xs font-bold text-gray-800">Facturação por Cidade (em MT)</h4>
+                      <p class="text-[10px] text-gray-400">Valores consolidados em Meticais</p>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Moçambique</span>
+                  </div>
                   <div class="h-60">
                     <canvas id="cityChart"></canvas>
                   </div>
                 </div>
 
                 <!-- Gráfico 2: Evolução das Vendas Mensais -->
-                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-2xs">
-                  <h4 class="text-xs font-bold text-gray-800 mb-4 flex items-center justify-between">
-                    <span>Tendência Semestral de Facturação</span>
-                    <span class="text-[10px] text-gray-400 font-normal">Jul - Dez</span>
-                  </h4>
+                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-2xs">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 class="text-xs font-bold text-gray-800">Tendência Semestral de Facturação</h4>
+                      <p class="text-[10px] text-gray-400">Evolução de Julho a Dezembro</p>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">+18% Crescimento</span>
+                  </div>
                   <div class="h-60">
                     <canvas id="timelineChart"></canvas>
                   </div>
@@ -529,11 +628,22 @@
               </div>
             </div>
 
-            <!-- Painel de Tabelas de Dados -->
-            <div id="tablesView" class="hidden bg-white border border-gray-200 rounded-xl overflow-hidden shadow-2xs">
-              <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <h4 class="text-xs font-bold text-gray-800">Tabela Consolidada de Vendas por Província e Produto</h4>
-                <span class="text-[11px] text-gray-400">4 registos principais</span>
+            <!-- Painel de Tabelas de Dados com Filtro de Pesquisa -->
+            <div id="tablesView" class="hidden bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-2xs">
+              <div class="p-4 sm:p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 class="text-xs font-bold text-gray-800">Tabela Consolidada de Vendas por Província e Produto</h4>
+                  <p class="text-[11px] text-gray-400">Relatório financeiro discriminado</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input 
+                    type="text" 
+                    id="dashboardTableSearch"
+                    onkeyup="filterDashboardTable()" 
+                    placeholder="Pesquisar cidade ou produto..." 
+                    class="bg-slate-50 border border-gray-200 rounded-xl px-3 py-1.5 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500 w-52"
+                  />
+                </div>
               </div>
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-gray-600">
@@ -543,46 +653,104 @@
                       <th class="px-5 py-3">Produto Principal</th>
                       <th class="px-5 py-3">Quantidade</th>
                       <th class="px-5 py-3 text-right">Total Vendas (MT)</th>
+                      <th class="px-5 py-3 text-center">Status</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100 font-mono text-[11px]">
-                    <tr class="hover:bg-slate-50">
-                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Maputo</td>
-                      <td class="px-5 py-3">Computador Portátil</td>
-                      <td class="px-5 py-3">120</td>
-                      <td class="px-5 py-3 text-right font-bold text-slate-800">1.035.000 MT</td>
+                  <tbody id="dashboardTableBody" class="divide-y divide-gray-100 font-mono text-[11px]">
+                    <tr class="hover:bg-slate-50/80 transition-colors" data-region="Maputo">
+                      <td class="px-5 py-3 font-sans font-semibold text-gray-900 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span> Maputo
+                      </td>
+                      <td class="px-5 py-3 font-sans text-gray-700">Computador Portátil</td>
+                      <td class="px-5 py-3">120 unid.</td>
+                      <td class="px-5 py-3 text-right font-bold text-gray-900">1.035.000 MT</td>
+                      <td class="px-5 py-3 text-center">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Líder</span>
+                      </td>
                     </tr>
-                    <tr class="hover:bg-slate-50">
-                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Matola</td>
-                      <td class="px-5 py-3">Monitor 27" 4K</td>
-                      <td class="px-5 py-3">78</td>
-                      <td class="px-5 py-3 text-right font-bold text-slate-800">450.000 MT</td>
+                    <tr class="hover:bg-slate-50/80 transition-colors" data-region="Matola">
+                      <td class="px-5 py-3 font-sans font-semibold text-gray-900 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Matola
+                      </td>
+                      <td class="px-5 py-3 font-sans text-gray-700">Monitor 27" 4K</td>
+                      <td class="px-5 py-3">78 unid.</td>
+                      <td class="px-5 py-3 text-right font-bold text-gray-900">450.000 MT</td>
+                      <td class="px-5 py-3 text-center">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Estável</span>
+                      </td>
                     </tr>
-                    <tr class="hover:bg-slate-50">
-                      <td class="px-5 py-3 font-sans font-medium text-gray-900">Boane</td>
-                      <td class="px-5 py-3">Rato Óptico & Teclado</td>
-                      <td class="px-5 py-3">275</td>
-                      <td class="px-5 py-3 text-right font-bold text-slate-800">256.000 MT</td>
+                    <tr class="hover:bg-slate-50/80 transition-colors" data-region="Boane">
+                      <td class="px-5 py-3 font-sans font-semibold text-gray-900 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span> Boane
+                      </td>
+                      <td class="px-5 py-3 font-sans text-gray-700">Rato Óptico & Teclado</td>
+                      <td class="px-5 py-3">275 unid.</td>
+                      <td class="px-5 py-3 text-right font-bold text-gray-900">256.000 MT</td>
+                      <td class="px-5 py-3 text-center">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Alto Volume</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
 
-            <!-- Painel de Recomendações e Ações -->
+            <!-- Painel de Recomendações e Ações Estratégicas -->
             <div id="insightsView" class="hidden space-y-4">
-              <div class="bg-slate-50 border border-gray-200 rounded-xl p-5 space-y-3">
-                <h4 class="text-xs font-bold text-gray-900 uppercase">Acções Recomendadas para o Negócio</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-700">
-                  <div class="p-4 bg-white rounded-lg border border-gray-200">
-                    <p class="font-bold text-gray-900 mb-1">1. Reforço de Stock de Portáteis</p>
-                    <p class="text-gray-500 leading-relaxed">Sendo a categoria que gera mais de 59% da receita total, garantir abastecimento sem roturas em Maputo e Matola.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                
+                <div class="p-5 bg-white rounded-2xl border border-red-200 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-red-700 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Prioridade Máxima
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">Stock</span>
                   </div>
-                  <div class="p-4 bg-white rounded-lg border border-gray-200">
-                    <p class="font-bold text-gray-900 mb-1">2. Campanha de Margem em Acessórios</p>
-                    <p class="text-gray-500 leading-relaxed">Em Boane, o volume de unidades é alto mas o ticket médio é baixo. Criar pacotes combo com monitores e computadores.</p>
-                  </div>
+                  <h5 class="font-bold text-gray-900 text-sm">Reforço de Stock de Portáteis</h5>
+                  <p class="text-gray-600 leading-relaxed">
+                    Sendo a categoria que gera mais de 59% da receita total (1.035.000 MT), é imperativo garantir abastecimento sem roturas nos armazéns de Maputo e Matola com 4 semanas de antecedência.
+                  </p>
                 </div>
+
+                <div class="p-5 bg-white rounded-2xl border border-blue-200 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-blue-700 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Oportunidade Comercial
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Margem</span>
+                  </div>
+                  <h5 class="font-bold text-gray-900 text-sm">Campanha de Margem em Acessórios</h5>
+                  <p class="text-gray-600 leading-relaxed">
+                    Em Boane, o volume de unidades é o maior (275 unid.), mas o ticket unitário é baixo. Criar pacotes combo promocionais incluindo cabos HDMI e adaptadores para elevar a margem líquida.
+                  </p>
+                </div>
+
+                <div class="p-5 bg-white rounded-2xl border border-emerald-200 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-emerald-700 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <i data-lucide="users" class="w-3.5 h-3.5"></i> Fidelização Top-Tier
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Contratos</span>
+                  </div>
+                  <h5 class="font-bold text-gray-900 text-sm">Contratos Corporativos com NUIT</h5>
+                  <p class="text-gray-600 leading-relaxed">
+                    Formalizar avenças anuais com os clientes institucionais que geram compras recorrentes mensais, oferecendo faturação automática com retenção na fonte simplificada.
+                  </p>
+                </div>
+
+                <div class="p-5 bg-white rounded-2xl border border-amber-200 shadow-2xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-700 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Cobranças Móveis
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Kivora C2B</span>
+                  </div>
+                  <h5 class="font-bold text-gray-900 text-sm">Automação de Pagamentos M-Pesa / E-Mola</h5>
+                  <p class="text-gray-600 leading-relaxed">
+                    Mais de 70% dos pagamentos de clientes finais em Moçambique utilizam carteiras móveis. Ativar cobranças automatizadas com prompt USSD para reduzir prazos médios de recebimento.
+                  </p>
+                </div>
+
               </div>
             </div>
 
@@ -610,16 +778,17 @@
           const displayName = user.name || user.email || 'Utilizador';
           const isAdmin = user.role === 'admin' || user.isSuperuser;
           const isClient = user.role === 'client';
+          const planBadge = isAdmin ? 'ADMIN' : (isClient ? 'CLIENTE' : (user.plan ? user.plan.toUpperCase() : 'TRIAL'));
+          const badgeColor = isAdmin ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : (isClient ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30');
+
           authArea.innerHTML = `
             <div class="flex items-center space-x-2">
-              <a href="pricing.html" class="px-2 py-0.5 text-[11px] font-semibold rounded bg-[#25282C] text-gray-300 hover:text-white transition-colors">Planos</a>
-              ${isAdmin ? '<a href="admin.html" class="px-2 py-0.5 text-[11px] font-bold rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 transition-colors">Painel Admin</a>' : ''}
-              ${isClient ? '<a href="client.html" class="px-2 py-0.5 text-[11px] font-bold rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30 transition-colors">Painel Cliente</a>' : ''}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#1F2428] text-gray-200 border border-gray-700/70">
                 <span class="w-2 h-2 rounded-full ${isAdmin ? 'bg-amber-400' : (isClient ? 'bg-emerald-500' : 'bg-blue-500')}"></span>
                 <span class="truncate max-w-[120px] font-semibold">${displayName}</span>
+                <span class="px-1.5 py-0.2 text-[9px] font-bold rounded ${badgeColor} border">${planBadge}</span>
               </span>
-              <button onclick="logoutUser()" class="p-1 text-gray-400 hover:text-red-400 rounded transition-colors" title="Terminar Sessão">
+              <button onclick="logoutUser()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Terminar Sessão">
                 <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -678,9 +847,121 @@
     }
 
     function startNewAnalysis() {
+      showSetupView();
+    }
+
+    // Alternar Menu Mobile
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobileNavMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    }
+
+    // Alternar entre Setup (Upload) e Dashboard
+    function toggleMainView() {
+      if (setupSection.classList.contains('hidden')) {
+        showSetupView();
+      } else {
+        showDashboardView();
+      }
+    }
+
+    function showSetupView() {
       setupSection.classList.remove('hidden');
       workspaceSection.classList.add('hidden');
+      
+      const navToggleText = document.getElementById('navToggleText');
+      const navToggleIcon = document.getElementById('navToggleIcon');
+      if (navToggleText) navToggleText.innerText = "Ver Dashboard";
+      if (navToggleIcon) navToggleIcon.setAttribute('data-lucide', 'layout-dashboard');
+
+      const btnSetup = document.getElementById('btnViewSetup');
+      const btnDash = document.getElementById('btnViewDashboard');
+      if (btnSetup && btnDash) {
+        btnSetup.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white shadow-2xs flex items-center gap-1.5";
+        btnDash.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center gap-1.5 transition-colors cursor-pointer";
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function showDashboardView() {
+      setupSection.classList.add('hidden');
+      workspaceSection.classList.remove('hidden');
+
+      const navToggleText = document.getElementById('navToggleText');
+      const navToggleIcon = document.getElementById('navToggleIcon');
+      if (navToggleText) navToggleText.innerText = "Nova Análise";
+      if (navToggleIcon) navToggleIcon.setAttribute('data-lucide', 'sparkles');
+
+      const btnSetup = document.getElementById('btnViewSetup');
+      const btnDash = document.getElementById('btnViewDashboard');
+      if (btnSetup && btnDash) {
+        btnDash.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white shadow-2xs flex items-center gap-1.5";
+        btnSetup.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 flex items-center gap-1.5 transition-colors cursor-pointer";
+      }
+
+      // Exibir conteúdo diretamente
+      dashboardPlaceholder.classList.add('hidden');
+      dashboardContent.classList.remove('hidden');
+
+      switchAgentTab('chat');
+      renderCharts();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    // Filtrar dados por província
+    function filterProvince(city, btn) {
+      document.querySelectorAll('.prov-filter-btn').forEach(b => {
+        b.className = "prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer";
+      });
+      if (btn) {
+        btn.className = "prov-filter-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-900 text-white shadow-2xs cursor-pointer";
+      }
+
+      const rows = document.querySelectorAll('#dashboardTableBody tr');
+      rows.forEach(r => {
+        const region = r.getAttribute('data-region') || '';
+        if (city === 'Todas' || region.toLowerCase().includes(city.toLowerCase())) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      // Atualizar gráficos com destaque se filtrado
+      if (cityChartInstance) {
+        if (city === 'Todas') {
+          cityChartInstance.data.datasets[0].backgroundColor = ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE'];
+        } else {
+          cityChartInstance.data.datasets[0].backgroundColor = cityChartInstance.data.labels.map(l => 
+            l.toLowerCase() === city.toLowerCase() ? '#2563EB' : '#E2E8F0'
+          );
+        }
+        cityChartInstance.update();
+      }
+
+      showNotification(`Dashboard filtrado para: ${city}`, 'info', 'Filtro Regional');
+    }
+
+    function filterDashboardTable() {
+      const search = (document.getElementById('dashboardTableSearch')?.value || '').toLowerCase();
+      const rows = document.querySelectorAll('#dashboardTableBody tr');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(search) ? '' : 'none';
+      });
     }
 
     function updateTrialStatus() {
