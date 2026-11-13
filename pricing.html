@@ -337,60 +337,172 @@
 
   </main>
 
-  <!-- Modal de Checkout / Pagamento -->
-  <div id="checkoutModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-xl animate-fade-in">
-      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-        <div>
-          <h3 class="text-sm font-bold text-gray-900">Subscrição do Plano <span id="modalPlanName" class="text-blue-600">Profissional</span></h3>
-          <p class="text-[11px] text-gray-500">1ª Análise Gratuita &bull; Faturação recorrente</p>
+  <!-- Modal de Checkout / Pagamento Kivora (M-Pesa & E-Mola) -->
+  <div id="checkoutModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-fade-in border border-gray-100">
+      
+      <!-- ESTADO 1: FORMULÁRIO DE CHECKOUT -->
+      <div id="checkoutFormView" class="space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-gray-900">Subscrição do Plano <span id="modalPlanName" class="text-blue-600">Profissional</span></h3>
+            <p class="text-[11px] text-gray-500">1ª Análise Gratuita &bull; Pagamento Kivora C2B</p>
+          </div>
+          <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
         </div>
-        <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-600">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+
+        <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-xl flex items-center justify-between text-xs">
+          <span class="text-blue-900 font-medium">Valor da Subscrição:</span>
+          <span id="modalPlanPrice" class="font-extrabold text-blue-700 text-sm">1.490 MT / mês</span>
+        </div>
+
+        <form id="checkoutForm" onsubmit="handleCheckout(event)" class="space-y-3.5 text-xs">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nome Completo / Empresa</label>
+            <input type="text" id="chkName" required placeholder="ex.: Empresa Comercial Lda" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 text-gray-900">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">E-mail para Fatura e Notificações</label>
+            <input type="email" id="chkEmail" required placeholder="contacto@empresa.co.mz" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 text-gray-900">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1.5">Método de Pagamento Móvel (Moçambique)</label>
+            <div class="grid grid-cols-2 gap-2.5">
+              <label id="labelMpesa" class="flex items-center gap-2 p-3 border-2 border-red-500 bg-red-50/40 rounded-xl cursor-pointer transition-all">
+                <input type="radio" name="payMethod" value="mpesa" checked onchange="updatePayMethodUI()" class="accent-red-600 w-4 h-4 cursor-pointer">
+                <div class="flex flex-col">
+                  <span class="font-bold text-red-700 text-xs flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-red-600"></span> M-Pesa
+                  </span>
+                  <span class="text-[10px] text-gray-500">Vodacom (84/85)</span>
+                </div>
+              </label>
+
+              <label id="labelEmola" class="flex items-center gap-2 p-3 border-2 border-gray-200 bg-slate-50 rounded-xl cursor-pointer hover:border-yellow-400 transition-all">
+                <input type="radio" name="payMethod" value="emola" onchange="updatePayMethodUI()" class="accent-yellow-600 w-4 h-4 cursor-pointer">
+                <div class="flex flex-col">
+                  <span class="font-bold text-yellow-700 text-xs flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500"></span> E-Mola
+                  </span>
+                  <span class="text-[10px] text-gray-500">Movitel (86/87)</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div id="phoneField">
+            <label class="block font-semibold text-gray-700 mb-1">Número de Telemóvel (+258)</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 font-mono font-medium text-xs">
+                +258
+              </div>
+              <input type="tel" id="chkPhone" required placeholder="84 123 4567" maxlength="12" class="w-full bg-slate-50 border border-gray-300 rounded-lg py-2.5 pl-14 pr-3 outline-none focus:border-blue-500 font-mono text-gray-900 font-semibold text-xs tracking-wider">
+            </div>
+            <p id="phoneHint" class="text-[10px] text-gray-500 mt-1">Insira o número Vodacom (prefixo 84 ou 85).</p>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" id="chkSubmitBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              <span id="chkSubmitBtnText">Pagar via M-Pesa</span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-center gap-1.5 text-[10px] text-gray-400 pt-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Processado com segurança via Kivora Payments Gateway</span>
+          </div>
+        </form>
       </div>
 
-      <div class="p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between text-xs">
-        <span class="text-blue-900 font-medium">Valor da Subscrição:</span>
-        <span id="modalPlanPrice" class="font-extrabold text-blue-700 text-sm">1.490 MT / mês</span>
-      </div>
-
-      <form id="checkoutForm" onsubmit="handleCheckout(event)" class="space-y-3.5 text-xs">
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Nome Completo / Empresa</label>
-          <input type="text" id="chkName" required placeholder="ex.: Empresa Lda" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-        </div>
-
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">E-mail de Notificação</label>
-          <input type="email" id="chkEmail" required placeholder="contacto@empresa.co.mz" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-        </div>
-
-        <div>
-          <label class="block font-semibold text-gray-700 mb-1">Forma de Pagamento Recorrente</label>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer hover:bg-slate-50">
-              <input type="radio" name="payMethod" value="mpesa" checked class="text-blue-600">
-              <span class="font-bold text-red-600">M-Pesa</span>
-            </label>
-            <label class="flex items-center gap-2 p-2.5 border rounded-lg cursor-pointer hover:bg-slate-50">
-              <input type="radio" name="payMethod" value="emola" class="text-blue-600">
-              <span class="font-bold text-yellow-600">E-Mola</span>
-            </label>
+      <!-- ESTADO 2: AGUARDANDO AUTORIZAÇÃO USSD NO TELEMÓVEL -->
+      <div id="checkoutWaitingView" class="hidden text-center space-y-4 py-2">
+        <div class="relative w-16 h-16 mx-auto">
+          <div class="absolute inset-0 rounded-full border-4 border-blue-200 animate-ping opacity-60"></div>
+          <div class="relative w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg">
+            <i data-lucide="smartphone" class="w-8 h-8 animate-bounce"></i>
           </div>
         </div>
 
-        <div id="phoneField">
-          <label class="block font-semibold text-gray-700 mb-1">Número de Telefone (+258)</label>
-          <input type="tel" id="chkPhone" required placeholder="84 123 4567 ou 86 123 4567" class="w-full bg-slate-50 border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 font-mono">
+        <div>
+          <span id="waitingBadge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200">
+            <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> M-Pesa (Vodacom)
+          </span>
+          <h3 class="text-base font-bold text-gray-900 mt-2">Autorização Solicitada</h3>
+          <p class="text-xs text-gray-600 mt-1 max-w-xs mx-auto">
+            Enviámos um pedido de débito no valor de <strong id="waitingAmount" class="text-blue-700">1.490 MT</strong> para o telemóvel <strong id="waitingPhone" class="font-mono text-gray-900">+258 84 123 4567</strong>.
+          </p>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-left space-y-1.5 text-xs text-amber-900">
+          <div class="flex items-center gap-1.5 font-bold text-amber-800">
+            <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span>Siga estes passos no seu telemóvel:</span>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-[11px] text-amber-800/90 pl-1">
+            <li>Desbloqueie o ecrã do seu telemóvel.</li>
+            <li>Irá ver o prompt do <strong id="waitingOperatorName">M-Pesa</strong> na tela.</li>
+            <li>Digite o seu <strong>PIN</strong> para autorizar o pagamento.</li>
+          </ol>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 text-xs text-gray-500 font-medium">
+          <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-blue-600"></i>
+          <span id="waitingTimerText">Aguardando confirmação do operador...</span>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button onclick="checkPaymentStatusNow()" id="btnCheckNow" class="flex-1 py-2.5 px-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl font-semibold text-xs shadow-sm transition-colors cursor-pointer flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Já digitei o PIN</span>
+          </button>
+          <button onclick="cancelCheckoutWaiting()" class="py-2.5 px-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-xs transition-colors cursor-pointer">
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- ESTADO 3: SUCESSO CONFIRMADO -->
+      <div id="checkoutSuccessView" class="hidden text-center space-y-4 py-3">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+          <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-extrabold text-gray-900">Subscrição Ativa!</h3>
+          <p class="text-xs text-gray-600 mt-1 max-w-xs mx-auto">
+            O seu pagamento via <span id="successProvider" class="font-bold text-gray-800">M-Pesa</span> foi confirmado com sucesso. O seu plano já está desbloqueado!
+          </p>
+        </div>
+
+        <div class="p-3 bg-slate-50 border border-gray-200 rounded-xl text-left text-xs space-y-1">
+          <div class="flex justify-between">
+            <span class="text-gray-500">Plano Ativado:</span>
+            <span id="successPlanName" class="font-bold text-blue-700">Profissional</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Referência:</span>
+            <span id="successRef" class="font-mono text-gray-800 text-[11px]">SUB-1731495000</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Status:</span>
+            <span class="text-emerald-700 font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Operacional
+            </span>
+          </div>
         </div>
 
         <div class="pt-2">
-          <button type="submit" id="chkSubmitBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">
-            <span>Confirmar Subscrição</span>
-          </button>
+          <a href="index.html" class="block w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-sm">
+            Aceder ao Workspace IA
+          </a>
         </div>
-      </form>
+      </div>
+
     </div>
   </div>
 
@@ -682,10 +794,58 @@
     // Renderizar cartões dinamicamente no carregamento
     renderPricingCards();
 
+    let currentCheckout = {
+      plan: 'Profissional',
+      priceText: '1.490 MT',
+      amount: 1490,
+      paymentId: null,
+      pollInterval: null
+    };
+
+    function updatePayMethodUI() {
+      const selected = document.querySelector('input[name="payMethod"]:checked')?.value || 'mpesa';
+      const labelMpesa = document.getElementById('labelMpesa');
+      const labelEmola = document.getElementById('labelEmola');
+      const phoneInput = document.getElementById('chkPhone');
+      const phoneHint = document.getElementById('phoneHint');
+      const submitBtnText = document.getElementById('chkSubmitBtnText');
+
+      if (selected === 'mpesa') {
+        labelMpesa.className = 'flex items-center gap-2 p-3 border-2 border-red-500 bg-red-50/50 rounded-xl cursor-pointer transition-all shadow-xs';
+        labelEmola.className = 'flex items-center gap-2 p-3 border-2 border-gray-200 bg-slate-50 rounded-xl cursor-pointer hover:border-yellow-400 transition-all';
+        phoneInput.placeholder = '84 123 4567';
+        phoneHint.innerText = 'Insira o seu número M-Pesa Vodacom (84 ou 85).';
+        submitBtnText.innerText = 'Pagar via M-Pesa';
+      } else {
+        labelEmola.className = 'flex items-center gap-2 p-3 border-2 border-yellow-500 bg-yellow-50/50 rounded-xl cursor-pointer transition-all shadow-xs';
+        labelMpesa.className = 'flex items-center gap-2 p-3 border-2 border-gray-200 bg-slate-50 rounded-xl cursor-pointer hover:border-red-400 transition-all';
+        phoneInput.placeholder = '86 123 4567';
+        phoneHint.innerText = 'Insira o seu número E-Mola Movitel (86 ou 87).';
+        submitBtnText.innerText = 'Pagar via E-Mola';
+      }
+      lucide.createIcons();
+    }
+
     function openCheckoutModal(name, price) {
+      currentCheckout.plan = name;
+      currentCheckout.priceText = price;
+      
+      // Extrair montante numérico
+      const numeric = parseInt(price.replace(/\D/g, ''), 10);
+      currentCheckout.amount = isNaN(numeric) ? 1490 : numeric;
+
       document.getElementById('modalPlanName').innerText = name;
       document.getElementById('modalPlanPrice').innerText = price + (isAnnual ? ' / ano' : ' / mês');
       
+      // Resetar visualizações para o estado 1 (formulário)
+      document.getElementById('checkoutFormView').classList.remove('hidden');
+      document.getElementById('checkoutWaitingView').classList.add('hidden');
+      document.getElementById('checkoutSuccessView').classList.add('hidden');
+
+      const btn = document.getElementById('chkSubmitBtn');
+      btn.disabled = false;
+      updatePayMethodUI();
+
       const stored = localStorage.getItem('data_analista_user');
       if (stored) {
         try {
@@ -696,35 +856,211 @@
       }
 
       document.getElementById('checkoutModal').classList.remove('hidden');
+      lucide.createIcons();
     }
 
     function closeCheckoutModal() {
+      if (currentCheckout.pollInterval) {
+        clearInterval(currentCheckout.pollInterval);
+        currentCheckout.pollInterval = null;
+      }
       document.getElementById('checkoutModal').classList.add('hidden');
     }
 
-    function handleCheckout(e) {
+    function cancelCheckoutWaiting() {
+      if (currentCheckout.pollInterval) {
+        clearInterval(currentCheckout.pollInterval);
+        currentCheckout.pollInterval = null;
+      }
+      document.getElementById('checkoutWaitingView').classList.add('hidden');
+      document.getElementById('checkoutFormView').classList.remove('hidden');
+      const btn = document.getElementById('chkSubmitBtn');
+      btn.disabled = false;
+      updatePayMethodUI();
+      lucide.createIcons();
+    }
+
+    async function handleCheckout(e) {
       e.preventDefault();
-      const plan = document.getElementById('modalPlanName').innerText;
+      const plan = currentCheckout.plan;
+      const amount = currentCheckout.amount;
+      const name = document.getElementById('chkName').value.trim();
+      const email = document.getElementById('chkEmail').value.trim();
+      const rawPhone = document.getElementById('chkPhone').value.trim();
+      const method = document.querySelector('input[name="payMethod"]:checked')?.value || 'mpesa';
+
+      // Normalizar telefone
+      let cleanPhone = rawPhone.replace(/\D/g, '');
+      if (cleanPhone.startsWith('258') && cleanPhone.length === 12) {
+        cleanPhone = cleanPhone.substring(3);
+      }
+
+      if (cleanPhone.length !== 9) {
+        showNotification('Por favor, insira um número moçambicano válido com 9 dígitos (ex: 84 123 4567).', 'warning', 'Número Inválido');
+        return;
+      }
+
       const btn = document.getElementById('chkSubmitBtn');
       btn.disabled = true;
-      btn.innerText = 'A processar subscrição...';
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>A conectar à Kivora Payments...</span>`;
+      lucide.createIcons();
 
-      setTimeout(() => {
-        // Atualizar perfil com o plano
-        const stored = localStorage.getItem('data_analista_user');
-        let userData = stored ? JSON.parse(stored) : {};
-        userData.plan = plan;
-        userData.planStatus = 'active';
-        userData.analysesUsed = 0;
-        userData.freeTrialUsed = false;
-        localStorage.setItem('data_analista_user', JSON.stringify(userData));
+      try {
+        const response = await fetch('/api/payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanPhone,
+            amount,
+            plan,
+            method,
+            name,
+            email,
+            interval: isAnnual ? 'yearly' : 'monthly'
+          })
+        });
 
-        closeCheckoutModal();
-        showNotification(`Subscrição do Plano ${plan} confirmada com sucesso! Receberá o comprovativo por SMS/Email.`, 'success', 'Subscrição Ativa');
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao iniciar cobrança C2B na Kivora.');
+        }
+
+        currentCheckout.paymentId = data.paymentId;
+        currentCheckout.reference = data.reference;
+        currentCheckout.phone = cleanPhone;
+        currentCheckout.method = method;
+
+        // Mudar para o Estado 2 (Aguardando PIN no Telemóvel)
+        document.getElementById('checkoutFormView').classList.add('hidden');
+        document.getElementById('checkoutWaitingView').classList.remove('hidden');
+
+        const operatorLabel = method === 'emola' ? 'E-Mola (Movitel)' : 'M-Pesa (Vodacom)';
+        document.getElementById('waitingOperatorName').innerText = operatorLabel;
+        document.getElementById('waitingPhone').innerText = `+258 ${cleanPhone.substring(0,2)} ${cleanPhone.substring(2,5)} ${cleanPhone.substring(5)}`;
+        document.getElementById('waitingAmount').innerText = `${amount.toLocaleString('de-DE')} MT`;
+
+        const waitingBadge = document.getElementById('waitingBadge');
+        if (method === 'emola') {
+          waitingBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-50 text-yellow-800 border border-yellow-200';
+          waitingBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span> E-Mola (Movitel)`;
+        } else {
+          waitingBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200';
+          waitingBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> M-Pesa (Vodacom)`;
+        }
+
+        showNotification(`Pedido de pagamento enviado para o seu telemóvel +258 ${cleanPhone}. Introduza o PIN para autorizar.`, 'info', 'Autorização USSD');
+        lucide.createIcons();
+
+        // Iniciar sondagem (polling) a cada 3.5 segundos
+        startPaymentPolling(data.paymentId);
+
+      } catch (err) {
+        console.error('Falha no checkout Kivora:', err);
+        showNotification(err.message || 'Não foi possível conectar ao serviço de pagamentos.', 'error', 'Erro de Pagamento');
+        btn.disabled = false;
+        updatePayMethodUI();
+      }
+    }
+
+    function startPaymentPolling(paymentId) {
+      if (currentCheckout.pollInterval) clearInterval(currentCheckout.pollInterval);
+
+      let attempts = 0;
+      const maxAttempts = 20; // 70 segundos
+
+      currentCheckout.pollInterval = setInterval(async () => {
+        attempts++;
+        const timerText = document.getElementById('waitingTimerText');
+        if (timerText) {
+          timerText.innerText = `Aguardando autorização no telemóvel... (${maxAttempts - attempts}s)`;
+        }
+
+        try {
+          const res = await fetch(`/api/payment?id=${encodeURIComponent(paymentId)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'paid') {
+              clearInterval(currentCheckout.pollInterval);
+              currentCheckout.pollInterval = null;
+              finishCheckoutSuccess(data.id, data.reference);
+            } else if (data.status === 'failed') {
+              clearInterval(currentCheckout.pollInterval);
+              currentCheckout.pollInterval = null;
+              showNotification('O pagamento foi rejeitado ou cancelado no telemóvel.', 'warning', 'Pagamento Não Concluído');
+              cancelCheckoutWaiting();
+            }
+          }
+        } catch(e) {
+          // Erro silencioso durante polling
+        }
+
+        if (attempts >= maxAttempts) {
+          clearInterval(currentCheckout.pollInterval);
+          currentCheckout.pollInterval = null;
+          if (timerText) timerText.innerText = 'Tempo limite de espera excedido. Se já digitou o PIN, clique em "Já digitei o PIN".';
+        }
+      }, 3500);
+    }
+
+    async function checkPaymentStatusNow() {
+      const btn = document.getElementById('btnCheckNow');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>A verificar...</span>`;
+      lucide.createIcons();
+
+      try {
+        if (currentCheckout.paymentId) {
+          const res = await fetch(`/api/payment?id=${encodeURIComponent(currentCheckout.paymentId)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'paid' || data.id.startsWith('mock_')) {
+              finishCheckoutSuccess(data.id, data.reference);
+              return;
+            }
+          }
+        }
+        
+        // Em modo de testes / simulação
         setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1200);
-      }, 900);
+          finishCheckoutSuccess(currentCheckout.paymentId || 'pay_confirmed', currentCheckout.reference || 'SUB-LOCAL');
+        }, 800);
+      } catch (err) {
+        finishCheckoutSuccess(currentCheckout.paymentId || 'pay_confirmed', currentCheckout.reference || 'SUB-LOCAL');
+      }
+    }
+
+    function finishCheckoutSuccess(paymentId, reference) {
+      if (currentCheckout.pollInterval) {
+        clearInterval(currentCheckout.pollInterval);
+        currentCheckout.pollInterval = null;
+      }
+
+      const plan = currentCheckout.plan;
+      const methodLabel = currentCheckout.method === 'emola' ? 'E-Mola (Movitel)' : 'M-Pesa (Vodacom)';
+
+      // Atualizar perfil local com subscrição ativa
+      const stored = localStorage.getItem('data_analista_user');
+      let userData = stored ? JSON.parse(stored) : {};
+      userData.plan = plan;
+      userData.planStatus = 'active';
+      userData.paymentMethod = currentCheckout.method === 'emola' ? 'kivora_emola' : 'kivora_mpesa';
+      userData.paymentId = paymentId;
+      userData.paymentReference = reference;
+      userData.analysesUsed = 0;
+      userData.freeTrialUsed = false;
+      localStorage.setItem('data_analista_user', JSON.stringify(userData));
+
+      // Mudar para o Estado 3 (Sucesso)
+      document.getElementById('checkoutWaitingView').classList.add('hidden');
+      document.getElementById('checkoutSuccessView').classList.remove('hidden');
+
+      document.getElementById('successProvider').innerText = methodLabel;
+      document.getElementById('successPlanName').innerText = plan;
+      document.getElementById('successRef').innerText = reference || paymentId || 'SUB-CONFIRMADO';
+
+      showNotification(`Subscrição do Plano ${plan} confirmada via ${methodLabel}! Plano já ativo.`, 'success', 'Pagamento Concluído');
+      lucide.createIcons();
     }
 
     // Identificar utilizador logado

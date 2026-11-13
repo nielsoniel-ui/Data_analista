@@ -131,7 +131,8 @@
           <!-- Badge do Plano -->
           <div class="p-2.5 px-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-            <span class="text-blue-900 font-semibold">Plano Profissional Ativo</span>
+            <span id="clientPlanText" class="text-blue-900 font-semibold">Plano Profissional Ativo</span>
+            <span id="clientPayMethodBadge" class="hidden text-[10px] px-1.5 py-0.5 rounded font-bold"></span>
             <a href="pricing.html" class="text-blue-600 font-bold underline hover:text-blue-800 ml-1">Gerir</a>
           </div>
           <a href="index.html" class="px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
@@ -415,6 +416,31 @@
         }
       }
     });
+
+    // Sincronizar dados do utilizador e subscrição Kivora (M-Pesa / E-Mola)
+    const stored = localStorage.getItem('data_analista_user');
+    if (stored) {
+      try {
+        const u = JSON.parse(stored);
+        if (u.plan) {
+          const planText = document.getElementById('clientPlanText');
+          if (planText) planText.innerText = `Plano ${u.plan} Ativo`;
+        }
+        if (u.paymentMethod) {
+          const badge = document.getElementById('clientPayMethodBadge');
+          if (badge) {
+            badge.classList.remove('hidden');
+            if (u.paymentMethod.includes('emola')) {
+              badge.className = 'text-[10px] px-1.5 py-0.5 rounded font-bold bg-yellow-100 text-yellow-800 border border-yellow-200';
+              badge.innerText = 'E-Mola';
+            } else {
+              badge.className = 'text-[10px] px-1.5 py-0.5 rounded font-bold bg-red-100 text-red-700 border border-red-200';
+              badge.innerText = 'M-Pesa';
+            }
+          }
+        }
+      } catch(e) {}
+    }
 
     async function logoutClient() {
       const confirmed = await showConfirmDialog('Deseja terminar a sua sessão no Portal do Cliente?', {

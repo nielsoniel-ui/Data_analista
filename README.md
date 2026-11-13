@@ -92,7 +92,25 @@ A plataforma oferece um modelo freemium sustentável adaptado ao mercado moçamb
 - **[Lucide Icons](https://lucide.dev/)**
 - **[Chart.js](https://www.chartjs.org/)**
 - **[MongoDB Atlas](https://www.mongodb.com/)**
+- **[Kivora Payments API](https://www.kivorapayments.com)** (M-Pesa & E-Mola C2B)
 - **[Python (PyMongo & Bcrypt)](https://pymongo.readthedocs.io/)**
+
+---
+
+## 🇲🇿 Integração Kivora Payments (M-Pesa e E-Mola)
+
+A aplicação integra a API oficial da **Kivora Payments** (especificação OpenAPI 3.1.0 `kivora-payments.openapi.json`):
+- **Cobranças C2B:** Iniciação de débito direto no telemóvel do cliente via **M-Pesa (Vodacom 84/85)** e **E-Mola (Movitel 86/87)**.
+- **USSD Push em Tempo Real:** Ao submeter a subscrição, o cliente recebe o prompt no telemóvel para introduzir o seu PIN e autorizar a transação.
+- **Sondagem Automática & Webhooks:**
+  - `POST /api/payment`: Inicia a cobrança e gera a referência idempotente.
+  - `GET /api/payment?id={paymentId}`: Consulta o estado da transação (`pending`, `paid`, `failed`).
+  - `POST /api/kivora-webhook`: Endpoint pronto para receber eventos da Kivora (`payment.completed`, `subscription.created`).
+- **Variáveis de Ambiente na Vercel:**
+  ```env
+  KIVORA_SECRET_KEY=sk_test_... # ou sk_live_...
+  KIVORA_API_URL=https://www.kivorapayments.com
+  ```
 
 ---
 
