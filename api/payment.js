@@ -100,9 +100,46 @@ module.exports = async function handler(req, res) {
       if (client) {
         const db = client.db(process.env.MONGO_DB_NAME || 'datanalistadb');
         const query = id ? { paymentId: id } : { reference };
-        const paymentRecord = await db.collection('payments').findOne(query);
+        let paymentRecord = await db.collection('payments').findOne(query);
 
         if (paymentRecord) {
+          // Se for mock/sandbox ou se já foi liquidado, garantir atualização imediata no MongoDB Atlas
+          if ((id && id.startsWith('mock_')) || paymentRecord.status === 'paid') {
+            if (paymentRecord.status !== 'paid') {
+              await db.collection('payments').updateOne(
+                { _id: paymentRecord._id },
+                { $set: { status: 'paid', paidAt: new Date(), updatedAt: new Date() } }
+              );
+              paymentRecord.status = 'paid';
+              paymentRecord.paidAt = new Date();
+            }
+
+            // Ativar plano no utilizador e garantir perfil de cliente
+            if (paymentRecord.customerEmail) {
+              await db.collection('users').updateOne(
+                { email: paymentRecord.customerEmail.toLowerCase().trim() },
+                {
+                  $set: {
+                    role: 'client',
+                    plan: paymentRecord.plan || 'Profissional',
+                    planStatus: 'active',
+                    planActivatedAt: new Date(),
+                    lastPaymentId: paymentRecord.paymentId,
+                    paymentMethod: paymentRecord.provider === 'emola' ? 'kivora_emola' : 'kivora_mpesa',
+                    updated_at: new Date()
+                  }
+                }
+              );
+            }
+
+            // Gerar fatura automática única e idempotente
+            try {
+              await generateInvoiceForPayment(db, paymentRecord);
+            } catch (invErr) {
+              console.warn('Aviso: falha ao gerar fatura automática:', invErr.message);
+            }
+          }
+
           return res.status(200).json({
             ok: true,
             id: paymentRecord.paymentId,
@@ -110,13 +147,13 @@ module.exports = async function handler(req, res) {
             amount: paymentRecord.amount,
             currency: paymentRecord.currency || 'MZN',
             reference: paymentRecord.reference,
-            method: paymentRecord.method,
+            method: paymentRecord.provider || paymentRecord.method,
             phone: paymentRecord.phone
           });
         }
       }
 
-      // Se for pagamento simulado local (mock)
+      // Se for pagamento simulado local (mock) sem registo prévio
       if (id && id.startsWith('mock_')) {
         return res.status(200).json({
           ok: true,
@@ -237,19 +274,46 @@ module.exports = async function handler(req, res) {
             updatedAt: new Date()
           });
 
-          // Se tiver email, atualiza utilizador existente
+          // Garantir que o cliente existe e tem papel de 'client'
           if (email) {
+            const cleanEmail = email.toLowerCase().trim();
             const usersCol = db.collection('users');
-            await usersCol.updateOne(
-              { email: email.toLowerCase().trim() },
-              {
-                $set: {
-                  lastPaymentId: paymentId,
-                  pendingPlan: plan,
-                  paymentProvider: detectedProvider
+            const existingUser = await usersCol.findOne({ email: cleanEmail });
+
+            if (existingUser) {
+              await usersCol.updateOne(
+                { email: cleanEmail },
+                {
+                  $set: {
+                    role: 'client',
+                    pendingPlan: plan,
+                    lastPaymentId: paymentId,
+                    paymentProvider: detectedProvider,
+                    updated_at: new Date()
+                  }
                 }
-              }
-            );
+              );
+            } else {
+              const bcrypt = require('bcryptjs');
+              const salt = await bcrypt.genSalt(10);
+              const passwordHash = await bcrypt.hash('@nalista2026', salt);
+              await usersCol.insertOne({
+                name: name || 'Novo Cliente',
+                email: cleanEmail,
+                phone: cleanPhone,
+                password_hash: passwordHash,
+                role: 'client',
+                status: 'active',
+                plan: plan || 'Profissional',
+                pendingPlan: plan || 'Profissional',
+                lastPaymentId: paymentId,
+                paymentProvider: detectedProvider,
+                organization: 'Moçambique',
+                province: 'Maputo Cidade',
+                created_at: new Date(),
+                updated_at: new Date()
+              });
+            }
           }
           // Registar atividade de auditoria do cliente
           await logActivity(db, {

@@ -178,15 +178,23 @@ module.exports = async function handler(req, res) {
         };
       });
 
-      // Filtrar apenas clientes (role === 'client' ou utilizadores que efetuaram transações)
-      const clients = enrichedUsers.filter(u => u.role === 'client' || u.totalSpent > 0 || u.invoicesCount > 0);
+      // Filtrar clientes da plataforma (qualquer utilizador com subscrição/pagamento ou registado que não seja superadmin)
+      const clients = enrichedUsers.filter(u => 
+        u.role === 'client' || 
+        u.totalSpent > 0 || 
+        u.invoicesCount > 0 || 
+        u.paymentsCount > 0 || 
+        u.plan || 
+        u.pendingPlan ||
+        (u.role !== 'admin' && !u.is_superuser && u.email !== 'admin@dataanalista.com')
+      );
 
       // Métricas globais
       const totalUsers = users.length;
       const activeUsers = users.filter(u => u.status !== 'suspended').length;
       const suspendedUsers = users.filter(u => u.status === 'suspended').length;
       const adminsCount = users.filter(u => u.role === 'admin' || u.is_superuser).length;
-      const clientsCount = clients.length || users.filter(u => u.role === 'client').length;
+      const clientsCount = clients.length;
       const regularUsersCount = users.filter(u => u.role === 'user' || (!u.role && !u.is_superuser)).length;
 
       // Distribuição por província
