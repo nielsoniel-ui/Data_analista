@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { generateInvoiceForPayment, logActivity } = require('./invoice-helper');
 
 let cachedClient = null;
 
@@ -77,6 +78,10 @@ module.exports = async function handler(req, res) {
               { paymentId: id },
               { $set: { status: 'paid', updatedAt: new Date(), kivoraData } }
             );
+            const pRec = await db.collection('payments').findOne({ paymentId: id });
+            if (pRec) {
+              await generateInvoiceForPayment(db, pRec);
+            }
           }
 
           return res.status(200).json({
@@ -246,6 +251,15 @@ module.exports = async function handler(req, res) {
               }
             );
           }
+          // Registar atividade de auditoria do cliente
+          await logActivity(db, {
+            userEmail: email,
+            userName: name,
+            action: 'payment_initiated',
+            title: `Cobrança ${providerLabel} Iniciada`,
+            details: `Cobrança de ${numAmount.toLocaleString('pt-MZ')} MT enviada para o contacto +258 ${cleanPhone} (${plan || 'Profissional'}).`,
+            metadata: { paymentId, reference, amount: numAmount, plan, provider: detectedProvider }
+          });
         } catch (dbErr) {
           console.warn('Aviso: falha ao guardar pagamento no MongoDB:', dbErr.message);
         }

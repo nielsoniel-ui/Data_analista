@@ -82,19 +82,27 @@
       <!-- Navegação Central Desktop (visível apenas em telas grandes) -->
       <nav class="hidden xl:flex items-center space-x-1 text-xs text-gray-300">
         <a href="admin.html" class="px-2.5 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Visão Geral</a>
+        <a href="#clientsSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Clientes</span>
+        </a>
+        <a href="#invoicesSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Faturação</span>
+        </a>
+        <a href="#activitiesSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="activity" class="w-3.5 h-3.5 text-purple-400"></i>
+          <span>Atividades</span>
+        </a>
         <a href="#usersSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Utilizadores</a>
         <a href="#databaseSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">MongoDB Atlas</a>
         <a href="#planosSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
           <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>Gerir Planos</span>
+          <span>Planos</span>
         </a>
         <a href="client.html" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
           <i data-lucide="layout" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span>Dashboard Cliente</span>
-        </a>
-        <a href="index.html" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
-          <span>Workspace IA</span>
+          <span>Portal Cliente</span>
         </a>
       </nav>
 
@@ -121,9 +129,21 @@
         <i data-lucide="gauge" class="w-4 h-4 text-blue-400"></i>
         <span>Visão Geral</span>
       </a>
+      <a href="#clientsSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="users" class="w-4 h-4 text-blue-400"></i>
+        <span>Gestão de Clientes</span>
+      </a>
+      <a href="#invoicesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+        <span>Faturação & Recibos</span>
+      </a>
+      <a href="#activitiesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="activity" class="w-4 h-4 text-purple-400"></i>
+        <span>Histórico de Atividades</span>
+      </a>
       <a href="#usersSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
-        <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
-        <span>Gestão de Utilizadores</span>
+        <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
+        <span>Todos os Utilizadores</span>
       </a>
       <a href="#databaseSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
         <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
@@ -131,7 +151,7 @@
       </a>
       <a href="#planosSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
         <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
-        <span>Gerir Planos de Subscrição</span>
+        <span>Gerir Planos</span>
       </a>
       <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
         <i data-lucide="layout" class="w-4 h-4 text-emerald-400"></i>
@@ -271,6 +291,164 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- =====================================================
+         1. GESTÃO CENTRALIZADA DE CLIENTES
+    ====================================================== -->
+    <div id="clientsSection" class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
+      <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="p-2 bg-blue-50 text-blue-600 rounded-xl">
+              <i data-lucide="building-2" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-base font-bold text-gray-900">Gestão Centralizada de Clientes</h3>
+            <span id="clientsCountBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">1 Cliente</span>
+          </div>
+          <p class="text-xs text-gray-500">Acompanhe contas corporativas, planos ativos, histórico de faturação e consulte o dossiê individual.</p>
+        </div>
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <input 
+            type="text" 
+            id="clientSearch"
+            onkeyup="filterClientsTable()" 
+            placeholder="Pesquisar cliente, empresa ou e-mail..." 
+            class="bg-slate-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500 w-64"
+          />
+          <button onclick="addUserModal()" class="px-3.5 py-2 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+            <span>Novo Cliente</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-gray-600">
+          <thead class="bg-slate-50 text-[11px] font-semibold text-gray-500 uppercase border-b border-gray-100">
+            <tr>
+              <th class="px-6 py-3.5">Cliente / Empresa</th>
+              <th class="px-6 py-3.5">Contactos & Província</th>
+              <th class="px-6 py-3.5">Plano Subscrito</th>
+              <th class="px-6 py-3.5">Total Faturado</th>
+              <th class="px-6 py-3.5">Faturas</th>
+              <th class="px-6 py-3.5">Estado</th>
+              <th class="px-6 py-3.5 text-right">Dossiê & Ações</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTableBody" class="divide-y divide-gray-100">
+            <tr>
+              <td colspan="7" class="px-6 py-8 text-center text-xs text-gray-400">
+                A carregar lista de clientes do MongoDB Atlas...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         2. SISTEMA AUTOMÁTICO DE FATURAÇÃO & RECIBOS
+    ====================================================== -->
+    <div id="invoicesSection" class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
+      <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-base font-bold text-gray-900">Sistema Automático de Faturação & Recibos</h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">100% Automático</span>
+          </div>
+          <p class="text-xs text-gray-500">Geração automática de faturas legais com IVA (16%) e envio imediato de comprovativo para o cliente após pagamento M-Pesa / E-Mola.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="refreshData()" class="px-3.5 py-2 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Sincronizar Faturas</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Resumo de Faturação -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 sm:p-6 bg-slate-50/70 border-b border-gray-100 text-xs">
+        <div class="p-3 bg-white rounded-xl border border-gray-200/60 shadow-2xs">
+          <span class="text-gray-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Total Faturado Liquidado</span>
+          <span id="kpiInvoicedTotal" class="font-extrabold text-base text-gray-900">1.490 MT</span>
+        </div>
+        <div class="p-3 bg-white rounded-xl border border-gray-200/60 shadow-2xs">
+          <span class="text-gray-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Faturas Emitidas</span>
+          <span id="kpiInvoicesCount" class="font-extrabold text-base text-emerald-600">1 Fatura</span>
+        </div>
+        <div class="p-3 bg-white rounded-xl border border-gray-200/60 shadow-2xs">
+          <span class="text-gray-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Disparo Automático E-mail</span>
+          <span class="font-semibold text-emerald-700 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 100% Entregues
+          </span>
+        </div>
+        <div class="p-3 bg-white rounded-xl border border-gray-200/60 shadow-2xs">
+          <span class="text-gray-400 block text-[10px] uppercase font-bold tracking-wider mb-0.5">Gateway Integrado</span>
+          <span class="font-semibold text-blue-700">Kivora C2B (M-Pesa / E-Mola)</span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-gray-600">
+          <thead class="bg-slate-50 text-[11px] font-semibold text-gray-500 uppercase border-b border-gray-100">
+            <tr>
+              <th class="px-6 py-3.5">Nº da Fatura</th>
+              <th class="px-6 py-3.5">Data de Emissão</th>
+              <th class="px-6 py-3.5">Cliente</th>
+              <th class="px-6 py-3.5">Descrição do Serviço</th>
+              <th class="px-6 py-3.5">Valor Total</th>
+              <th class="px-6 py-3.5">Método de Pagamento</th>
+              <th class="px-6 py-3.5">Notificação Cliente</th>
+              <th class="px-6 py-3.5 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="invoicesTableBody" class="divide-y divide-gray-100">
+            <tr>
+              <td colspan="8" class="px-6 py-8 text-center text-xs text-gray-400">
+                A carregar faturas emitidas...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         3. REGISTO CENTRALIZADO DE ATIVIDADES & AUDITORIA
+    ====================================================== -->
+    <div id="activitiesSection" class="bg-white border border-gray-200/90 rounded-2xl shadow-xs overflow-hidden">
+      <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="p-2 bg-purple-50 text-purple-600 rounded-xl">
+              <i data-lucide="activity" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-base font-bold text-gray-900">Histórico Centralizado de Atividades & Auditoria</h3>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Tempo Real
+            </span>
+          </div>
+          <p class="text-xs text-gray-500">Todas as operações realizadas pelos clientes (logins, pagamentos, consultas, emissões de faturas) registadas cronologicamente.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input 
+            type="text" 
+            id="activitySearch"
+            onkeyup="filterActivitiesFeed()" 
+            placeholder="Filtrar eventos por cliente ou ação..." 
+            class="bg-slate-50 border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-blue-500 w-56"
+          />
+        </div>
+      </div>
+
+      <div id="activitiesFeed" class="divide-y divide-gray-100 max-h-96 overflow-y-auto p-2 sm:p-4 space-y-2">
+        <div class="p-4 text-center text-xs text-gray-400">A carregar registo de atividades...</div>
+      </div>
     </div>
 
     <!-- Tabela de Gestão de Utilizadores -->
@@ -731,6 +909,217 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
       </div>
     </div>
 
+    <!-- Modal: Dossiê Completo do Cliente -->
+    <div id="clientDossierModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 max-w-3xl w-full my-8 p-6 sm:p-8 space-y-6 relative">
+        <button onclick="closeClientDossierModal()" type="button" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Cabeçalho do Dossiê -->
+        <div class="flex items-start justify-between gap-4 border-b border-gray-100 pb-5">
+          <div class="flex items-center gap-3">
+            <div id="dossierAvatar" class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-700 flex items-center justify-center font-black text-base shrink-0">
+              CL
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 id="dossierName" class="text-lg font-bold text-gray-900">Cliente Corporativo</h3>
+                <span id="dossierStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Ativo</span>
+              </div>
+              <div id="dossierOrg" class="text-xs text-gray-500">Cliente Corporativo Moçambique &bull; Maputo Cidade</div>
+              <div id="dossierId" class="text-[10px] text-gray-400 font-mono mt-0.5">ID: 6ae9c06c2c55fd11b8e0f837</div>
+            </div>
+          </div>
+          <div class="text-right space-y-1">
+            <span id="dossierPlanBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 inline-block">Plano Profissional</span>
+            <div class="text-xs text-gray-500">Total Faturado: <span id="dossierTotalSpent" class="font-extrabold text-gray-900">1.490 MT</span></div>
+          </div>
+        </div>
+
+        <!-- Abas de Navegação do Dossiê -->
+        <div class="flex items-center space-x-2 border-b border-gray-200 text-xs font-semibold">
+          <button id="dossierTabInvoicesBtn" onclick="switchDossierTab('invoices')" class="px-3 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer">
+            Faturas & Comprovativos (<span id="dossierInvoicesCount">0</span>)
+          </button>
+          <button id="dossierTabPaymentsBtn" onclick="switchDossierTab('payments')" class="px-3 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-900 cursor-pointer">
+            Transações Kivora (<span id="dossierPaymentsCount">0</span>)
+          </button>
+          <button id="dossierTabActivitiesBtn" onclick="switchDossierTab('activities')" class="px-3 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-900 cursor-pointer">
+            Histórico de Atividades (<span id="dossierActivitiesCount">0</span>)
+          </button>
+        </div>
+
+        <!-- Conteúdo Aba 1: Faturas do Cliente -->
+        <div id="dossierTabInvoices" class="space-y-3">
+          <div class="overflow-x-auto border border-gray-100 rounded-xl">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-slate-50 text-[10px] uppercase font-bold text-gray-500 border-b border-gray-100">
+                <tr>
+                  <th class="px-4 py-2.5">Nº Fatura</th>
+                  <th class="px-4 py-2.5">Data</th>
+                  <th class="px-4 py-2.5">Serviço</th>
+                  <th class="px-4 py-2.5">Valor (MT)</th>
+                  <th class="px-4 py-2.5">Método</th>
+                  <th class="px-4 py-2.5 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="dossierInvoicesTableBody" class="divide-y divide-gray-100">
+                <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">Nenhuma fatura encontrada.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Conteúdo Aba 2: Pagamentos / Kivora -->
+        <div id="dossierTabPayments" class="hidden space-y-3">
+          <div class="overflow-x-auto border border-gray-100 rounded-xl">
+            <table class="w-full text-left text-xs text-gray-600">
+              <thead class="bg-slate-50 text-[10px] uppercase font-bold text-gray-500 border-b border-gray-100">
+                <tr>
+                  <th class="px-4 py-2.5">Ref. / ID</th>
+                  <th class="px-4 py-2.5">Data</th>
+                  <th class="px-4 py-2.5">Telemóvel</th>
+                  <th class="px-4 py-2.5">Provedor</th>
+                  <th class="px-4 py-2.5">Valor</th>
+                  <th class="px-4 py-2.5">Estado</th>
+                  <th class="px-4 py-2.5 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="dossierPaymentsTableBody" class="divide-y divide-gray-100">
+                <tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">Nenhum pagamento encontrado.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Conteúdo Aba 3: Atividades do Cliente -->
+        <div id="dossierTabActivities" class="hidden space-y-2 max-h-72 overflow-y-auto">
+          <div id="dossierActivitiesList" class="space-y-2">
+            <div class="p-4 text-center text-gray-400 text-xs">Nenhuma atividade registada.</div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+          <div class="text-gray-400">E-mail: <span id="dossierEmail" class="font-mono text-gray-700">cliente@dataanalista.com</span></div>
+          <button type="button" onclick="closeClientDossierModal()" class="px-4 py-2 font-semibold text-gray-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+            Fechar Dossiê
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Visualização de Fatura Oficial (Admin) -->
+    <div id="adminInvoiceModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-2xl border border-gray-200 max-w-2xl w-full my-8 p-6 sm:p-8 space-y-6 relative">
+        <button onclick="closeAdminInvoiceModal()" type="button" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div id="adminInvoicePrintArea" class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-gray-200 pb-6">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">República de Moçambique</span>
+              </div>
+              <h2 class="text-2xl font-black text-gray-900 tracking-tight">Data Analista</h2>
+              <p class="text-xs text-gray-500 font-medium">Data Analista Moçambique Lda &bull; NUIT: 400192837</p>
+              <p class="text-[11px] text-gray-400">Avenida Julius Nyerere, nº 1332, 4º Andar, Maputo Cidade</p>
+              <p class="text-[11px] text-gray-400">E-mail: faturacao@dataanalista.com &bull; Tel: +258 84 000 0000</p>
+            </div>
+            <div class="sm:text-right space-y-1">
+              <span class="inline-block px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-[11px] rounded-lg tracking-wide">
+                FATURA / RECIBO DE QUITAÇÃO
+              </span>
+              <div id="adminModalInvNumber" class="text-lg font-black text-gray-900 font-mono">FAT-2026-0001</div>
+              <div class="text-xs text-gray-500">Emitida em: <span id="adminModalInvDate" class="font-semibold text-gray-800">17/11/2026</span></div>
+              <div class="text-xs text-gray-500">Ref. Kivora: <span id="adminModalInvRef" class="font-mono text-gray-700">SUB-1794567779945</span></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-gray-100 text-xs">
+            <div>
+              <span class="text-gray-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Facturado A (Cliente):</span>
+              <div id="adminModalInvCustomerName" class="font-bold text-gray-900 text-sm">Cliente Corporativo</div>
+              <div id="adminModalInvCustomerOrg" class="text-gray-600">Empresa Moçambicana</div>
+              <div id="adminModalInvCustomerEmail" class="font-mono text-gray-600">cliente@dataanalista.com</div>
+              <div id="adminModalInvCustomerPhone" class="text-gray-600">+258 84 123 4567</div>
+            </div>
+            <div class="sm:text-right">
+              <span class="text-gray-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Detalhes Fiscais & Pagamento:</span>
+              <div>NUIT: <span id="adminModalInvCustomerNuit" class="font-mono font-bold text-gray-900">400982314</span></div>
+              <div>Província: <span id="adminModalInvCustomerProvince" class="font-semibold text-gray-800">Maputo Cidade</span></div>
+              <div>Método: <span id="adminModalInvMethod" class="font-semibold text-emerald-700">M-Pesa (Vodacom)</span></div>
+              <div>Estado: <span class="inline-flex items-center gap-1 font-bold text-emerald-700"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Liquidado / Pago</span></div>
+            </div>
+          </div>
+
+          <div class="overflow-hidden border border-gray-200 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-[11px] font-bold text-gray-600 uppercase border-b border-gray-200">
+                <tr>
+                  <th class="px-4 py-2.5">Descrição do Serviço</th>
+                  <th class="px-4 py-2.5 text-center">Período</th>
+                  <th class="px-4 py-2.5 text-right">Taxa IVA</th>
+                  <th class="px-4 py-2.5 text-right">Preço s/ IVA</th>
+                  <th class="px-4 py-2.5 text-right">Total (MT)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr>
+                  <td class="px-4 py-3">
+                    <div id="adminModalInvService" class="font-bold text-gray-900">Subscrição Mensal - Plano Profissional</div>
+                    <div id="adminModalInvDesc" class="text-[11px] text-gray-500 mt-0.5">Acesso à plataforma autônoma de inteligência comercial e análise de dados IA para Moçambique.</div>
+                  </td>
+                  <td id="adminModalInvInterval" class="px-4 py-3 text-center text-gray-600">Mensal</td>
+                  <td class="px-4 py-3 text-right text-gray-600">16%</td>
+                  <td id="adminModalInvSubtotal" class="px-4 py-3 text-right font-mono text-gray-700">1.284,48 MT</td>
+                  <td id="adminModalInvLineTotal" class="px-4 py-3 text-right font-mono font-bold text-gray-900">1.490,00 MT</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col sm:flex-row justify-between items-start gap-4 pt-2">
+            <div class="max-w-xs text-[11px] text-gray-500 italic bg-amber-50/60 p-3 rounded-lg border border-amber-200/50">
+              <p>Este documento constitui comprovativo de quitação legal após liquidação via Kivora Payments (M-Pesa / E-Mola).</p>
+            </div>
+            <div class="w-full sm:w-64 space-y-1.5 text-xs text-right">
+              <div class="flex justify-between text-gray-600">
+                <span>Subtotal (sem IVA):</span>
+                <span id="adminModalInvSummarySubtotal" class="font-mono font-semibold">1.284,48 MT</span>
+              </div>
+              <div class="flex justify-between text-gray-600">
+                <span>IVA (16% Moçambique):</span>
+                <span id="adminModalInvSummaryVat" class="font-mono font-semibold">205,52 MT</span>
+              </div>
+              <div class="flex justify-between text-sm font-black text-gray-900 border-t border-gray-200 pt-2">
+                <span>Total Liquidado:</span>
+                <span id="adminModalInvSummaryTotal" class="font-mono text-emerald-700">1.490,00 MT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-gray-100 flex items-center justify-between text-xs">
+          <button type="button" id="adminModalResendBtn" onclick="resendCurrentModalInvoice()" class="px-3.5 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            <span>Reenviar ao Cliente</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="closeAdminInvoiceModal()" class="px-3.5 py-2 text-xs font-semibold text-gray-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+              Fechar
+            </button>
+            <button type="button" onclick="printAdminInvoiceModal()" class="px-4 py-2 text-xs font-semibold bg-[#111315] hover:bg-black text-white rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Imprimir / PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -751,6 +1140,12 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
     let chartUsageInstance = null;
     let chartGeoInstance = null;
     let cachedUsersList = [];
+    let cachedClientsList = [];
+    let cachedInvoicesList = [];
+    let cachedActivitiesList = [];
+    let cachedPaymentsList = [];
+    let currentDossierClient = null;
+    let currentModalInvoice = null;
 
     // Inicialização dos Gráficos com placeholders responsivos
     function initCharts() {
@@ -823,8 +1218,12 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
           throw new Error(data.error || 'Erro desconhecido ao carregar dados do admin.');
         }
 
-        const { dbInfo, stats, users, payments } = data;
+        const { dbInfo, stats, users, clients, invoices, activities, payments } = data;
         cachedUsersList = users || [];
+        cachedClientsList = clients || [];
+        cachedInvoicesList = invoices || [];
+        cachedActivitiesList = activities || [];
+        cachedPaymentsList = payments || [];
 
         // 1. Atualizar KPIs com dados reais
         const kpiUsers = document.getElementById('kpiTotalUsers');
@@ -859,7 +1258,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
 
         const kpiRevenue = document.getElementById('kpiTotalRevenue');
         if (kpiRevenue) {
-          kpiRevenue.innerHTML = `${(stats.totalRevenue || 0).toLocaleString('pt-MZ')} <span class="text-xs font-normal text-gray-500">MT</span>`;
+          kpiRevenue.innerHTML = `${(stats.totalInvoicedAmount || stats.totalRevenue || 0).toLocaleString('pt-MZ')} <span class="text-xs font-normal text-gray-500">MT</span>`;
         }
 
         const kpiRevenueSub = document.getElementById('kpiRevenueSub');
@@ -880,7 +1279,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         if (dbInfoKivora) {
           dbInfoKivora.innerHTML = `
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-            ${stats.totalPayments} transações Kivora monitorizadas
+            ${stats.totalPayments} transações &bull; ${cachedInvoicesList.length} faturas geradas
           `;
         }
 
@@ -889,10 +1288,29 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
           dbInfoStatus.innerText = `TLS Encriptado • Latência: ${dbInfo.latencyMs}ms`;
         }
 
-        // 3. Renderizar Tabela de Utilizadores Reais
+        // 3. Atualizar Badges das Secções Centrais
+        const clientsBadge = document.getElementById('clientsCountBadge');
+        if (clientsBadge) {
+          clientsBadge.innerText = `${cachedClientsList.length} ${cachedClientsList.length === 1 ? 'Cliente' : 'Clientes'}`;
+        }
+
+        const kpiInvoicedTotal = document.getElementById('kpiInvoicedTotal');
+        if (kpiInvoicedTotal) {
+          kpiInvoicedTotal.innerText = `${(stats.totalInvoicedAmount || stats.totalRevenue || 0).toLocaleString('pt-MZ')} MT`;
+        }
+
+        const kpiInvoicesCount = document.getElementById('kpiInvoicesCount');
+        if (kpiInvoicesCount) {
+          kpiInvoicesCount.innerText = `${cachedInvoicesList.length} ${cachedInvoicesList.length === 1 ? 'Fatura' : 'Faturas'}`;
+        }
+
+        // 4. Renderizar Tabelas e Feeds
+        renderClientsTable(cachedClientsList);
+        renderInvoicesTable(cachedInvoicesList);
+        renderActivitiesFeed(cachedActivitiesList);
         renderUsersTable(cachedUsersList);
 
-        // 4. Atualizar Gráficos Chart.js com dados reais
+        // 5. Atualizar Gráficos Chart.js com dados reais
         if (chartGeoInstance && stats.provinces) {
           const provLabels = Object.keys(stats.provinces);
           const provData = Object.values(stats.provinces);
@@ -915,7 +1333,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         lucide.createIcons();
 
         if (isManual) {
-          showNotification('Métricas e utilizadores sincronizados em tempo real com o MongoDB Atlas.', 'success', 'Base Atualizada');
+          showNotification('Clientes, faturas e auditoria sincronizados em tempo real com o MongoDB Atlas.', 'success', 'Base Atualizada');
         }
 
       } catch (err) {
@@ -928,7 +1346,418 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
       }
     }
 
-    // Renderizar Tabela com Linhas Dinâmicas Reais
+    // =========================================================================
+    // 1. RENDERIZAR TABELA DE CLIENTES (ADMIN)
+    // =========================================================================
+    function renderClientsTable(clients) {
+      const tbody = document.getElementById('clientsTableBody');
+      if (!tbody) return;
+
+      if (!clients || clients.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-xs text-gray-400">Nenhum cliente corporativo registado até ao momento.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = clients.map(c => {
+        const initials = (c.name || c.email || 'CL')
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .substring(0, 2)
+          .toUpperCase();
+
+        const isSuspended = c.status === 'suspended';
+        const planName = c.plan || (c.totalSpent > 0 ? 'Profissional' : 'Degustação');
+        const spentStr = (Number(c.totalSpent) || 0).toLocaleString('pt-MZ') + ' MT';
+        const invCount = c.invoicesCount || (c.totalSpent > 0 ? 1 : 0);
+        const orgStr = [c.organization, c.province].filter(Boolean).join(' • ') || 'Moçambique';
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-blue-500/15 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0">
+                ${initials}
+              </div>
+              <div>
+                <div class="font-bold text-gray-900">${escapeHtml(c.name || 'Cliente')}</div>
+                <div class="text-[10px] text-gray-400 font-mono">ID: ${c._id}</div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="font-mono text-[11px] text-gray-700">${escapeHtml(c.email)}</div>
+              <div class="text-[11px] text-gray-400">${escapeHtml(orgStr)}</div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                ${escapeHtml(planName)}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-mono font-bold text-gray-900">${spentStr}</td>
+            <td class="px-6 py-4 text-gray-600 font-mono">${invCount} ${invCount === 1 ? 'fatura' : 'faturas'}</td>
+            <td class="px-6 py-4">
+              ${isSuspended 
+                ? '<span class="inline-flex items-center gap-1 text-red-600 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Suspenso</span>'
+                : '<span class="inline-flex items-center gap-1 text-emerald-600 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Activo</span>'}
+            </td>
+            <td class="px-6 py-4 text-right space-x-2">
+              <button onclick="openClientDossierModal('${c._id}')" class="px-2.5 py-1.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-lg shadow-2xs transition-all inline-flex items-center gap-1 cursor-pointer">
+                <i data-lucide="eye" class="w-3 h-3 text-blue-400"></i>
+                <span>Ver Dossiê</span>
+              </button>
+              <button onclick="toggleUserStatusInDb('${c._id}', '${c.status}')" class="text-xs ${isSuspended ? 'text-emerald-600 hover:text-emerald-800' : 'text-red-500 hover:text-red-700'} font-medium cursor-pointer">
+                ${isSuspended ? 'Reactivar' : 'Suspender'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterClientsTable() {
+      const input = document.getElementById('clientSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#clientsTableBody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+      });
+    }
+
+    // =========================================================================
+    // 2. RENDERIZAR TABELA DE FATURAS (ADMIN)
+    // =========================================================================
+    function renderInvoicesTable(invoices) {
+      const tbody = document.getElementById('invoicesTableBody');
+      if (!tbody) return;
+
+      if (!invoices || invoices.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="px-6 py-8 text-center text-xs text-gray-400">Nenhuma fatura emitida até ao momento.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = invoices.map(inv => {
+        const dateStr = inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString('pt-MZ') : '17/11/2026';
+        const amountStr = (Number(inv.amount) || 0).toLocaleString('pt-MZ') + ' MT';
+        const methodStr = inv.paymentMethod || (inv.paymentProvider === 'emola' ? 'E-Mola' : 'M-Pesa');
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="px-6 py-4 font-mono font-bold text-gray-900">${escapeHtml(inv.invoiceNumber)}</td>
+            <td class="px-6 py-4 text-gray-600">${dateStr}</td>
+            <td class="px-6 py-4">
+              <div class="font-bold text-gray-900">${escapeHtml(inv.customerName || 'Cliente')}</div>
+              <div class="font-mono text-[11px] text-gray-500">${escapeHtml(inv.customerEmail)}</div>
+            </td>
+            <td class="px-6 py-4 font-semibold text-gray-800">${escapeHtml(inv.serviceName || inv.plan)}</td>
+            <td class="px-6 py-4 font-mono font-bold text-gray-900">${amountStr}</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">
+                <span class="w-1.5 h-1.5 rounded-full ${inv.paymentProvider === 'emola' ? 'bg-amber-500' : 'bg-red-500'}"></span>
+                ${escapeHtml(methodStr)}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                <i data-lucide="check" class="w-3 h-3"></i> Enviada ao Cliente
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right space-x-2">
+              <button onclick="openAdminInvoiceModal('${inv.invoiceNumber}')" class="px-2.5 py-1.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-lg shadow-2xs transition-all inline-flex items-center gap-1 cursor-pointer">
+                <i data-lucide="file-text" class="w-3 h-3 text-emerald-400"></i>
+                <span>Ver Fatura</span>
+              </button>
+              <button onclick="resendInvoiceEmail('${inv._id}', '${inv.invoiceNumber}')" class="text-xs text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+                Reenviar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // =========================================================================
+    // 3. RENDERIZAR FEED DE ATIVIDADES & AUDITORIA (ADMIN)
+    // =========================================================================
+    function renderActivitiesFeed(activities) {
+      const container = document.getElementById('activitiesFeed');
+      if (!container) return;
+
+      if (!activities || activities.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400">Nenhuma atividade registada no histórico.</div>`;
+        return;
+      }
+
+      const getActionIcon = (action) => {
+        if (action?.includes('invoice')) return { icon: 'receipt', color: 'text-emerald-600 bg-emerald-50' };
+        if (action?.includes('payment')) return { icon: 'credit-card', color: 'text-blue-600 bg-blue-50' };
+        if (action?.includes('login')) return { icon: 'log-in', color: 'text-indigo-600 bg-indigo-50' };
+        if (action?.includes('user')) return { icon: 'user', color: 'text-purple-600 bg-purple-50' };
+        return { icon: 'activity', color: 'text-amber-600 bg-amber-50' };
+      };
+
+      container.innerHTML = activities.map(act => {
+        const { icon, color } = getActionIcon(act.action);
+        const timeStr = act.createdAt ? new Date(act.createdAt).toLocaleString('pt-MZ') : 'Agora';
+
+        return `
+          <div class="activity-feed-item p-3.5 bg-slate-50 hover:bg-white rounded-xl border border-gray-100 transition-colors flex items-start gap-3">
+            <div class="p-2 rounded-lg ${color} shrink-0 mt-0.5">
+              <i data-lucide="${icon}" class="w-4 h-4"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="text-xs font-bold text-gray-900 truncate">${escapeHtml(act.title)}</h4>
+                <span class="text-[10px] text-gray-400 shrink-0">${timeStr}</span>
+              </div>
+              <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">${escapeHtml(act.details)}</p>
+              <div class="flex items-center gap-2 mt-1.5 text-[10px] text-gray-400 font-mono">
+                <span class="font-semibold text-gray-700">${escapeHtml(act.userName || 'Sistema')}</span>
+                <span>&bull;</span>
+                <span>${escapeHtml(act.userEmail || '')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterActivitiesFeed() {
+      const input = document.getElementById('activitySearch').value.toLowerCase();
+      const items = document.querySelectorAll('.activity-feed-item');
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(input) ? '' : 'none';
+      });
+    }
+
+    // =========================================================================
+    // 4. MODAL: DOSSIÊ COMPLETO DO CLIENTE
+    // =========================================================================
+    async function openClientDossierModal(clientId) {
+      let client = cachedClientsList.find(c => String(c._id) === String(clientId)) || cachedUsersList.find(u => String(u._id) === String(clientId));
+      
+      try {
+        const res = await fetch(`/api/admin?action=client_dossier&clientId=${clientId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && data.client) {
+            client = data.client;
+            currentDossierClient = data;
+          }
+        }
+      } catch(e) {}
+
+      if (!client) {
+        showNotification('Não foi possível carregar os detalhes do cliente.', 'error');
+        return;
+      }
+
+      const initials = (client.name || client.email || 'CL').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('dossierAvatar').innerText = initials;
+      document.getElementById('dossierName').innerText = client.name || 'Cliente';
+      document.getElementById('dossierOrg').innerText = `${client.organization || 'Moçambique'} • ${client.province || 'Maputo Cidade'}`;
+      document.getElementById('dossierId').innerText = `ID: ${client._id}`;
+      document.getElementById('dossierEmail').innerText = client.email;
+      document.getElementById('dossierPlanBadge').innerText = `Plano ${client.plan || (client.totalSpent > 0 ? 'Profissional' : 'Degustação')}`;
+      document.getElementById('dossierStatusBadge').innerText = client.status === 'suspended' ? 'Suspenso' : 'Ativo';
+      document.getElementById('dossierStatusBadge').className = `px-2 py-0.5 rounded-full text-[10px] font-bold ${client.status === 'suspended' ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'}`;
+      document.getElementById('dossierTotalSpent').innerText = (Number(client.totalSpent) || 0).toLocaleString('pt-MZ') + ' MT';
+
+      // Dados das Abas
+      const clientInvoices = (currentDossierClient?.invoices) || cachedInvoicesList.filter(inv => (inv.customerEmail || '').toLowerCase() === (client.email || '').toLowerCase());
+      const clientPayments = (currentDossierClient?.payments) || cachedPaymentsList.filter(p => (p.customerEmail || '').toLowerCase() === (client.email || '').toLowerCase());
+      const clientActivities = (currentDossierClient?.activities) || cachedActivitiesList.filter(a => (a.userEmail || '').toLowerCase() === (client.email || '').toLowerCase());
+
+      document.getElementById('dossierInvoicesCount').innerText = clientInvoices.length;
+      document.getElementById('dossierPaymentsCount').innerText = clientPayments.length;
+      document.getElementById('dossierActivitiesCount').innerText = clientActivities.length;
+
+      // 1. Aba Faturas
+      const invTbody = document.getElementById('dossierInvoicesTableBody');
+      if (clientInvoices.length === 0) {
+        invTbody.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400">Nenhuma fatura emitida para este cliente.</td></tr>`;
+      } else {
+        invTbody.innerHTML = clientInvoices.map(inv => `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="px-4 py-2.5 font-mono font-bold text-gray-900">${escapeHtml(inv.invoiceNumber)}</td>
+            <td class="px-4 py-2.5 text-gray-600">${inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString('pt-MZ') : '17/11/2026'}</td>
+            <td class="px-4 py-2.5 font-medium text-gray-800">${escapeHtml(inv.serviceName || inv.plan)}</td>
+            <td class="px-4 py-2.5 font-mono font-bold text-gray-900">${(Number(inv.amount) || 0).toLocaleString('pt-MZ')} MT</td>
+            <td class="px-4 py-2.5 text-gray-600">${escapeHtml(inv.paymentMethod || 'M-Pesa')}</td>
+            <td class="px-4 py-2.5 text-right">
+              <button onclick="openAdminInvoiceModal('${inv.invoiceNumber}')" class="px-2 py-1 bg-[#111315] hover:bg-black text-white text-[11px] font-semibold rounded shadow-2xs">
+                Ver Fatura
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 2. Aba Pagamentos
+      const payTbody = document.getElementById('dossierPaymentsTableBody');
+      if (clientPayments.length === 0) {
+        payTbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">Nenhum pagamento registado.</td></tr>`;
+      } else {
+        payTbody.innerHTML = clientPayments.map(p => {
+          const isPending = p.status === 'pending';
+          const pStatusBadge = isPending 
+            ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Pendente</span>'
+            : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Pago</span>';
+
+          const actionBtn = isPending
+            ? `<button onclick="confirmPendingPayment('${p.paymentId || p._id}')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold rounded">Confirmar</button>`
+            : `<span class="text-[10px] text-gray-400">Liquidado</span>`;
+
+          return `
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-4 py-2.5 font-mono text-[11px] text-gray-700">${escapeHtml(p.reference || p.paymentId)}</td>
+              <td class="px-4 py-2.5 text-gray-600">${p.createdAt ? new Date(p.createdAt).toLocaleDateString('pt-MZ') : '13/11/2026'}</td>
+              <td class="px-4 py-2.5 font-mono text-gray-700">${escapeHtml(p.phone || '')}</td>
+              <td class="px-4 py-2.5 font-medium text-gray-800">${escapeHtml(p.providerLabel || p.provider)}</td>
+              <td class="px-4 py-2.5 font-mono font-bold text-gray-900">${(Number(p.amount) || 0).toLocaleString('pt-MZ')} MT</td>
+              <td class="px-4 py-2.5">${pStatusBadge}</td>
+              <td class="px-4 py-2.5 text-right">${actionBtn}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 3. Aba Atividades
+      const actContainer = document.getElementById('dossierActivitiesList');
+      if (clientActivities.length === 0) {
+        actContainer.innerHTML = `<div class="p-4 text-center text-gray-400 text-xs">Nenhuma atividade registada para este cliente.</div>`;
+      } else {
+        actContainer.innerHTML = clientActivities.map(a => `
+          <div class="p-3 bg-slate-50 rounded-xl border border-gray-100 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-gray-900">${escapeHtml(a.title)}</span>
+              <span class="text-[10px] text-gray-400 font-mono">${a.createdAt ? new Date(a.createdAt).toLocaleString('pt-MZ') : 'Agora'}</span>
+            </div>
+            <p class="text-gray-600 mt-1">${escapeHtml(a.details)}</p>
+          </div>
+        `).join('');
+      }
+
+      switchDossierTab('invoices');
+      document.getElementById('clientDossierModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function switchDossierTab(tab) {
+      const tabs = ['invoices', 'payments', 'activities'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`dossierTab${t.charAt(0).toUpperCase() + t.slice(1)}Btn`);
+        const panel = document.getElementById(`dossierTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (t === tab) {
+          btn.className = 'px-3 py-2 border-b-2 border-blue-600 text-blue-600 cursor-pointer';
+          panel.classList.remove('hidden');
+        } else {
+          btn.className = 'px-3 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-900 cursor-pointer';
+          panel.classList.add('hidden');
+        }
+      });
+      lucide.createIcons();
+    }
+
+    function closeClientDossierModal() {
+      document.getElementById('clientDossierModal').classList.add('hidden');
+    }
+
+    // =========================================================================
+    // 5. MODAL: VISUALIZAÇÃO E IMPRESSÃO DE FATURA (ADMIN)
+    // =========================================================================
+    function openAdminInvoiceModal(invoiceNumber) {
+      const inv = cachedInvoicesList.find(i => i.invoiceNumber === invoiceNumber) || cachedInvoicesList[0];
+      if (!inv) return;
+
+      currentModalInvoice = inv;
+      document.getElementById('adminModalInvNumber').innerText = inv.invoiceNumber;
+      document.getElementById('adminModalInvDate').innerText = inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString('pt-MZ') : '17/11/2026';
+      document.getElementById('adminModalInvRef').innerText = inv.paymentReference || inv.paymentId || 'SUB-1794567779945';
+      document.getElementById('adminModalInvCustomerName').innerText = inv.customerName || 'Cliente Corporativo';
+      document.getElementById('adminModalInvCustomerOrg').innerText = inv.customerOrg || 'Moçambique';
+      document.getElementById('adminModalInvCustomerEmail').innerText = inv.customerEmail || 'cliente@dataanalista.com';
+      document.getElementById('adminModalInvCustomerPhone').innerText = inv.customerPhone ? '+258 ' + inv.customerPhone : '+258 84 123 4567';
+      document.getElementById('adminModalInvCustomerNuit').innerText = inv.customerNuit || '400982314';
+      document.getElementById('adminModalInvCustomerProvince').innerText = inv.customerProvince || 'Maputo Cidade';
+      document.getElementById('adminModalInvMethod').innerText = inv.paymentMethod || 'M-Pesa (Vodacom)';
+
+      document.getElementById('adminModalInvService').innerText = inv.serviceName || `Subscrição - Plano ${inv.plan}`;
+      document.getElementById('adminModalInvDesc').innerText = inv.serviceDescription || 'Acesso à plataforma autônoma de inteligência comercial e análise de dados IA para Moçambique.';
+      document.getElementById('adminModalInvInterval').innerText = inv.interval === 'annual' ? 'Anual' : 'Mensal';
+
+      const amt = Number(inv.amount) || 1490;
+      const subtotal = Number(inv.subtotal) || Math.round((amt / 1.16) * 100) / 100;
+      const vat = Number(inv.vatAmount) || Math.round((amt - subtotal) * 100) / 100;
+
+      document.getElementById('adminModalInvSubtotal').innerText = subtotal.toLocaleString('pt-MZ', { minimumFractionDigits: 2 }) + ' MT';
+      document.getElementById('adminModalInvLineTotal').innerText = amt.toLocaleString('pt-MZ', { minimumFractionDigits: 2 }) + ' MT';
+      document.getElementById('adminModalInvSummarySubtotal').innerText = subtotal.toLocaleString('pt-MZ', { minimumFractionDigits: 2 }) + ' MT';
+      document.getElementById('adminModalInvSummaryVat').innerText = vat.toLocaleString('pt-MZ', { minimumFractionDigits: 2 }) + ' MT';
+      document.getElementById('adminModalInvSummaryTotal').innerText = amt.toLocaleString('pt-MZ', { minimumFractionDigits: 2 }) + ' MT';
+
+      document.getElementById('adminInvoiceModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeAdminInvoiceModal() {
+      document.getElementById('adminInvoiceModal').classList.add('hidden');
+    }
+
+    function printAdminInvoiceModal() {
+      window.print();
+    }
+
+    async function resendInvoiceEmail(invoiceId, invoiceNumber) {
+      try {
+        const res = await fetch('/api/invoices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'resend_email', invoiceId })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showNotification(data.message || `Fatura ${invoiceNumber} reenviada por e-mail com sucesso!`, 'success', 'E-mail Enviado');
+          await loadRealAdminData();
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err) {
+        showNotification(err.message || 'Falha ao reenviar fatura.', 'error');
+      }
+    }
+
+    function resendCurrentModalInvoice() {
+      if (currentModalInvoice) {
+        resendInvoiceEmail(currentModalInvoice._id, currentModalInvoice.invoiceNumber);
+      }
+    }
+
+    // =========================================================================
+    // 6. CONFIRMAR PAGAMENTO MANUALMENTE (ADMIN)
+    // =========================================================================
+    async function confirmPendingPayment(paymentId) {
+      try {
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'confirm_payment', paymentId })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showNotification(data.message, 'success', 'Pagamento & Fatura Confirmados');
+          closeClientDossierModal();
+          await loadRealAdminData();
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err) {
+        showNotification(err.message || 'Falha ao confirmar pagamento.', 'error');
+      }
+    }
+
+    // =========================================================================
+    // 7. RENDERIZAR TABELA GERAL DE UTILIZADORES (ADMIN)
+    // =========================================================================
     function renderUsersTable(users) {
       const tbody = document.getElementById('usersTableBody');
       if (!tbody) return;
@@ -950,7 +1779,6 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         const isClient = user.role === 'client';
         const isSuspended = user.status === 'suspended';
 
-        // Role badge styling
         let roleBadge = '';
         let avatarBg = '';
         if (user.role === 'admin' || user.is_superuser) {
@@ -964,12 +1792,10 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
           avatarBg = 'bg-blue-500/20 text-blue-700';
         }
 
-        // Status badge
         const statusBadge = isSuspended
           ? '<span class="inline-flex items-center gap-1 text-red-600 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Suspenso</span>'
           : '<span class="inline-flex items-center gap-1 text-emerald-600 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Activo</span>';
 
-        // Actions
         let actionButtons = '';
         if (isSuperAdmin) {
           actionButtons = '<span class="text-xs text-gray-400 font-mono">Protegido</span>';
@@ -979,7 +1805,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
             ? 'text-xs text-emerald-600 hover:text-emerald-800 font-medium cursor-pointer'
             : 'text-xs text-red-500 hover:text-red-700 font-medium cursor-pointer';
 
-          const clientLink = isClient ? `<a href="client.html" class="text-xs text-blue-600 hover:underline font-medium mr-2">Ver Painel</a>` : '';
+          const clientLink = isClient ? `<button onclick="openClientDossierModal('${user._id}')" class="text-xs text-blue-600 hover:underline font-medium mr-2">Ver Dossiê</button>` : '';
 
           actionButtons = `
             ${clientLink}
@@ -1011,10 +1837,8 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
     }
 
     // =========================================================================
-    // AÇÕES REAIS NO MONGODB ATLAS
+    // 8. AÇÕES ADICIONAIS & SINCRONIZAÇÃO
     // =========================================================================
-
-    // 1. Suspender / Reativar utilizador no MongoDB Atlas
     async function toggleUserStatusInDb(userId, currentStatus) {
       try {
         const res = await fetch('/api/admin', {
@@ -1028,7 +1852,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         }
 
         const newStatus = data.user ? data.user.status : (currentStatus === 'suspended' ? 'active' : 'suspended');
-        const msg = newStatus === 'suspended' ? 'Conta de utilizador suspensa temporariamente no MongoDB.' : 'Conta reativada com sucesso no MongoDB.';
+        const msg = newStatus === 'suspended' ? 'Conta suspensa temporariamente no MongoDB.' : 'Conta reativada com sucesso no MongoDB.';
         showNotification(msg, newStatus === 'suspended' ? 'warning' : 'success', 'MongoDB Atlas Atualizado');
 
         await loadRealAdminData();
@@ -1037,7 +1861,6 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
       }
     }
 
-    // 2. Modal de Criação de Utilizador
     function addUserModal() {
       const modal = document.getElementById('createUserModal');
       if (modal) {
@@ -1054,7 +1877,6 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
       }
     }
 
-    // 3. Submeter Criação de Novo Utilizador no MongoDB Atlas
     async function submitCreateUser(e) {
       if (e) e.preventDefault();
       const submitBtn = document.getElementById('submitCreateUserBtn');
@@ -1108,6 +1930,15 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
     }
 
     function refreshData() {
+      loadRealAdminData(true);
+    }
+
+    // Sincronização Automática em Tempo Real (a cada 30 segundos)
+    setInterval(() => {
+      if (!document.hidden) {
+        loadRealAdminData(false);
+      }
+    }, 30000);
       loadRealAdminData(true);
     }
 

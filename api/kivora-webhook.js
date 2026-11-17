@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { generateInvoiceForPayment, logActivity } = require('./invoice-helper');
 
 let cachedClient = null;
 
@@ -94,6 +95,14 @@ module.exports = async function handler(req, res) {
           }
         );
         console.log(`[Kivora Webhook] Plano "${planName}" ativado para utilizador: ${userEmail}`);
+      }
+
+      // Gerar automaticamente a fatura comercial / recibo legal único
+      try {
+        const generatedInvoice = await generateInvoiceForPayment(db, targetPayment);
+        console.log(`[Kivora Webhook] Fatura gerada automaticamente: ${generatedInvoice?.invoiceNumber}`);
+      } catch (invErr) {
+        console.error('[Kivora Webhook] Erro ao gerar fatura automática:', invErr.message);
       }
     } 
     // 2. Pagamento Falhou ou Expirou

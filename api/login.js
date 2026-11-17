@@ -58,6 +58,22 @@ module.exports = async function handler(req, res) {
       return res.status(401).json({ error: 'Palavra-passe incorrecta.' });
     }
 
+    try {
+      const { logActivity } = require('./invoice-helper');
+      await logActivity(db, {
+        userId: user._id,
+        userEmail: user.email,
+        userName: user.name,
+        action: 'login',
+        title: 'Sessão Iniciada no Portal',
+        details: `Utilizador autenticado com sucesso no sistema (${user.role === 'admin' ? 'Painel Admin' : (user.role === 'client' ? 'Portal do Cliente' : 'Workspace IA')}).`,
+        metadata: { role: user.role, province: user.province }
+      });
+      await users.updateOne({ _id: user._id }, { $set: { last_login: new Date() } });
+    } catch (e) {
+      console.warn('Aviso: falha ao registar log de login:', e.message);
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Sessão iniciada com sucesso!',
