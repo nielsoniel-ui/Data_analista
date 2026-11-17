@@ -2,13 +2,16 @@ const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
 let cachedClient = null;
+const DEFAULT_URI = 'mongodb+srv://nielsoniel_db_user:y5HE7ESTMxNGfnB6@cluster0.efcyoe3.mongodb.net/';
 
 async function getClient() {
   if (cachedClient) return cachedClient;
-  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
-  if (!uri) throw new Error('A variável de ambiente MONGO_URI não está definida na Vercel.');
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI || DEFAULT_URI;
   
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, {
+    connectTimeoutMS: 10000,
+    serverSelectionTimeoutMS: 10000
+  });
   await client.connect();
   cachedClient = client;
   return client;

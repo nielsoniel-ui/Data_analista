@@ -3,13 +3,18 @@ const { generateInvoiceForPayment, logActivity } = require('./invoice-helper');
 
 let cachedClient = null;
 
+const DEFAULT_URI = 'mongodb+srv://nielsoniel_db_user:y5HE7ESTMxNGfnB6@cluster0.efcyoe3.mongodb.net/';
+
 async function getClient() {
   if (cachedClient) return cachedClient;
-  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI || DEFAULT_URI;
   if (!uri) return null; // Permite prosseguir mesmo sem MongoDB para testes de API
   
   try {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, {
+      connectTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 10000
+    });
     await client.connect();
     cachedClient = client;
     return client;

@@ -1939,8 +1939,6 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         loadRealAdminData(false);
       }
     }, 30000);
-      loadRealAdminData(true);
-    }
 
     // ==========================================
     // GESTÃO DE PLANOS (ADMIN)
@@ -2123,9 +2121,17 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
     }
 
     // Inicializar valores e carregar dados reais do MongoDB Atlas ao carregar o painel
-    initCharts();
-    populatePlansForm(getStoredPlans());
-    loadRealAdminData();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        populatePlansForm(getStoredPlans());
+        loadRealAdminData();
+      });
+    } else {
+      initCharts();
+      populatePlansForm(getStoredPlans());
+      loadRealAdminData();
+    }
   </script>
 </body>
 </html>
