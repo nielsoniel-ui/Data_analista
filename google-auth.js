@@ -6,16 +6,11 @@
 (function () {
   // Google Client ID oficial fornecido pela organização montado dinamicamente
   const DEFAULT_CLIENT_ID = ['1091952444976', '496j8knsnk9piuq8d49jv0le4g12uln4.apps.googleusercontent.com'].join('-');
-  const PRODUCTION_ORIGIN = 'https://data-analista.vercel.app';
 
   let googleClientId = DEFAULT_CLIENT_ID;
   let isGoogleScriptLoaded = false;
   let tokenClient = null;
   let currentAuthContext = 'register'; // 'register' ou 'login'
-
-  function isAuthorizedOrigin() {
-    return window.location.origin === PRODUCTION_ORIGIN;
-  }
 
   // Injetar meta tag google-signin-client_id dinamicamente
   function ensureGoogleMetaTag(clientId) {
@@ -209,28 +204,9 @@
   }
 
   // 8. Modal Interativo de Autenticação Google
-  function openGoogleModal(context = 'register', showOriginNotice = false) {
+  function openGoogleModal(context = 'register') {
     currentAuthContext = context;
     let modal = document.getElementById('googleAuthModal');
-    const currentOrigin = window.location.origin || window.location.protocol + '//' + window.location.host;
-    const isMismatched = !isAuthorizedOrigin();
-
-    const originNoticeHtml = (showOriginNotice || isMismatched) ? `
-      <div class="p-3 bg-amber-50 border border-amber-200/80 rounded-xl text-left space-y-1">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800">
-          <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-          </svg>
-          <span>Aviso de Origem Google OAuth (origin_mismatch)</span>
-        </div>
-        <p class="text-[11px] text-amber-700 leading-relaxed">
-          Está a aceder a partir de <strong>${currentOrigin}</strong>. Para que o pop-up nativo da Google funcione aqui, adicione <strong>${currentOrigin}</strong> nas <em>Origens JavaScript autorizadas</em> na Google Cloud Console.
-        </p>
-        <p class="text-[11px] text-amber-800 font-medium">
-          Entretanto, pode autenticar ou criar a sua conta diretamente escolhendo uma opção abaixo:
-        </p>
-      </div>
-    ` : '';
 
     if (!modal) {
       modal = document.createElement('div');
@@ -259,9 +235,6 @@
               <p class="text-xs text-gray-500 font-mono">Google Identity &bull; MongoDB Atlas</p>
             </div>
           </div>
-
-          <!-- Alerta de Origem (se aplicável) -->
-          <div id="googleOriginNoticeArea">${originNoticeHtml}</div>
 
           <div class="border-t border-gray-100 pt-3 space-y-3">
             <!-- Botão de Abertura do Popup Oficial da Google -->
@@ -337,9 +310,6 @@
         </div>
       `;
       document.body.appendChild(modal);
-    } else {
-      const noticeArea = document.getElementById('googleOriginNoticeArea');
-      if (noticeArea) noticeArea.innerHTML = originNoticeHtml;
     }
 
     const titleEl = document.getElementById('googleModalTitle');
@@ -383,13 +353,7 @@
   function triggerGoogleAuth(context = 'register') {
     currentAuthContext = context;
 
-    // Se a origem atual NÃO for a autorizada (ex: localhost, preview), abre o modal com aviso explicativo
-    if (!isAuthorizedOrigin()) {
-      openGoogleModal(context, true);
-      return;
-    }
-
-    // Se estiver na origem autorizada oficial e tokenClient estiver pronto, abre o pop-up nativo
+    // Tentar diretamente o pop-up nativo oficial da Google OAuth2
     if (tokenClient) {
       try {
         showAuthLoading(true);
@@ -401,7 +365,21 @@
       }
     }
 
-    // Caso contrário, abre o modal estilizado
+    // Se GIS One-Tap estiver disponível, tenta primeiro o prompt
+    if (isGoogleScriptLoaded && googleClientId && window.google?.accounts?.id) {
+      try {
+        window.google.accounts.id.prompt((notification) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            openGoogleModal(context);
+          }
+        });
+        return;
+      } catch (e) {
+        console.warn('[Google Auth] Prompt Google falhou:', e);
+      }
+    }
+
+    // Caso contrário, abre o modal estilizado limpo
     openGoogleModal(context);
   }
 
