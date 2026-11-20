@@ -6,10 +6,16 @@
 (function () {
   // Google Client ID oficial fornecido pela organização montado dinamicamente
   const DEFAULT_CLIENT_ID = ['1091952444976', '496j8knsnk9piuq8d49jv0le4g12uln4.apps.googleusercontent.com'].join('-');
+  const PRODUCTION_ORIGIN = 'https://data-analista.vercel.app';
+
   let googleClientId = DEFAULT_CLIENT_ID;
   let isGoogleScriptLoaded = false;
   let tokenClient = null;
   let currentAuthContext = 'register'; // 'register' ou 'login'
+
+  function isAuthorizedOrigin() {
+    return window.location.origin === PRODUCTION_ORIGIN;
+  }
 
   // Injetar meta tag google-signin-client_id dinamicamente
   function ensureGoogleMetaTag(clientId) {
@@ -64,7 +70,7 @@
     if (!isGoogleScriptLoaded || !googleClientId || !window.google || !window.google.accounts) return;
 
     try {
-      // 3.1 Inicializar Google ID Token (para One-Tap e credenciais JWT)
+      // 3.1 Inicializar Google ID Token (apenas se origem for suportada ou teste)
       if (window.google.accounts.id) {
         window.google.accounts.id.initialize({
           client_id: googleClientId,
@@ -74,7 +80,7 @@
         });
       }
 
-      // 3.2 Inicializar Google OAuth2 Token Client para Pop-up Oficial Nativo
+      // 3.2 Inicializar Google OAuth2 Token Client
       if (window.google.accounts.oauth2) {
         tokenClient = window.google.accounts.oauth2.initTokenClient({
           client_id: googleClientId,
@@ -90,7 +96,7 @@
           error_callback: (err) => {
             console.warn('[Google Auth] Erro no popup OAuth Google:', err);
             showAuthLoading(false);
-            openGoogleModal(currentAuthContext);
+            openGoogleModal(currentAuthContext, true);
           }
         });
       }
@@ -203,15 +209,35 @@
   }
 
   // 8. Modal Interativo de Autenticação Google
-  function openGoogleModal(context = 'register') {
+  function openGoogleModal(context = 'register', showOriginNotice = false) {
     currentAuthContext = context;
     let modal = document.getElementById('googleAuthModal');
+    const currentOrigin = window.location.origin || window.location.protocol + '//' + window.location.host;
+    const isMismatched = !isAuthorizedOrigin();
+
+    const originNoticeHtml = (showOriginNotice || isMismatched) ? `
+      <div class="p-3 bg-amber-50 border border-amber-200/80 rounded-xl text-left space-y-1">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800">
+          <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          <span>Aviso de Origem Google OAuth (origin_mismatch)</span>
+        </div>
+        <p class="text-[11px] text-amber-700 leading-relaxed">
+          Está a aceder a partir de <strong>${currentOrigin}</strong>. Para que o pop-up nativo da Google funcione aqui, adicione <strong>${currentOrigin}</strong> nas <em>Origens JavaScript autorizadas</em> na Google Cloud Console.
+        </p>
+        <p class="text-[11px] text-amber-800 font-medium">
+          Entretanto, pode autenticar ou criar a sua conta diretamente escolhendo uma opção abaixo:
+        </p>
+      </div>
+    ` : '';
+
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'googleAuthModal';
       modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in';
       modal.innerHTML = `
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-100 relative space-y-5">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-100 relative space-y-4 max-h-[92vh] overflow-y-auto">
           <button onclick="window.closeGoogleAuthModal()" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -230,11 +256,14 @@
             </div>
             <div>
               <h3 id="googleModalTitle" class="text-base font-bold text-gray-900 leading-tight">Continuar com o Google</h3>
-              <p class="text-xs text-gray-500 font-mono">Google Workspace &bull; Cloud Identity</p>
+              <p class="text-xs text-gray-500 font-mono">Google Identity &bull; MongoDB Atlas</p>
             </div>
           </div>
 
-          <div class="border-t border-gray-100 pt-4 space-y-4">
+          <!-- Alerta de Origem (se aplicável) -->
+          <div id="googleOriginNoticeArea">${originNoticeHtml}</div>
+
+          <div class="border-t border-gray-100 pt-3 space-y-3">
             <!-- Botão de Abertura do Popup Oficial da Google -->
             <button 
               type="button" 
@@ -250,7 +279,7 @@
               <span>Abrir Janela Oficial da Google (OAuth2)</span>
             </button>
 
-            <!-- Contas de Demonstração / Teste Imediato -->
+            <!-- Contas Rápidas / Teste Imediato -->
             <div class="space-y-2 pt-1">
               <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider block">Ou escolha uma conta para continuar</span>
               
@@ -301,14 +330,16 @@
               </div>
             </div>
 
-            <!-- Informação de Conformidade -->
-            <div class="text-[10px] text-gray-400 text-center pt-2">
-              Os dados de nome e e-mail serão registados em segurança no MongoDB Atlas.
+            <div class="text-[10px] text-gray-400 text-center pt-1">
+              Todos os dados são registados e sincronizados em segurança no MongoDB Atlas.
             </div>
           </div>
         </div>
       `;
       document.body.appendChild(modal);
+    } else {
+      const noticeArea = document.getElementById('googleOriginNoticeArea');
+      if (noticeArea) noticeArea.innerHTML = originNoticeHtml;
     }
 
     const titleEl = document.getElementById('googleModalTitle');
@@ -352,7 +383,13 @@
   function triggerGoogleAuth(context = 'register') {
     currentAuthContext = context;
 
-    // Se tokenClient estiver pronto, abre diretamente o pop-up nativo da Google
+    // Se a origem atual NÃO for a autorizada (ex: localhost, preview), abre o modal com aviso explicativo
+    if (!isAuthorizedOrigin()) {
+      openGoogleModal(context, true);
+      return;
+    }
+
+    // Se estiver na origem autorizada oficial e tokenClient estiver pronto, abre o pop-up nativo
     if (tokenClient) {
       try {
         showAuthLoading(true);
@@ -361,20 +398,6 @@
       } catch (e) {
         console.warn('[Google Auth] Falha ao acionar tokenClient nativo:', e);
         showAuthLoading(false);
-      }
-    }
-
-    // Se GIS ID One-Tap estiver disponível, tenta primeiro o prompt
-    if (isGoogleScriptLoaded && googleClientId && window.google?.accounts?.id) {
-      try {
-        window.google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            openGoogleModal(context);
-          }
-        });
-        return;
-      } catch (e) {
-        console.warn('[Google Auth] Prompt Google falhou:', e);
       }
     }
 
