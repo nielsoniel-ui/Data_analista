@@ -1815,6 +1815,10 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
 
         const orgText = [user.organization, user.province].filter(Boolean).join(' • ') || 'Moçambique';
 
+        const googleBadge = user.auth_provider === 'google'
+          ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded ml-1">Google</span>'
+          : '';
+
         return `
           <tr class="hover:bg-slate-50/80 transition-colors">
             <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
@@ -1822,7 +1826,7 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
                 ${initials}
               </div>
               <div>
-                <div class="font-bold text-gray-900">${escapeHtml(user.name || 'Utilizador')}</div>
+                <div class="font-bold text-gray-900 flex items-center">${escapeHtml(user.name || 'Utilizador')}${googleBadge}</div>
                 <div class="text-[10px] text-gray-400 font-mono">ID: ${user._id}</div>
               </div>
             </td>
