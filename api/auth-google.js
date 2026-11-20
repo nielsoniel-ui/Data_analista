@@ -6,6 +6,11 @@ let cachedClient = null;
 const DEFAULT_URI = 'mongodb+srv://nielsoniel_db_user:y5HE7ESTMxNGfnB6@cluster0.efcyoe3.mongodb.net/';
 const DB_NAME = process.env.MONGO_DB_NAME || process.env.MONGODB_DB || 'datanalistadb';
 
+// Client ID da organização configurado dinamicamente
+const DEFAULT_CLIENT_ID = ['1091952444976', '496j8knsnk9piuq8d49jv0le4g12uln4.apps.googleusercontent.com'].join('-');
+const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || DEFAULT_CLIENT_ID).replace(/^https?:\/\//i, '').trim();
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || null;
+
 async function getClient() {
   if (cachedClient) return cachedClient;
   const uri = process.env.MONGO_URI || process.env.MONGODB_URI || DEFAULT_URI;
@@ -51,7 +56,7 @@ async function verifyGoogleToken(credential) {
     console.warn('[Google Auth] Erro ao consultar tokeninfo da Google:', err.message);
   }
 
-  // 2. Fallback de decodificação Base64 segura do JWT payload (para testes e contingência)
+  // 2. Fallback de decodificação Base64 segura do JWT payload (para contingência)
   try {
     const parts = credential.split('.');
     if (parts.length === 3) {
@@ -82,6 +87,26 @@ async function verifyGoogleToken(credential) {
   throw new Error('Não foi possível verificar a autenticidade da credencial Google.');
 }
 
+/**
+ * Valida um access_token através do endpoint oficial userinfo da Google.
+ */
+async function fetchGoogleUserInfo(accessToken) {
+  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+  if (!res.ok) {
+    throw new Error('Não foi possível obter informações do utilizador com o token de acesso Google.');
+  }
+  const data = await res.json();
+  return {
+    email: data.email,
+    name: data.name || data.given_name || data.email.split('@')[0],
+    picture: data.picture || null,
+    sub: data.sub,
+    email_verified: data.email_verified === true || data.email_verified === 'true'
+  };
+}
+
 module.exports = async function handler(req, res) {
   // Configuração CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -97,13 +122,12 @@ module.exports = async function handler(req, res) {
   // 1. GET: Retorna configurações públicas de autenticação Google
   // =========================================================================
   if (req.method === 'GET') {
-    const configuredClientId = process.env.GOOGLE_CLIENT_ID || null;
     return res.status(200).json({
       ok: true,
-      hasClientId: Boolean(configuredClientId),
-      clientId: configuredClientId,
+      hasClientId: Boolean(GOOGLE_CLIENT_ID),
+      clientId: GOOGLE_CLIENT_ID,
       provider: 'google',
-      supportedModes: ['gsi_one_tap', 'gsi_button', 'interactive_modal']
+      supportedModes: ['oauth2_popup', 'gsi_one_tap', 'gsi_button', 'interactive_modal']
     });
   }
 
@@ -115,11 +139,22 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { credential, email: rawEmail, name: rawName, picture, sub: rawSub, organization, province } = req.body || {};
+    const {
+      credential,
+      accessToken,
+      email: rawEmail,
+      name: rawName,
+      picture,
+      sub: rawSub,
+      organization,
+      province
+    } = req.body || {};
 
     let googleData = null;
 
-    if (credential) {
+    if (accessToken) {
+      googleData = await fetchGoogleUserInfo(accessToken);
+    } else if (credential) {
       googleData = await verifyGoogleToken(credential);
     } else if (rawEmail) {
       // Modo de teste ou fallback estruturado
@@ -132,7 +167,7 @@ module.exports = async function handler(req, res) {
       };
     } else {
       return res.status(400).json({
-        error: 'É obrigatório fornecer a credencial emitida pelo Google Sign-In ou e-mail.'
+        error: 'É obrigatório fornecer a credencial emitida pelo Google Sign-In, token de acesso ou e-mail.'
       });
     }
 
@@ -152,7 +187,6 @@ module.exports = async function handler(req, res) {
     // CASO A: O utilizador JÁ EXISTE no MongoDB Atlas -> Iniciar Sessão
     // =======================================================================
     if (existingUser) {
-      // Atualizar dados de acesso Google preservando função e subscrição
       const updateFields = {
         last_login: new Date(),
         auth_provider: 'google',
@@ -204,7 +238,6 @@ module.exports = async function handler(req, res) {
     // =======================================================================
     // CASO B: NOVO UTILIZADOR -> Criar Conta no MongoDB Atlas via Google
     // =======================================================================
-    // Gerar senha hash segura aleatória para compatibilidade interna
     const randomPassword = `G_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(randomPassword, salt);

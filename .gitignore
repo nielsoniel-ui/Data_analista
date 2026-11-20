@@ -4,4 +4,7 @@ Thumbs.db
 .vscode/
 .idea/
 node_modules/
+client_secret_*.json
+*.pdf
+
 
