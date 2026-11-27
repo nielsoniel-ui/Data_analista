@@ -92,7 +92,7 @@
     },
     {
       id: 'analysis_dashboard',
-      keywords: ['analise', 'analisar', 'dashboard', 'grafico', 'graficos', 'tabela', 'tabelas', 'prompt', 'pergunta', 'agente', 'ia', 'inteligencia', 'como funciona', 'usar', 'comecar', 'criar', 'provincia', 'maputo', 'matola', 'beira', 'nampula', 'boane', 'filtro'],
+      keywords: ['analise', 'analisar', 'dashboard', 'dashboards', 'grafico', 'graficos', 'tabela', 'tabelas', 'prompt', 'agente', 'ia', 'inteligencia artificial', 'data analista', 'provincia', 'maputo', 'matola', 'beira', 'nampula', 'boane', 'filtro', 'vendas.csv'],
       weight: 2,
       answer: () => ({
         text: `<strong>Como gerar análises e dashboards automáticos:</strong><br><br>1. No <strong>Workspace IA</strong>, escolha o seu ficheiro CSV (ou use o ficheiro de demonstração <code>vendas.csv</code>).<br>2. Escreva uma instrução de negócio (ex.: <em>"Quais províncias geram maior receita em Meticais?"</em>) ou clique numa sugestão.<br>3. Clique em <strong>"Analisar e Criar Dashboard"</strong>.<br><br>O agente gera KPIs em <strong>Meticais (MT)</strong>, gráficos interativos, tabelas pesquisáveis, filtros por província (<em>Maputo, Matola, Beira, Nampula, Boane</em>) e recomendações estratégicas.`,
@@ -171,9 +171,50 @@
     }
   ];
 
+  const CORE_PROJECT_TERMS = [
+    'data analista', 'csv', 'gcs', 'cloud storage', 'bucket', 'gs://',
+    'mpesa', 'm-pesa', 'emola', 'e-mola', 'kivora', 'nuit', 'iva',
+    'fatura', 'faturas', 'dashboard', 'dashboards', 'workspace',
+    'portal do cliente', 'painel admin', 'plano', 'planos', 'subscricao',
+    'vendas.csv', 'mongodb', 'atlas', 'google'
+  ];
+
+  const OFF_TOPIC_TERMS = [
+    'futebol', 'jogo', 'golo', 'campeonato', 'benfica', 'sporting', 'porto', 'mambas',
+    'bolo', 'culinaria', 'cozinhar', 'almoco', 'jantar',
+    'clima', 'tempo hoje', 'chuva', 'previsao', 'temperatura',
+    'musica', 'cancao', 'filme', 'novela', 'serie', 'ator', 'atriz',
+    'piada', 'anedota', 'poema', 'poesia', 'verso', 'historia', 'geografia',
+    'capital de', 'presidente', 'politica', 'eleicoes',
+    'medico', 'doenca', 'remedio', 'sintoma', 'horoscopo', 'signo',
+    'bitcoin', 'cripto', 'ethereum', 'namoro', 'amor',
+    'traduz', 'traduza', 'traducao', 'trabalho de casa', 'tpc',
+    'chatgpt', 'openai', 'receita de', 'matematica', 'equacao'
+  ];
+
+  function matchesKeyword(normText, kw) {
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(?:^|[^a-z0-9])${escaped}(?:$|[^a-z0-9])`);
+    return regex.test(normText);
+  }
+
+  function buildOutOfScopeResponse() {
+    return {
+      text: `Desculpe, sou o assistente exclusivo do <strong>Data Analista</strong> e apenas respondo a assuntos relacionados com o nosso projecto.<br><br>Posso ajudar com dúvidas sobre:<br>• Carregamento de ficheiros <strong>CSV</strong> e links <strong>Cloud (GCS)</strong><br>• Criação de <strong>Dashboards, Gráficos e exportação PDF/JSON</strong><br>• Planos, <strong>1ª Análise Grátis</strong> e pagamentos <strong>M-Pesa / E-Mola</strong><br>• <strong>Faturas (IVA/NUIT)</strong>, Portal do Cliente e acesso com <strong>Google</strong>.<br><br>Como posso ajudar dentro da plataforma?`
+    };
+  }
+
   function findBestAnswer(userInput) {
     const norm = normalizeText(userInput);
     if (!norm) return null;
+
+    const hasCoreProjectTerm = CORE_PROJECT_TERMS.some(term => matchesKeyword(norm, term));
+    const hasOffTopicTerm = OFF_TOPIC_TERMS.some(term => matchesKeyword(norm, term));
+
+    // Bloqueia imediatamente temas fora do escopo se não mencionarem termos centrais do sistema
+    if (hasOffTopicTerm && !hasCoreProjectTerm) {
+      return buildOutOfScopeResponse();
+    }
 
     let bestMatch = null;
     let highestScore = 0;
@@ -181,7 +222,7 @@
     for (const entry of KNOWLEDGE_BASE) {
       let score = 0;
       for (const kw of entry.keywords) {
-        if (norm.includes(kw)) {
+        if (matchesKeyword(norm, kw)) {
           // Pontuação extra para palavras maiores / mais específicas
           score += entry.weight + (kw.length > 5 ? 1 : 0);
         }
@@ -196,10 +237,8 @@
       return bestMatch.answer();
     }
 
-    // Resposta fallback inteligente quando não há match direto
-    return {
-      text: `Compreendi a sua questão sobre <em>"${escapeHtml(userInput)}"</em>, mas não encontrei um tópico exato.<br><br>Posso explicar como:<br>• Carregar ficheiros <strong>CSV ou Cloud GCS</strong><br>• Gerar <strong>Dashboards e exportar PDF</strong><br>• Pagar com <strong>M-Pesa / E-Mola</strong><br>• Aceder às suas <strong>Faturas ou Conta Google</strong>.<br><br>Escolha um dos botões rápidos acima ou reformule a sua dúvida!`
-    };
+    // Recusa educada para qualquer assunto fora do projecto Data Analista
+    return buildOutOfScopeResponse();
   }
 
   function escapeHtml(text) {
