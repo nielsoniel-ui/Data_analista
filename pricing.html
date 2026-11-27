@@ -58,60 +58,102 @@
       );
       opacity: 0.95;
     }
+    /* Ocultar barra de scroll com touch suave */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
 
-  <!-- Header -->
-  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
-    <div class="flex items-center space-x-3">
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        MZ
-      </span>
-      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
-        <span>Data Analista</span>
-      </a>
+  <!-- Header Responsivo -->
+  <header class="w-full bg-[#111315] text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
+      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          MZ
+        </span>
+        <a href="index.html" class="text-xs sm:text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-1.5 sm:gap-2">
+          <span>Data Analista</span>
+          <span class="hidden sm:inline-flex px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">PLANOS</span>
+        </a>
+      </div>
+
+      <!-- Navegação Desktop -->
+      <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Workspace IA</a>
+        <a href="pricing.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Planos & Preços</a>
+        <a href="client.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Portal Cliente</a>
+        <a href="admin.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Painel Admin</a>
+      </nav>
+
+      <!-- Perfil / Login / Hambúrguer Mobile -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <div id="authHeaderArea" class="flex items-center space-x-1 sm:space-x-2 text-xs">
+          <a href="login.html" class="px-2.5 py-1 text-xs text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors">Entrar</a>
+          <a href="register.html" class="hidden sm:inline-flex px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-sm transition-colors text-xs">Criar Conta</a>
+        </div>
+        <!-- Botão Hambúrguer Mobile -->
+        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="md:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer shrink-0" title="Alternar Menu">
+          <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Navegação -->
-    <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
-      <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Workspace IA</a>
-      <a href="pricing.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Planos & Preços</a>
-      <a href="client.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Portal Cliente</a>
-      <a href="admin.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Painel Admin</a>
-    </nav>
-
-    <!-- Perfil / Login -->
-    <div id="authHeaderArea" class="flex items-center space-x-2 text-xs">
-      <a href="login.html" class="px-3 py-1.5 text-gray-300 hover:text-white">Entrar</a>
-      <a href="register.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full shadow-sm transition-colors">Criar Conta</a>
+    <!-- Dropdown Mobile Navigation -->
+    <div id="mobileNavMenu" class="hidden md:hidden border-t border-gray-800/80 pt-3 pb-2 mt-2.5 space-y-1">
+      <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+        <span>Workspace IA</span>
+      </a>
+      <a href="pricing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium">
+        <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
+        <span>Planos & Preços (M-Pesa / E-Mola)</span>
+      </a>
+      <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-400"></i>
+        <span>Portal do Cliente</span>
+      </a>
+      <a href="admin.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="shield" class="w-4 h-4 text-amber-400"></i>
+        <span>Painel do Administrador</span>
+      </a>
+      <div class="pt-2 border-t border-gray-800 flex items-center justify-between gap-2 px-1">
+        <a href="login.html" class="flex-1 text-center py-1.5 px-3 rounded-lg border border-gray-700 text-gray-300 hover:text-white hover:bg-gray-800 text-xs">Entrar</a>
+        <a href="register.html" class="flex-1 text-center py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium">Criar Conta</a>
+      </div>
     </div>
   </header>
 
   <!-- Container Principal -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 pb-20 space-y-8">
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 pt-4 sm:pt-6 pb-20 space-y-6 sm:space-y-8">
     
     <!-- Faixa Superior com o Gradiente Icónico -->
     <div class="hero-gradient-stripes shadow-sm"></div>
 
     <!-- Hero de Planos -->
-    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-12 -mt-1 text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <i data-lucide="gift" class="w-3.5 h-3.5"></i>
-        <span>1ª ANÁLISE 100% GRATUITA &bull; SEM CARTÃO DE CRÉDITO OBRIGATÓRIO</span>
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-5 sm:p-8 md:p-12 -mt-1 text-center space-y-3 sm:space-y-4">
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <i data-lucide="gift" class="w-3.5 h-3.5 shrink-0"></i>
+        <span>1ª ANÁLISE 100% GRATUITA &bull; SEM CARTÃO OBRIGATÓRIO</span>
       </div>
 
-      <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+      <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
         Planos Recorrentes para o Seu Negócio
       </h1>
       
-      <p class="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-xs sm:text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
         Experimente o poder da inteligência artificial aplicada aos seus ficheiros CSV. Faça a sua primeira análise grátis e escolha o plano de subscrição mensal ideal para a sua equipa em Moçambique.
       </p>
 
       <!-- Toggle Faturamento Mensal / Anual -->
-      <div class="pt-4 flex items-center justify-center gap-3 text-xs font-semibold text-gray-600">
+      <div class="pt-2 sm:pt-4 flex items-center justify-center gap-3 text-xs font-semibold text-gray-600">
         <span id="labelMonthly" class="text-gray-900 font-bold">Mensal</span>
         <button id="billingToggle" onclick="toggleBilling()" type="button" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-neutral-800 transition-colors duration-200 ease-in-out focus:outline-none">
           <span id="billingToggleDot" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
@@ -339,8 +381,8 @@
   </main>
 
   <!-- Modal de Checkout / Pagamento Kivora (M-Pesa & E-Mola) -->
-  <div id="checkoutModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-fade-in border border-gray-100">
+  <div id="checkoutModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-xs overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl animate-fade-in border border-gray-100 max-h-[92vh] overflow-y-auto my-auto">
       
       <!-- ESTADO 1: FORMULÁRIO DE CHECKOUT -->
       <div id="checkoutFormView" class="space-y-4">
@@ -509,6 +551,21 @@
 
   <script>
     lucide.createIcons();
+
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobileNavMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    }
 
     let isAnnual = false;
 

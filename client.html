@@ -60,154 +60,193 @@
       );
       opacity: 0.95;
     }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
 
-  <!-- 1. Header do Cliente -->
-  <header class="w-full bg-[#111315] text-white px-6 py-3 flex items-center justify-between shadow-sm sticky top-0 z-50">
-    <div class="flex items-center space-x-3">
-      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        MZ
-      </span>
-      <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
-        <span>Data Analista</span>
-        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PORTAL DO CLIENTE</span>
-      </a>
+  <!-- 1. Header do Cliente Responsivo -->
+  <header class="w-full bg-[#111315] text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
+      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          MZ
+        </span>
+        <a href="index.html" class="text-xs sm:text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-1.5 sm:gap-2">
+          <span>Data Analista</span>
+          <span class="hidden sm:inline-flex px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PORTAL CLIENTE</span>
+        </a>
+      </div>
+
+      <!-- Navegação Central Desktop -->
+      <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
+        <a href="client.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Meu Painel</a>
+        <a href="#invoicesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Minhas Faturas</span>
+        </a>
+        <a href="pricing.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="credit-card" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Plano & Faturação</span>
+        </a>
+        <a href="#filesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Meus Ficheiros</a>
+        <a href="#insightsSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Recomendações IA</a>
+        <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Nova Análise</span>
+        </a>
+      </nav>
+
+      <!-- Perfil & Logout -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <div class="flex items-center space-x-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+          <span class="text-xs font-semibold text-gray-200 hidden md:inline truncate max-w-[120px]">cliente@dataanalista.com</span>
+          <span class="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CLIENTE</span>
+        </div>
+        <button onclick="logoutClient()" class="p-1 sm:p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer shrink-0" title="Terminar Sessão">
+          <i data-lucide="log-out" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
+        </button>
+        <!-- Botão Hambúrguer Mobile -->
+        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="md:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer shrink-0" title="Alternar Menu">
+          <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Navegação Central -->
-    <nav class="hidden md:flex items-center space-x-1 text-xs text-gray-300">
-      <a href="client.html" class="px-3 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Meu Painel</a>
-      <a href="#invoicesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-400"></i>
-        <span>Minhas Faturas</span>
+    <!-- Dropdown Mobile Navigation -->
+    <div id="mobileNavMenu" class="hidden md:hidden border-t border-gray-800/80 pt-3 pb-2 mt-2.5 space-y-1">
+      <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium">
+        <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-400"></i>
+        <span>Meu Painel Executivo</span>
       </a>
-      <a href="pricing.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="credit-card" class="w-3.5 h-3.5 text-blue-400"></i>
-        <span>Plano & Faturação</span>
+      <a href="#invoicesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+        <span>Minhas Faturas & Pagamentos</span>
       </a>
-      <a href="#filesSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Meus Ficheiros</a>
-      <a href="#insightsSection" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Recomendações IA</a>
-      <a href="index.html" class="px-3 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
-        <span>Nova Análise com IA</span>
+      <a href="pricing.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="credit-card" class="w-4 h-4 text-blue-400"></i>
+        <span>Plano & Faturação (M-Pesa / E-Mola)</span>
       </a>
-    </nav>
-
-    <!-- Perfil & Logout -->
-    <div class="flex items-center space-x-2">
-      <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span class="text-xs font-semibold text-gray-200">cliente@dataanalista.com</span>
-        <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CLIENTE</span>
-      </div>
-      <button onclick="logoutClient()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors" title="Terminar Sessão">
-        <i data-lucide="log-out" class="w-4 h-4"></i>
-      </button>
+      <a href="#filesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="file-text" class="w-4 h-4 text-amber-400"></i>
+        <span>Meus Ficheiros CSV</span>
+      </a>
+      <a href="index.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-blue-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+        <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+        <span>Fazer Nova Análise com IA</span>
+      </a>
     </div>
   </header>
 
   <!-- Container Principal -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 pb-20 space-y-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 pt-4 sm:pt-6 pb-20 space-y-6">
     
     <!-- Faixa Superior com o Gradiente Icónico -->
     <div class="hero-gradient-stripes shadow-sm"></div>
 
     <!-- Cabeçalho do Painel do Cliente -->
-    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-10 -mt-1">
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-4 sm:p-8 md:p-10 -mt-1">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shadow-sm"></span>
             <span>Inteligência Comercial &bull; Moçambique</span>
           </div>
-          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
             Painel Executivo do Cliente
           </h2>
-          <p class="text-sm text-gray-500 mt-1 max-w-2xl">
+          <p class="text-xs sm:text-sm text-gray-500 mt-1 max-w-2xl">
             Acompanhe a sua facturação, vendas por província, indicadores em Meticais (MT) e diagnósticos automáticos gerados pelo Data Analista.
           </p>
         </div>
 
-        <div class="flex items-center gap-2.5 flex-wrap">
+        <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           <!-- Badge do Plano -->
-          <div class="p-2.5 px-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-            <span id="clientPlanText" class="text-blue-900 font-semibold">Plano Profissional Ativo</span>
+          <div class="p-2 sm:p-2.5 px-3 sm:px-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-600 shrink-0"></span>
+            <span id="clientPlanText" class="text-blue-900 font-semibold truncate">Plano Profissional Ativo</span>
             <span id="clientPayMethodBadge" class="hidden text-[10px] px-1.5 py-0.5 rounded font-bold"></span>
             <a href="pricing.html" class="text-blue-600 font-bold underline hover:text-blue-800 ml-1">Gerir</a>
           </div>
-          <a href="index.html" class="px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+          <a href="index.html" class="flex-1 sm:flex-initial justify-center px-4 py-2 sm:py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400"></i>
-            <span>Fazer Pergunta aos Dados</span>
+            <span>Nova Pergunta IA</span>
           </a>
-          <button onclick="window.print()" class="px-3.5 py-2.5 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5">
+          <button onclick="window.print()" class="flex-1 sm:flex-initial justify-center px-3.5 py-2 sm:py-2.5 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
-            <span>Exportar Relatório PDF</span>
+            <span>Exportar PDF</span>
           </button>
         </div>
       </div>
     </div>
 
     <!-- 4 Cards de Métricas de Negócio do Cliente -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
       <!-- Métrica 1 -->
-      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-        <div class="flex items-center justify-between text-gray-400 mb-2">
-          <span class="text-[11px] font-bold uppercase tracking-wider">Facturação Consolidada</span>
-          <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
-            <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-3.5 sm:p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-1.5 sm:mb-2">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate">Facturação</span>
+          <div class="p-1.5 sm:p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
+            <i data-lucide="badge-dollar-sign" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
           </div>
         </div>
-        <div class="text-2xl font-extrabold text-gray-900">1.741.000 <span class="text-xs font-normal text-gray-500">MT</span></div>
-        <div class="flex items-center text-xs text-emerald-600 mt-1 font-medium gap-1">
-          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-          <span>+18.4% em relação ao trimestre anterior</span>
+        <div class="text-lg sm:text-2xl font-extrabold text-gray-900">1.741.000 <span class="text-[10px] sm:text-xs font-normal text-gray-500">MT</span></div>
+        <div class="flex items-center text-[10px] sm:text-xs text-emerald-600 mt-1 font-medium gap-1">
+          <i data-lucide="trending-up" class="w-3 h-3"></i>
+          <span class="truncate">+18.4% vs anterior</span>
         </div>
       </div>
 
       <!-- Métrica 2 -->
-      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-        <div class="flex items-center justify-between text-gray-400 mb-2">
-          <span class="text-[11px] font-bold uppercase tracking-wider">Total de Pedidos / Vendas</span>
-          <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-            <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-3.5 sm:p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-1.5 sm:mb-2">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate">Total Pedidos</span>
+          <div class="p-1.5 sm:p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0">
+            <i data-lucide="shopping-bag" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
           </div>
         </div>
-        <div class="text-2xl font-extrabold text-gray-900">2.450 <span class="text-xs font-normal text-gray-500">pedidos</span></div>
-        <div class="flex items-center text-xs text-slate-500 mt-1 gap-1">
-          <span>Ticket médio: <strong>710 MT</strong> por transação</span>
+        <div class="text-lg sm:text-2xl font-extrabold text-gray-900">2.450 <span class="text-[10px] sm:text-xs font-normal text-gray-500">pedidos</span></div>
+        <div class="flex items-center text-[10px] sm:text-xs text-slate-500 mt-1 gap-1 truncate">
+          <span>Ticket: <strong>710 MT</strong></span>
         </div>
       </div>
 
       <!-- Métrica 3 -->
-      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-        <div class="flex items-center justify-between text-gray-400 mb-2">
-          <span class="text-[11px] font-bold uppercase tracking-wider">Filial Líder em Vendas</span>
-          <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
-            <i data-lucide="map-pin" class="w-4 h-4"></i>
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-3.5 sm:p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-1.5 sm:mb-2">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate">Filial Líder</span>
+          <div class="p-1.5 sm:p-2 bg-purple-50 text-purple-600 rounded-lg shrink-0">
+            <i data-lucide="map-pin" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
           </div>
         </div>
-        <div class="text-2xl font-extrabold text-gray-900">Maputo Central</div>
-        <div class="flex items-center text-xs text-slate-500 mt-1 gap-1">
-          <span>Representa <strong>59.4%</strong> da faturação total</span>
+        <div class="text-lg sm:text-2xl font-extrabold text-gray-900 truncate">Maputo Central</div>
+        <div class="flex items-center text-[10px] sm:text-xs text-slate-500 mt-1 gap-1 truncate">
+          <span>Faturação: <strong>59.4%</strong></span>
         </div>
       </div>
 
       <!-- Métrica 4 -->
-      <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
-        <div class="flex items-center justify-between text-gray-400 mb-2">
-          <span class="text-[11px] font-bold uppercase tracking-wider">Retenção de Clientes</span>
-          <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
-            <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+      <div class="bg-white border border-gray-200/90 rounded-2xl p-3.5 sm:p-5 shadow-xs">
+        <div class="flex items-center justify-between text-gray-400 mb-1.5 sm:mb-2">
+          <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider truncate">Retenção</span>
+          <div class="p-1.5 sm:p-2 bg-amber-50 text-amber-600 rounded-lg shrink-0">
+            <i data-lucide="heart-handshake" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
           </div>
         </div>
-        <div class="text-2xl font-extrabold text-gray-900">86.5%</div>
-        <div class="flex items-center text-xs text-emerald-600 mt-1 font-medium gap-1">
-          <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-          <span>Alta fidelização em clientes corporativos</span>
+        <div class="text-lg sm:text-2xl font-extrabold text-gray-900">86.5%</div>
+        <div class="flex items-center text-[10px] sm:text-xs text-emerald-600 mt-1 font-medium gap-1 truncate">
+          <i data-lucide="trending-up" class="w-3 h-3"></i>
+          <span>Alta fidelização</span>
         </div>
       </div>
     </div>
@@ -517,6 +556,21 @@
 
   <script>
     lucide.createIcons();
+
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobileNavMenu');
+      const icon = document.getElementById('mobileMenuIcon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    }
 
     // Gráfico de Vendas Realizadas vs Metas
     const ctxSales = document.getElementById('clientSalesChart').getContext('2d');

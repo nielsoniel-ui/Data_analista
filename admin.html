@@ -60,20 +60,30 @@
       );
       opacity: 0.95;
     }
+
+    /* Ocultar barra de scroll em tabs horizontais com touch suave */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
 
   <!-- 1. Header do Administrador Responsivo -->
-  <header class="w-full bg-[#111315] text-white px-4 sm:px-6 py-3 shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+  <header class="w-full bg-[#111315] text-white px-3 sm:px-6 py-2.5 sm:py-3 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
       <!-- Logo & Badge -->
-      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
-        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
+      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium bg-neutral-800 text-neutral-300 border border-neutral-700/50">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           MZ
         </span>
-        <a href="index.html" class="text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-2">
+        <a href="index.html" class="text-xs sm:text-sm font-semibold tracking-wide text-gray-100 hover:text-white flex items-center gap-1.5 sm:gap-2">
           <span>Data Analista</span>
           <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">ADMIN</span>
         </a>
@@ -81,25 +91,25 @@
 
       <!-- Navegação Central Desktop (visível apenas em telas grandes) -->
       <nav class="hidden xl:flex items-center space-x-1 text-xs text-gray-300">
-        <a href="admin.html" class="px-2.5 py-1.5 rounded-lg bg-[#25282C] text-white font-medium">Visão Geral</a>
-        <a href="#clientsSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        <button onclick="switchAdminTab('overview')" id="navLinkOverview" class="px-2.5 py-1.5 rounded-lg bg-[#25282C] text-white font-medium cursor-pointer transition-colors">Visão Geral</button>
+        <button onclick="switchAdminTab('clients')" id="navLinkClients" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
           <i data-lucide="users" class="w-3.5 h-3.5 text-blue-400"></i>
           <span>Clientes</span>
-        </a>
-        <a href="#invoicesSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        </button>
+        <button onclick="switchAdminTab('invoices')" id="navLinkInvoices" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
           <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span>Faturação</span>
-        </a>
-        <a href="#activitiesSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        </button>
+        <button onclick="switchAdminTab('activities')" id="navLinkActivities" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
           <i data-lucide="activity" class="w-3.5 h-3.5 text-purple-400"></i>
           <span>Atividades</span>
-        </a>
-        <a href="#usersSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">Utilizadores</a>
-        <a href="#databaseSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors">MongoDB Atlas</a>
-        <a href="#planosSection" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
+        </button>
+        <button onclick="switchAdminTab('users')" id="navLinkUsers" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors cursor-pointer">Utilizadores</button>
+        <button onclick="switchAdminTab('plans')" id="navLinkPlans" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
           <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>Planos</span>
-        </a>
+          <span>Planos & DB</span>
+        </button>
+        <button onclick="switchAdminTab('all')" id="navLinkAll" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors cursor-pointer">Ver Tudo</button>
         <a href="client.html" class="px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors flex items-center gap-1">
           <i data-lucide="layout" class="w-3.5 h-3.5 text-emerald-400"></i>
           <span>Portal Cliente</span>
@@ -107,17 +117,17 @@
       </nav>
 
       <!-- Perfil, Logout & Hambúrguer Mobile -->
-      <div class="flex items-center space-x-2 shrink-0">
-        <div class="flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+      <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+        <div class="flex items-center space-x-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-[#1F2428] border border-gray-700/70">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
           <span class="text-xs font-semibold text-gray-200 hidden md:inline">admin@dataanalista.com</span>
-          <span class="px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">SUPERUSER</span>
+          <span class="hidden sm:inline-block px-1.5 py-0.2 text-[9px] font-bold rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">SUPERUSER</span>
         </div>
-        <button onclick="logoutAdmin()" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Terminar Sessão">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
+        <button onclick="logoutAdmin()" class="p-1 sm:p-1.5 text-gray-400 hover:text-red-400 hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer shrink-0" title="Terminar Sessão">
+          <i data-lucide="log-out" class="w-3.5 sm:w-4 h-3.5 sm:h-4"></i>
         </button>
         <!-- Botão Menu Mobile (aparece em telas < xl) -->
-        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="xl:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer" title="Alternar Menu">
+        <button id="mobileMenuToggleBtn" onclick="toggleMobileNav()" class="xl:hidden p-1.5 text-gray-300 hover:text-white hover:bg-[#25282C] rounded-lg transition-colors cursor-pointer shrink-0" title="Alternar Menu">
           <i data-lucide="menu" id="mobileMenuIcon" class="w-5 h-5"></i>
         </button>
       </div>
@@ -125,34 +135,34 @@
 
     <!-- Dropdown Mobile Navigation -->
     <div id="mobileNavMenu" class="hidden xl:hidden border-t border-gray-800/80 pt-3 pb-2 mt-3 space-y-1">
-      <a href="admin.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium">
+      <button onclick="switchAdminTab('overview'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[#25282C] text-white text-xs font-medium text-left cursor-pointer">
         <i data-lucide="gauge" class="w-4 h-4 text-blue-400"></i>
         <span>Visão Geral</span>
-      </a>
-      <a href="#clientsSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+      </button>
+      <button onclick="switchAdminTab('clients'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
         <i data-lucide="users" class="w-4 h-4 text-blue-400"></i>
         <span>Gestão de Clientes</span>
-      </a>
-      <a href="#invoicesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+      </button>
+      <button onclick="switchAdminTab('invoices'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
         <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
         <span>Faturação & Recibos</span>
-      </a>
-      <a href="#activitiesSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+      </button>
+      <button onclick="switchAdminTab('activities'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
         <i data-lucide="activity" class="w-4 h-4 text-purple-400"></i>
         <span>Histórico de Atividades</span>
-      </a>
-      <a href="#usersSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+      </button>
+      <button onclick="switchAdminTab('users'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
         <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
         <span>Todos os Utilizadores</span>
-      </a>
-      <a href="#databaseSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
-        <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
-        <span>Infraestrutura MongoDB Atlas</span>
-      </a>
-      <a href="#planosSection" onclick="toggleMobileNav()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
+      </button>
+      <button onclick="switchAdminTab('plans'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
         <i data-lucide="tag" class="w-4 h-4 text-amber-400"></i>
-        <span>Gerir Planos</span>
-      </a>
+        <span>Planos & Infraestrutura</span>
+      </button>
+      <button onclick="switchAdminTab('all'); toggleMobileNav()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors text-left cursor-pointer">
+        <i data-lucide="rows" class="w-4 h-4 text-gray-400"></i>
+        <span>Ver Tudo (Modo Expandido)</span>
+      </button>
       <a href="client.html" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-300 hover:bg-[#25282C] hover:text-white text-xs transition-colors">
         <i data-lucide="layout" class="w-4 h-4 text-emerald-400"></i>
         <span>Ver Dashboard Cliente</span>
@@ -171,27 +181,27 @@
     <div class="hero-gradient-stripes shadow-sm"></div>
 
     <!-- Cabeçalho do Painel Admin -->
-    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-8 md:p-10 -mt-1">
+    <div class="bg-white rounded-b-3xl shadow-sm border-x border-b border-gray-200/80 p-4 sm:p-8 md:p-10 -mt-1">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div class="flex items-center space-x-2 text-xs font-semibold tracking-wider text-slate-500 uppercase mb-2">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block shadow-sm"></span>
             <span>Centro de Controlo &bull; Moçambique</span>
           </div>
-          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
             Painel do Administrador
           </h2>
-          <p class="text-sm text-gray-500 mt-1 max-w-2xl">
+          <p class="text-xs sm:text-sm text-gray-500 mt-1 max-w-2xl">
             Monitorização global de utilizadores, consultas de IA generativa, segurança e base de dados MongoDB Atlas (<code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded text-blue-700">datanalistadb</code>).
           </p>
         </div>
 
-        <div class="flex items-center gap-2.5 flex-wrap">
-          <button onclick="addUserModal()" class="px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+        <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+          <button onclick="addUserModal()" class="flex-1 sm:flex-initial justify-center px-4 py-2.5 bg-[#111315] hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
             <span>Criar Utilizador</span>
           </button>
-          <button onclick="refreshData()" class="px-3.5 py-2.5 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5">
+          <button onclick="refreshData()" class="flex-1 sm:flex-initial justify-center px-3.5 py-2.5 border border-gray-200 hover:bg-slate-50 text-gray-700 text-xs font-medium rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
             <span>Actualizar</span>
           </button>
@@ -199,8 +209,54 @@
       </div>
     </div>
 
+    <!-- BARRA DE CONTROLO DO DASHBOARD & NAVEGAÇÃO POR ABAS -->
+    <div class="bg-white border border-gray-200/90 rounded-2xl p-2.5 sm:p-3 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-3">
+      <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap p-1 bg-slate-100/80 rounded-xl no-scrollbar" id="adminDashboardTabs">
+        <button onclick="switchAdminTab('overview')" id="tabBtnOverview" class="admin-tab-btn active shrink-0 px-3.5 py-2 rounded-lg text-xs font-bold bg-[#111315] text-white shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Visão Geral</span>
+        </button>
+        <button onclick="switchAdminTab('clients')" id="tabBtnClients" class="admin-tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="building-2" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span>Clientes</span>
+          <span id="tabBadgeClients" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">3</span>
+        </button>
+        <button onclick="switchAdminTab('invoices')" id="tabBtnInvoices" class="admin-tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>Faturação</span>
+          <span id="tabBadgeInvoices" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">2</span>
+        </button>
+        <button onclick="switchAdminTab('activities')" id="tabBtnActivities" class="admin-tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="activity" class="w-3.5 h-3.5 text-purple-600"></i>
+          <span>Auditoria</span>
+          <span id="tabBadgeActivities" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">Logs</span>
+        </button>
+        <button onclick="switchAdminTab('users')" id="tabBtnUsers" class="admin-tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-slate-700"></i>
+          <span>Utilizadores</span>
+          <span id="tabBadgeUsers" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-slate-200 text-slate-800">4</span>
+        </button>
+        <button onclick="switchAdminTab('plans')" id="tabBtnPlans" class="admin-tab-btn shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="tag" class="w-3.5 h-3.5 text-amber-600"></i>
+          <span>Planos & DB</span>
+        </button>
+        <button onclick="switchAdminTab('all')" id="tabBtnAll" class="admin-tab-btn shrink-0 px-3 py-2 rounded-lg text-xs font-medium text-gray-500 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1 transition-all cursor-pointer whitespace-nowrap">
+          <i data-lucide="rows" class="w-3.5 h-3.5"></i>
+          <span>Ver Tudo</span>
+        </button>
+      </div>
+
+      <!-- Indicador de Status do Cluster e Auto-refresh -->
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-medium border border-emerald-200/80">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>MongoDB Atlas em Tempo Real</span>
+        </span>
+      </div>
+    </div>
+
     <!-- 4 Cards de Métricas do Administrador (Dados Reais do MongoDB Atlas) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div id="overviewMetricsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <!-- Métrica 1: Utilizadores -->
       <div class="bg-white border border-gray-200/90 rounded-2xl p-5 shadow-xs">
         <div class="flex items-center justify-between text-gray-400 mb-2">
@@ -262,7 +318,7 @@
     </div>
 
     <!-- Gráficos de Auditoria e Sistema -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div id="overviewChartsGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
       <!-- Gráfico 1: Atividade de Consultas de IA -->
       <div class="lg:col-span-8 bg-white border border-gray-200/90 rounded-2xl p-6 shadow-xs">
@@ -1146,6 +1202,111 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
     let cachedPaymentsList = [];
     let currentDossierClient = null;
     let currentModalInvoice = null;
+    let currentActiveTab = 'overview';
+
+    // Gestão de Abas e Módulos do Dashboard Admin
+    function switchAdminTab(tab) {
+      currentActiveTab = tab;
+      const tabs = ['overview', 'clients', 'invoices', 'activities', 'users', 'plans', 'all'];
+
+      // Atualizar botões de abas no Dashboard
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (btn) {
+          if (t === tab) {
+            btn.className = 'admin-tab-btn active px-3.5 py-2 rounded-lg text-xs font-bold bg-[#111315] text-white shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap';
+          } else {
+            btn.className = 'admin-tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/80 flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap';
+          }
+        }
+        // Atualizar links da Navbar desktop
+        const navLink = document.getElementById(`navLink${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (navLink) {
+          if (t === tab) {
+            navLink.className = 'px-2.5 py-1.5 rounded-lg bg-[#25282C] text-white font-medium cursor-pointer transition-colors';
+          } else {
+            navLink.className = 'px-2.5 py-1.5 rounded-lg hover:bg-[#25282C] hover:text-white transition-colors cursor-pointer';
+          }
+        }
+      });
+
+      // Secções do Painel
+      const overviewMetrics = document.getElementById('overviewMetricsGrid');
+      const overviewCharts = document.getElementById('overviewChartsGrid');
+      const clientsSec = document.getElementById('clientsSection');
+      const invoicesSec = document.getElementById('invoicesSection');
+      const activitiesSec = document.getElementById('activitiesSection');
+      const databaseSec = document.getElementById('databaseSection');
+      const usersSec = document.getElementById('usersSection');
+      const planosSec = document.getElementById('planosSection');
+
+      if (tab === 'all') {
+        [overviewMetrics, overviewCharts, clientsSec, invoicesSec, activitiesSec, databaseSec, usersSec, planosSec].forEach(el => el?.classList.remove('hidden'));
+      } else if (tab === 'overview') {
+        overviewMetrics?.classList.remove('hidden');
+        overviewCharts?.classList.remove('hidden');
+        clientsSec?.classList.remove('hidden');
+        invoicesSec?.classList.remove('hidden');
+        activitiesSec?.classList.add('hidden');
+        databaseSec?.classList.add('hidden');
+        usersSec?.classList.add('hidden');
+        planosSec?.classList.add('hidden');
+      } else if (tab === 'clients') {
+        overviewMetrics?.classList.add('hidden');
+        overviewCharts?.classList.add('hidden');
+        clientsSec?.classList.remove('hidden');
+        invoicesSec?.classList.add('hidden');
+        activitiesSec?.classList.add('hidden');
+        databaseSec?.classList.add('hidden');
+        usersSec?.classList.add('hidden');
+        planosSec?.classList.add('hidden');
+      } else if (tab === 'invoices') {
+        overviewMetrics?.classList.add('hidden');
+        overviewCharts?.classList.add('hidden');
+        clientsSec?.classList.add('hidden');
+        invoicesSec?.classList.remove('hidden');
+        activitiesSec?.classList.add('hidden');
+        databaseSec?.classList.add('hidden');
+        usersSec?.classList.add('hidden');
+        planosSec?.classList.add('hidden');
+      } else if (tab === 'activities') {
+        overviewMetrics?.classList.add('hidden');
+        overviewCharts?.classList.add('hidden');
+        clientsSec?.classList.add('hidden');
+        invoicesSec?.classList.add('hidden');
+        activitiesSec?.classList.remove('hidden');
+        databaseSec?.classList.add('hidden');
+        usersSec?.classList.add('hidden');
+        planosSec?.classList.add('hidden');
+      } else if (tab === 'users') {
+        overviewMetrics?.classList.add('hidden');
+        overviewCharts?.classList.add('hidden');
+        clientsSec?.classList.add('hidden');
+        invoicesSec?.classList.add('hidden');
+        activitiesSec?.classList.add('hidden');
+        databaseSec?.classList.add('hidden');
+        usersSec?.classList.remove('hidden');
+        planosSec?.classList.add('hidden');
+      } else if (tab === 'plans') {
+        overviewMetrics?.classList.add('hidden');
+        overviewCharts?.classList.add('hidden');
+        clientsSec?.classList.add('hidden');
+        invoicesSec?.classList.add('hidden');
+        activitiesSec?.classList.add('hidden');
+        databaseSec?.classList.remove('hidden');
+        usersSec?.classList.add('hidden');
+        planosSec?.classList.remove('hidden');
+      }
+
+      lucide.createIcons();
+    }
+
+    function checkUrlTabHash() {
+      const hash = window.location.hash.toLowerCase().replace('#', '').replace('section', '');
+      if (['overview', 'clients', 'invoices', 'activities', 'users', 'plans', 'all'].includes(hash)) {
+        switchAdminTab(hash);
+      }
+    }
 
     // Inicialização dos Gráficos com placeholders responsivos
     function initCharts() {
@@ -1303,6 +1464,19 @@ Factura com NUIT e pagamento por transferência bancária</textarea>
         if (kpiInvoicesCount) {
           kpiInvoicesCount.innerText = `${cachedInvoicesList.length} ${cachedInvoicesList.length === 1 ? 'Fatura' : 'Faturas'}`;
         }
+
+        // Atualizar Badges das Abas de Navegação
+        const tabBadgeClients = document.getElementById('tabBadgeClients');
+        if (tabBadgeClients) tabBadgeClients.innerText = cachedClientsList.length;
+
+        const tabBadgeInvoices = document.getElementById('tabBadgeInvoices');
+        if (tabBadgeInvoices) tabBadgeInvoices.innerText = cachedInvoicesList.length;
+
+        const tabBadgeUsers = document.getElementById('tabBadgeUsers');
+        if (tabBadgeUsers) tabBadgeUsers.innerText = cachedUsersList.length;
+
+        const tabBadgeActivities = document.getElementById('tabBadgeActivities');
+        if (tabBadgeActivities) tabBadgeActivities.innerText = cachedActivitiesList.length;
 
         // 4. Renderizar Tabelas e Feeds
         renderClientsTable(cachedClientsList);
